@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+var url = 'https://c.y.qq.com/tips/fcgi-bin/fcg_music_red_dota.fcg?g_tk=153730533&jsonpCallback=MusicJsonCallback7917118951592015&loginUin=759811542&hostUin=0&format=jsonp&inCharset=utf8&outCharset=utf-8&notice=0&platform=yqq&needNewCode=0&ct=24&qq=759811542&cid=205360410&reqtype=1&from=2'
+
+
+function jsonp (url, jsonpCallback, success) {
+  let script = document.createElement('script')
+  script.type = 'text/javascript'
+  // 加载完毕立即执行
+  script.async = true
+  script.src = url
+  window[ jsonpCallback ] = function (data) {
+    success && success(data)
+  }
+  document.body.appendChild(script)
+}
+
+
+// let script = document.createElement('script')
+// script.type = 'text/javascript'
+// script.src = url
+// document.body.appendChild(script)
+//
+// function MusicJsonCallback7917118951592015 (data) {
+//   console.log(data)
+// }
+
+</script>
+</body>
+</html>

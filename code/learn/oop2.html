@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+// function Person (name) {
+//   this.name = name
+//   this.happy = [ 'cba' ]
+// }
+//
+// Person.prototype.say = function () {
+//   console.log(`我是${this.name}`)
+// }
+//
+// function Man (name) {
+//   Person.call(this, name)
+// }
+//
+// var allen = new Man('allen')
+// var tom = new Man('tom')
+// console.log(allen.name) // allen
+// console.log(allen.say)  // undefined
+// console.log(allen.happy)
+// console.log(tom.happy)
+// // 构造函数继承父类构造函数的是独立
+// allen.happy.push(111)
+// console.log(tom.happy)
+
+
+// function Person () {
+//   this.happy = [ 'cba' ]
+// }
+//
+// Person.prototype.say = function () {
+//   console.log(`我是` + this.happy)
+// }
+//
+// function Man () {
+// }
+//
+// Man.prototype = new Person()
+//
+// var allen = new Man('allen')
+// // 能够继承父类的原型
+// allen.say() // 我是cba
+// console.log(allen.happy) // ['cba']
+// var tom = new Man('tom')
+// tom.happy.push('nba')
+// // 通过类继承的方式，父类的属性会被共用
+// console.log(allen.happy) // ['cba','nba']
+
+
+function Person () {
+  this.happy = [ 'cba' ]
+}
+
+Person.prototype.say = function () {
+  console.log(`我是` + this.happy)
+}
+
+function Man () {
+  Person.call(this)
+}
+
+Man.prototype = new Person()
+var allen = new Man()
+var tom = new Man()
+allen.say() // 我是cba
+allen.happy.push('nba')
+console.log(tom.happy)  // [cba]
+
+</script>
+</body>
+</html>

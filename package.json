@@ -1,0 +1,24 @@
+{
+  "name": "inventory",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vuepress dev .",
+    "build": "vuepress build ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xuxiaozhou/inventory.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xuxiaozhou/inventory/issues"
+  },
+  "homepage": "https://github.com/xuxiaozhou/inventory#readme",
+  "devDependencies": {
+    "vuepress": "^0.14.2"
+  }
+}

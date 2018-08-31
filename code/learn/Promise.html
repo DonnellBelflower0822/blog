@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+const PENDING = 'pending'
+const RESOLVED = 'resolved'
+const REJECTED = 'rejected'
+
+function MyPromise (executor) {
+  let _this = this
+  _this.status = PENDING // 当前状态
+  _this.value = undefined // 要是成功返回的数据
+  _this.reason = undefined // 失败的原因
+  // 成功或失败的订阅回调数组
+  _this.resolvedCallbacks = []
+  _this.rejectedCallbacks = []
+  // 成功
+  _this.resolve = function (value) {
+    // 保证reslove执行前，then方法注册完毕
+    setTimeout(function () {
+      _this.status = RESOLVED
+      _this.value = value
+      // 发布订阅的回调函数
+      _this.resolvedCallbacks.forEach(fn => fn())
+    }, 0)
+  }
+  // 失败
+  _this.reject = function (reason) {
+    // 保证reject执行前，then方法注册完毕
+    _this.status = REJECTED
+    _this.reason = reason
+    // 发布订阅的回调函数
+    _this.rejectedCallbacks.forEach(fn => fn())
+  }
+  try {
+    executor(_this.resolve, _this.reject)
+  } catch (e) {
+    _this.reject(e)
+  }
+}
+
+MyPromise.prototype.then = function (onResolved, onRejected) {
+  let _this = this
+  // then返回的是一个Promise
+  let promsie2
+  // 成功
+  if (_this.status === RESOLVED) {
+    onResolved(_this.value)
+  }
+  // 失败
+  if (_this.status === REJECTED) {
+    onRejected(_this.reason)
+  }
+  // 等待
+  if (_this.status === PENDING) {
+    // 添加订阅
+    _this.resolvedCallbacks.push(function () {
+      onResolved(_this.value)
+    })
+    // 添加订阅
+    _this.rejectedCallbacks.push(function () {
+      onRejected(_this.reason)
+    })
+  }
+}
+
+// new MyPromise((resolve, reject) => {
+//   setTimeout(() => {
+//     reject(122)
+//   }, 1000)
+// }).then(res => {
+//   console.log(res)
+// }, e => {
+//   console.log('err' + e)
+// })
+
+
+new MyPromise(resolve => {
+  setTimeout(() => {
+    resolve(2333)
+  }, 1000)
+}).then(res => {
+  return res + '11'
+}).then(res => {
+  console.log(res)
+})
+
+</script>
+</body>
+</html>

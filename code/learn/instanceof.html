@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+var Person = function () {
+  this.name = 'allen'
+}
+var Son = function () {
+  this.name = 'allen'
+}
+var yao = new Person()
+console.log(yao instanceof Person)  // true
+console.log(yao instanceof Object)  // true
+// 实例.__proto__  === 构造器.prototype
+function _instanceof (obj, constructor) {
+  while (obj !== null) {
+    obj = obj.__proto__
+    if (obj === constructor.prototype) {
+      return true
+    }
+  }
+  return false
+}
+
+console.log(_instanceof(yao, Person))
+console.log(_instanceof(yao, Object))
+console.log(_instanceof(yao, Son))
+
+</script>
+</body>
+</html>

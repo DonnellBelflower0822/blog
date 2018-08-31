@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+// function factory (name, age) {
+//   var obj = {}
+//   obj.name = name
+//   obj.age = age
+//   return obj
+// }
+// let obj = factory('allen', 23)
+
+
+// function Person (name) {
+//   this.name = name
+// }
+//
+// var instance = (function () {
+//   var instance = null
+//   return function (name) {
+//     if (!instance) {
+//       instance = new Person(name)
+//     }
+//     return instance
+//
+//   }
+// })()
+//
+// var a = instance('allen')
+// var b = instance('tom')
+// console.log(a === b)  // true
+
+var Obj = {
+  // 订阅列表
+  list: [],
+  // 添加订阅
+  addListener (fn) {
+    this.list.push(fn)
+  },
+  // 发布
+  trigger () {
+    let _this = this
+    let args = arguments
+    this.list.forEach(fn => {
+      fn.apply(_this, args)
+    })
+  }
+}
+Obj.addListener(function (color, size) {
+  console.log('颜色' + color + ',大小' + size)
+})
+Obj.addListener(function (color, size) {
+  console.log('再次颜色' + color + ',再次大小' + size)
+})
+Obj.trigger('黑色', '超大')
+
+
+</script>
+</body>
+</html>

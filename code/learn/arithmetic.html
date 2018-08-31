@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+// let num = 19891
+//
+// function check (num) {
+//   num += ''
+//   let str = ''
+//   for (let i = num.length - 1; i >= 0; i--) {
+//     str += num[ i ]
+//   }
+//   return str === num
+// }
+//
+// console.log(check(num))
+
+// 冒泡
+var arr = [ 3, 1, 46, 223, 62, 63, 7, 34 ]
+
+// let length = arr.length
+// for (let i = 0; i < length; i++) {
+//   for (let j = i + 1; j < length; j++) {
+//     let left = arr[ i ]
+//     let right = arr[ j ]
+//     if (left > right) {
+//       arr[ i ] = right
+//       arr[ j ] = left
+//     }
+//   }
+// }
+// console.log(arr)
+
+// 选择排序
+
+let length = arr.length
+let min_index
+let tmp
+for (let i = 0; i < length; i++) {
+  min_index = i
+  for (let j = i + 1; j < length; j++) {
+    if (arr[ min_index ] > arr[ j ]) {
+      min_index = j
+    }
+  }
+  if (min_index !== i) {
+    tmp = arr[ i ]
+    arr[ i ] = arr[ min_index ]
+    arr[ min_index ] = tmp
+  }
+}
+console.log(arr)
+
+</script>
+</body>
+</html>

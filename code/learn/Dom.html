@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div class="root">
+  <div class="container">
+    <section class="sidebar">
+      <ul class="menu"></ul>
+    </section>
+    <section class="main">
+      <article class="post"></article>
+      <p class="copyright"></p>
+    </section>
+  </div>
+  <div class="box2"></div>
+</div>
+</body>
+</html>
+<script>
+// let tree = {
+//   treeArr: {},
+//   buildTree (node) {
+//     if (node.nodeType === 1) {
+//       if (node.children.length) {
+//         for (let i = 0; i < node.children.length; i++) {
+//
+//         }
+//       } else {
+//         this.treeArr[ node.tagName ] = {
+//           tagName: node.tagName
+//         }
+//       }
+//     }
+//   }
+// }
+// window.onload = function () {
+//
+// }
+
+// let app = document.getElementById('app')
+// let tree = {
+//   nodes: [],
+//   build (node) {
+//     this.nodes.push(node.tagName)
+//     if (node.children.length) {
+//       for (var i = 0; i < node.children.length; i++) {
+//         this.build(node.children[ i ])
+//       }
+//     }
+//     return this.nodes
+//   }
+// }
+// console.log(tree.build(app))
+
+
+// const BFS = {
+//   nodes: [],
+//   do (roots) {
+//     var children = []
+//     for (let i = 0; i < roots.length; i++) {
+//       var root = roots[ i ]
+//       // 过滤 text 节点、script 节点
+//       if (root.nodeType !== 3 && root.nodeName !== 'SCRIPT') {
+//         if (root.childNodes.length) {
+//           children.push(...root.childNodes)
+//         }
+//         this.nodes.push(root)
+//       }
+//     }
+//     if (children.length) {
+//       var tmp = this.do(children)
+//       return tmp
+//     } else {
+//       return this.nodes
+//     }
+//   }
+// }
+// console.log(BFS.do(document.body.childNodes))
+// const DFS = {
+//   nodes: [],
+//   do (root) {
+//     for (let i = 0; i < root.childNodes.length; i++) {
+//       var node = root.childNodes[ i ]
+//       // 过滤 text 节点、script 节点
+//       if ((node.nodeType != 3) && (node.nodeName != 'SCRIPT')) {
+//         this.nodes.push(node.tagName)
+//         this.do(node)
+//       }
+//     }
+//     return this.nodes;
+//   }
+// }
+
+
+// function buildDom (node) {
+//   let tree = {}
+//   if (node && node.nodeType === 1) {
+//     if (node.tagName.toLowerCase() === 'script') {
+//       return
+//     }
+//     if (node.children.length) {
+//       for (let i = 0; i < node.children.length; i++) {
+//         return {
+//           [ node.tagName ] : buildDom(node.children[ i ])
+//         }
+//       }
+//     } else {
+//       return {
+//         [ node.tagName ] : node.innerHTML
+//       }
+//     }
+//     return tree
+//   }
+//
+// }
+
+
+/** * 使用递归的方式先序遍历DOM树 * @param node 根节点 */
+// function traversal (node) {
+//   //对node的处理
+//   if (node && node.nodeType === 1) {
+//     console.log(node.tagName + (node.className ? '.' + node.className : '' + node.nodeValue))
+//   }
+//   var i = 0, childNodes = node.childNodes, item;
+//   for (; i < childNodes.length; i++) {
+//     item = childNodes[ i ];
+//     if (item.nodeType === 1) {
+//       // 递归先序遍历子节点
+//       traversal(item);
+//     }
+//   }
+// }
+
+// function traversal (node) {
+//   const queue = [ node ]
+//   while (queue.length) {
+//     const node = queue.shift()
+//     print(node)
+//     if (!node.children.length) {
+//       // 没有子节点
+//       continue
+//     }
+//     Array.from(node.children).forEach(x => {
+//       queue.push(x)
+//     })
+//   }
+// }
+//
+// function print (node) {
+//   console.log(node.tagName, `.${node.className}`)
+// }
+//
+// traversal(document.getElementById('app'))
+
+// DFS总是先进入下一级节点，只有当下一级没有未遍历的子节点时才会进入到当前层级的其它节点。
+
+// function Tree (node, layer) {
+//   const roots = Array.from(node)
+//   while (roots.length) {
+//     const root = roots.shift()
+//     print(root, layer)
+//     if (root.children && root.children.length) {
+//       Tree(root.children, layer + 1)
+//     }
+//   }
+// }
+//
+let print = (node, layer) => {
+  console.log(`${node.tagName} --className .${node.className} --level ${layer}`)
+}
+//
+// Tree(document.querySelectorAll('.root'), 1)
+
+function Tree (nodes) {
+  const queue = [ nodes ]
+  while (queue.length) {
+    const node = queue.shift()
+    print(node)
+    if (!node.children.length) {
+      continue
+    }
+    Array.from(node.children).forEach(x => [
+      queue.push(x)
+    ])
+  }
+}
+
+Tree(document.querySelector('.root'))
+
+</script>

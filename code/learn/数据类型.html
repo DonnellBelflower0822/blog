@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+// console.log(typeof 'str') // 'string'
+// console.log(typeof 1) // 'number'
+// console.log(typeof true)  // 'boolean'
+// console.log(typeof b) // 'undefined'
+// console.log(typeof Symbol()) // 'symbol'
+// console.log(typeof [])  // 'object'
+// console.log(typeof {})  // 'object'
+// console.log(typeof null)  // 'object'
+// console.log(typeof console.log) // 'function'
+
+// // console.log(Object.prototype.toString.call(a)) // 报错
+// console.log(Object.prototype.toString.call(undefined)) // '[object Undefined]'
+// console.log(Object.prototype.toString.call('str')) // '[object String]'
+// console.log(Object.prototype.toString.call(1)) // '[object Number]'
+// console.log(Object.prototype.toString.call(true)) // '[object Boolean]'
+// console.log(Object.prototype.toString.call(Symbol())) // '[object Symbol]'
+// console.log(Object.prototype.toString.call([])) // '[object Array]'
+// console.log(Object.prototype.toString.call({})) // '[object Object]'
+// console.log(Object.prototype.toString.call(null)) // '[object Null]'
+// console.log(Object.prototype.toString.call(console.log)) // '[object Function]'
+
+// console.log(JSON.stringify([])) // '[]'
+// console.log(JSON.stringify({})) // '{}'
+
+// console.log(Boolean(undefined)) // false
+// console.log(Boolean(null))  // false
+// console.log(Boolean(''))  // false
+// console.log(Boolean(0)) // false
+// console.log(Boolean(false)) // false
+// console.log(Boolean(NaN)) // false
+// console.log(Boolean(-0))  // false
+
+// console.log(undefined == null)  // true
+// console.log(NaN == NaN) // false
+// console.log(isNaN(NaN)) // true
+
+console.log(1 + '2')  // '1'+'2'  => 12
+console.log(1 * '2')  // 1*2  => 2
+console.log([ 1, 2 ] + [ 3, 4 ])
+// => [1,2].toString() + [3,4].toString()
+// => '1,2'+'3,4'
+
+</script>
+</body>
+</html>

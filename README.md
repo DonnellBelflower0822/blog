@@ -1,1 +1,93 @@
-# blog
+# 清单
+- [x] html(5)
+  - 标签
+  - 语义化
+  - meta
+  - pug
+- css(3)
+  - 特性
+    - 层叠性
+    - 继承性
+  - 选择器
+  - css单位
+  - 盒子模型
+  - 布局
+    - 浮动
+    - 常见布局
+    - flex
+    - grid
+  - 动画
+  - bfc
+  - 命名
+  - stylus 
+- javascript语法
+  - 基础语法
+  - API
+  - json
+  - 原型链继承,instanceof
+  - this
+  - new
+  - 正则表达式
+  - 作用域,闭包
+    - 内存泄漏
+  - 模块
+  - 异步
+  - Event Loop
+  - call,apply,bind
+  - 防抖和截流
+  - promise
+  - 对象拷贝 
+  - 存储
+    - cookie,session
+    - localStorage,sessionStorage,IndexDB
+- es6
+- typescript
+- canvas
+- DOM
+  - 事件
+    - 事件触发三阶段
+    - 事件级别
+    - 注册事件
+    - 事件委托(代理) 
+  - offset,scroll,client
+  - 模拟dom
+- BOM
+- http
+  - 协议
+  - ajax
+  - 跨域
+    - jsonp
+    - cors
+    - document.domain
+    - postMessage
+  - 性能优化
+  - websocket
+  - 浏览器渲染原理
+    - 重绘，回流
+  - 调试
+  - 抓包
+- 移动端
+  - 适配
+  - 移动端事件
+  - 1px
+- vue
+  - 常用技巧
+  - 原理
+  - 服务端渲染
+- webpack
+  - 手写webpack配置
+  - 常用webpack配置
+  - eslint
+  - 测试
+  - 模拟数据
+- git
+- node
+- react
+- react native
+- electron
+- web安全
+  - xss
+  - csrf
+- 算法
+- 设计模式 
+ 

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<div id="app">
+  <div class="">{{name}}</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+let vm = new Vue({
+  el: '#app',
+  data () {
+    return {
+      name: 'allen'
+    }
+  },
+  // 对数据进行检测
+  beforeCreate () {
+    console.log('el:' + this.$el) // undefined
+    console.log('data:' + this.$data) // undefined
+  },
+  created () {
+    console.log('el:' + this.$el)   // undefined
+    console.log('data:' + this.$data) // 进行数据观测
+  },
+  // 挂载dom节点
+  beforeMount () {
+    console.log('el:' + this.$el) // 构载dom节点
+    /**
+     <div id="app">
+      <div class="">{{name}}</div>
+     </div>
+     */
+    console.log(this.$el) // 未把数据渲染进如dom
+    console.log('data:' + this.$data)
+  },
+  mounted () {
+    console.log('el:' + this.$el)
+    /**
+     <div id="app">
+        <div class="">allen</div>
+     </div>
+     */
+    console.log(this.$el)
+    console.log('data:' + this.$data)
+  },
+  // 数据data发生改变
+  beforeUpdate () {
+    console.log(this.$el)
+  },
+  updated () {
+
+  },
+  // 组件销毁
+  beforeDestroy () {
+
+  },
+  destroy () {
+
+  },
+  methods: {}
+})
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+// function f () {
+//   return {
+//     hello: 'world'
+//   }
+// }
+//
+// function f1 () {
+//   return
+//   {
+//     hello: 'world'
+//   }
+// }
+// console.log(f())
+// console.log(f1()) // undefined
+// console.log(0.1 + 0.2)
+//
+// function calculate (num) {
+//   return parseFloat(num.toFixed(10))
+// }
+//
+// console.log(calculate(0.1 + 0.33))
+// console.log(parseFloat((0.1 + 0.2).toFixed(10)))
+
+
+let obj = {
+  a: 1,
+  b: 2
+}
+let obj1 = {
+  a: 1,
+  b: 2
+}
+let obj2 = {
+  a: '1',
+  b: 2
+}
+console.log(JSON.stringify(obj)==JSON.stringify(obj1))  // true
+console.log(JSON.stringify(obj)==JSON.stringify(obj2))  // false
+
+</script>
+</body>
+</html>

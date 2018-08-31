@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+// function Person (name) {
+//   this.name = name
+// }
+// Person.prototype.say = function () {
+//   console.log('我的名字' + this.name)
+// }
+// let allen = new Person('allen')
+
+// 构造函数实现继承
+// function Animal () {
+//   this.name = '动物'
+//   this.talk = function () {
+//     console.log(this.name)
+//   }
+// }
+//
+// Animal.prototype.say = function () {
+//   console.log('我是' + this.name)
+// }
+// function Man () {
+//   Animal.call(this)
+//   this.sex = '男'
+// }
+//
+// let ren = new Man()
+// console.log(ren.name) // 动物
+// // ren.say() // 报错
+// ren.talk()
+
+
+function Animal () {
+  this.name = '动物'
+  this.play = [ 1, 2 ]
+}
+
+Animal.prototype.say = function () {
+  console.log(this.play)
+}
+
+function Man () {
+  Animal.call(this)
+  this.sex = '男'
+}
+
+Man.prototype = Object.create(Animal.prototype)
+Man.prototype.constructor = Man
+let yao = new Man()
+let ming = new Man()
+yao.play.push(3)
+yao.say()   // [1,2,3]
+ming.say()  // [1,2,3]
+</script>
+</body>
+</html>

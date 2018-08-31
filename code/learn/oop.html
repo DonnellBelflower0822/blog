@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+// function Person (name) {
+//   this.name = name
+// }
+//
+// Person.prototype.age = 29
+//
+// function _new (constructor, params) {
+//   // 把类数组(arguments)转换成数组
+//   var args = [].slice.call(arguments)
+//   // 取出构造函数
+//   constructor = args.shift()
+//   // 创建空对象，并继承构造函数的prototype属性
+//   // var context = {}
+//   // context.__proto__ = constructor.prototype
+//   var context = Object.create(constructor.prototype)
+//   // 执行构造函数
+//   let result = constructor.apply(context, args)
+//   // 如果返回结果是对象，直接返回，否则返回context对象
+//   return (typeof result === 'object' && result !== null) ? result : context
+// }
+//
+// var ming = _new(Person, 'tony')
+// console.log(ming)
+// console.log(ming.age)
+// var yao = new Person('allen')
+// console.log(yao === 1000)   // false
+// console.log(yao.name) // tom
+
+// function fn () {
+//   let arr = [].slice.call(arguments)
+//   console.log(arr)  // Array[4]
+//   console.log(arguments)  // Arguments[4]
+// }
+//
+// fn(1, 2, 3, 4)
+
+
+function Person (name) {
+  this.name = name
+}
+
+Person.prototype.age = 20
+
+var yao = new Person('allen')
+var ming = Object.create(yao)
+console.log(ming.age)
+ming.name='名'
+console.log(yao.name)
+console.log(ming.name)
+
+</script>
+</body>
+</html>
