@@ -6,54 +6,121 @@
 </head>
 <body>
 <script>
-// let num = 19891
-//
-// function check (num) {
-//   num += ''
-//   let str = ''
-//   for (let i = num.length - 1; i >= 0; i--) {
-//     str += num[ i ]
-//   }
-//   return str === num
-// }
-//
-// console.log(check(num))
+  // let num = 19891
+  //
+  // function check (num) {
+  //   num += ''
+  //   let str = ''
+  //   for (let i = num.length - 1; i >= 0; i--) {
+  //     str += num[ i ]
+  //   }
+  //   return str === num
+  // }
+  //
+  // console.log(check(num))
 
-// 冒泡
-var arr = [ 3, 1, 46, 223, 62, 63, 7, 34 ]
+  // 冒泡
+  // var arr = [ 3, 1, 46, 223, 62, 63, 7, 34 ]
 
-// let length = arr.length
-// for (let i = 0; i < length; i++) {
-//   for (let j = i + 1; j < length; j++) {
-//     let left = arr[ i ]
-//     let right = arr[ j ]
-//     if (left > right) {
-//       arr[ i ] = right
-//       arr[ j ] = left
-//     }
-//   }
-// }
-// console.log(arr)
+  // let length = arr.length
+  // for (let i = 0; i < length; i++) {
+  //   for (let j = i + 1; j < length; j++) {
+  //     let left = arr[ i ]
+  //     let right = arr[ j ]
+  //     if (left > right) {
+  //       arr[ i ] = right
+  //       arr[ j ] = left
+  //     }
+  //   }
+  // }
+  // console.log(arr)
 
-// 选择排序
+  // 选择排序
 
-let length = arr.length
-let min_index
-let tmp
-for (let i = 0; i < length; i++) {
-  min_index = i
-  for (let j = i + 1; j < length; j++) {
-    if (arr[ min_index ] > arr[ j ]) {
-      min_index = j
+  // let length = arr.length
+  // let min_index
+  // let tmp
+  // for (let i = 0; i < length; i++) {
+  //   min_index = i
+  //   for (let j = i + 1; j < length; j++) {
+  //     if (arr[ min_index ] > arr[ j ]) {
+  //       min_index = j
+  //     }
+  //   }
+  //   if (min_index !== i) {
+  //     tmp = arr[ i ]
+  //     arr[ i ] = arr[ min_index ]
+  //     arr[ min_index ] = tmp
+  //   }
+  // }
+  // console.log(arr)
+  var arr = [1, 3, 20, 5, 2, 9, 6, 4, 80, 9, 4]
+  let length = arr.length
+  // for (let i = 0; i < length; i++) {
+  //   for (let j = i + 1; j < length; j++) {
+  //     if (arr[i] > arr[j]) {
+  //       let tmp = arr[i]
+  //       arr[i] = arr[j]
+  //       arr[j] = tmp
+  //     }
+  //   }
+  // }
+  // console.log(arr)
+
+  // for (let i = 0; i < length; i++) {
+  //   let minIndex = i
+  //   for (let j = i + 1; j < length; j++) {
+  //     if (arr[minIndex] > arr[j]) {
+  //       minIndex = j
+  //     }
+  //   }
+  //   if (minIndex !== i) {
+  //     let tmp = arr[minIndex]
+  //     arr[minIndex] = arr[i]
+  //     arr[i] = tmp
+  //   }
+  // }
+  // console.log(arr)
+
+  // function quickSort (arr) {
+  //   // 如果到头了
+  //   if (arr.length <= 1) return arr
+  //   // 取中间index
+  //   let mid = Math.floor(arr.length / 2)
+  //   let left = []
+  //   let right = []
+  //   // 取中间的值，splice一面遍历
+  //   let middleValue = arr.splice(mid, 1)[0]
+  //   for (let i = 0; i < arr.length; i++) {
+  //     if (arr[i] < middleValue) {
+  //       left.push(arr[i])
+  //     } else {
+  //       right.push(arr[i])
+  //     }
+  //   }
+  //   return quickSort(left).concat([middleValue], quickSort(right))
+  // }
+  //
+  // console.log(quickSort(arr))
+
+  var arr1 = [1, 2, 3, 4, 4, 5, 6, 9, 9, 20, 80]
+
+  function search (arr, leftIndex, rightIndex, value) {
+    if (leftIndex > rightIndex) return -1
+    var middleIndex = leftIndex + Math.floor((rightIndex - 1) / 2)
+    if (arr[middleIndex] === value) {
+      return middleIndex
+    } else if (arr[middleIndex] < value) {
+      // 右侧
+      return search(arr, middleIndex + 1, rightIndex)
+    } else if (arr[middleIndex] > value) {
+      // 左侧
+      return search(arr, leftIndex, middleIndex - 1)
     }
   }
-  if (min_index !== i) {
-    tmp = arr[ i ]
-    arr[ i ] = arr[ min_index ]
-    arr[ min_index ] = tmp
-  }
-}
-console.log(arr)
+
+  console.log(search(arr1, 0, arr1.length, 5))
+
 
 </script>
 </body>

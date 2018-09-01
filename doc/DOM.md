@@ -1,4 +1,7 @@
 # DOM
+- 解析url各部分
+- https://segmentfault.com/a/1190000015961743
+
 ## DOM事件级别
 - DOM0 `element.onclick=function(){}`
 - DOM1 `element.addEventListener('click',function(){},false)`
@@ -179,4 +182,7 @@ history.back()  // 回退
 history.forward() // 前进
 ```
 
-## 解析url各部分
+## domContentLoaded/onLoad
+- domContentLoaded：dom渲染完即可执行，此时图片 视频还可能没有加载完
+- onLoad：页面的全部资源加载完才会执行，包括图片 视频等
+

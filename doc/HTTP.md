@@ -4,6 +4,7 @@
 - 如何进行网站性能优化
 - HTTP状态码及其含义
 - https://github.com/poetries/FE-Interview-Questions/blob/master/HTTP.md
+- 安全问题
 
 ## ajax
 > 异步的javascript和xml
@@ -225,7 +226,13 @@ sessionStorage.setItem('key','value')
 sessionStorage.removeItem('key')
 sessionStorage.clear()
 ```
- 
+
+##  从输入url到得到html的详细过程
+- 浏览器根据dns服务器得到域名的ip地址
+- 向这个ip服务器发送http请求
+- 服务器收到，处理并返回http请求
+- 浏览器接收到返回内容
+
 ## 浏览器渲染过程
 - 拿到html经过解析成DOM树
 - 拿到css经过解析成css树
@@ -240,6 +247,7 @@ sessionStorage.clear()
 - 小图片使用base64
 - 静态资源开启gzip压缩
 - 组件异步加载
+- 按需引入第三方包
 
 ## 重排Reflow
 > 当可见节点位置及尺寸发生变化时会发生重排
@@ -279,3 +287,18 @@ sessionStorage.clear()
 - 避免使用css表达式(expression)，因为每次调用都会重新计算值（包括加载页面）
 - 尽量使用 css 属性简写，如：用 border 代替 border-width, border-style, border-color
 - 批量修改元素样式：elem.className 和 elem.style.cssText 代替 elem.style.xxx
+
+## 跨域携带cookie
+```
+// 前端
+xhr.withCredentials=true
+// 后端
+Access-Control-Allow-Origin: a.com
+Access-Control-Allow-Credentials: true
+```
+
+## 安全问题
+### xss跨站脚本攻击
+```vue
+v-html
+```

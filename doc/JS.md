@@ -8,6 +8,11 @@
 > https://juejin.im/post/5b16800fe51d4506ae719bae
 - https://zhuanlan.zhihu.com/p/25863288
 
+## js组成
+- 核心 ECMAScript
+- 文档对象模型 DOM
+- 浏览器对象模型 BOM
+
 ## 数据类型
 - 基本数据类型：`undefined,string,number,boolean`
 - 引用数据类型：`null,object`
@@ -79,6 +84,7 @@ console.log(Boolean(-0))  // false
 ```javascript
 console.log(undefined == null)  // true
 console.log(NaN == NaN) // false
+console.log(isNaN(NaN)) // true
 console.log(isNaN(NaN)) // true
 ```
 
@@ -460,4 +466,54 @@ console.log(arr1) // [16,20]
 * .map(val,index,data)
 */
 ["1", "2", "3"].map(parseInt) // [1,NaN,NaN]
+```
+
+## 对象深克隆
+```javascript
+// 对于正则，undefined，函数就无能为力了
+var obj = {
+    a: 1,
+    c: 'str',
+    h: null,
+    d: [1, 2, 3],
+    e: {
+      name: 'allen'
+    },
+    b: undefined,
+    f: function () {
+      console.log('function')
+    },
+    g: /[a-zA-Z]/,
+}
+console.log(JSON.parse(JSON.stringify(obj)))
+/**
+var obj = {
+  a:1,
+  c:'str',
+  d:[1,2,3],
+  e:{
+    name:'allen'
+  },
+  g:{},
+  h:null
+}
+*/
+```
+
+### 考虑数组和对象的深克隆
+```javascript
+function deepClone (origin, target = {}) {
+    for (let key in origin) {
+      // 判断自身属性是否存在
+      if (origin.hasOwnProperty(key)) {
+        if (typeof origin[key] === 'object' && origin[key] !== null) {
+          target[key] = Object.prototype.toString.call(origin[key]) === '[object Array]' ? [] : {}
+          deepClone(origin[key], target[key])
+        } else {
+          target[key] = origin[key]
+        }
+      }
+    }
+    return target
+}
 ```

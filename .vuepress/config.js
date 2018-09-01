@@ -52,6 +52,7 @@ function genSidebarConfig (title) {
         'CSS',
         'blog',
         'vue',
+        'mp',
         'HTTP',
         'arithmetic',
       ]

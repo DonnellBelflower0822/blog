@@ -1,6 +1,6 @@
 # 算法
 - 用JS实现千位分隔符
-- 快速排序
+- 插入排序
 
 ## 判断一个单词是否是回文
 > mamam,redivider
@@ -16,78 +16,103 @@ function check (num) {
 }
 ```
 
-## 去掉一组整型数组重复的值
-
-
-## 冒泡
+## 数组去重
 ```javascript
-var arr = [ 3, 1, 46, 223, 62, 63, 7, 34 ]
+let a = [1, '1', 1, NaN, NaN, undefined, undefined, null, null]
+// 使用set
+console.log([...new Set(a)])
+
+// 使用对象的key
+function unique (arr) {
+let obj = {}
+arr.forEach(item => {
+  if (!obj[item]) {
+    obj[item] = true
+  }
+})
+return Object.keys(obj)
+}
+console.log(unique(a))
+```
+
+## 冒泡排序
+```javascript
+var arr = [1, 3, 20, 5, 2, 9, 6, 4, 80, 9, 4]
 let length = arr.length
 for (let i = 0; i < length; i++) {
-  for (let j = i + 1; j < length; j++) {
-    let left = arr[ i ]
-    let right = arr[ j ]
-    if (left > right) {
-      arr[ i ] = right
-      arr[ j ] = left
+    for (let j = i + 1; j < length; j++) {
+        if (arr[i] > arr[j]) {
+            let tmp = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tmp
+        }
     }
-  }
 }
+console.log(arr)
 ```
 
 ## 选择排序
+> 一趟确定最小值的下标
 ```javascript
-/**
-* 选择排序
-*  每一趟找最小值的下标与当前趟数下标的换位置
-* @param arr
-*/
-function choice_sort (arr) {
+var arr = [1, 3, 20, 5, 2, 9, 6, 4, 80, 9, 4]
 let length = arr.length
-let min_index, tmp
 for (let i = 0; i < length; i++) {
-  // 初始化这一趟的最小值下标
-  min_index = i
-  for (let j = i + 1; j < length; j++) {
-      // 寻找最小数
-      if (arr[min_index] > arr[j]) {
-        min_index = j
+    let minIndex = i
+    for (let j = i + 1; j < length; j++) {
+      if (arr[minIndex] > arr[j]) {
+        minIndex = j
       }
     }
-    // 一趟结束了，可以换位置
-    tmp = arr[i]
-    arr[i] = arr[min_index]
-    arr[min_index] = tmp
-  }
-  return arr
+    if (minIndex !== i) {
+      let tmp = arr[minIndex]
+      arr[minIndex] = arr[i]
+      arr[i] = tmp
+    }
 }
+console.log(arr)
+```
+
+## 快速排序
+```javascript
+function quickSort (arr) {
+    // 如果到头了
+    if (arr.length <= 1) return arr
+    // 取中间index
+    let mid = Math.floor(arr.length / 2)
+    let left = []
+    let right = []
+    // 取中间的值，splice一面遍历
+    let middleValue = arr.splice(mid, 1)[0]
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i] < middleValue) {
+        left.push(arr[i])
+      } else {
+        right.push(arr[i])
+      }
+    }
+    return quickSort(left).concat([middleValue], quickSort(right))
+}
+
+console.log(quickSort(arr))
 ```
 
 ## 二分查找
-```javascript
- /**
-    * 二分查找
-    * @param arr 要查找的数组
-    * @param item 要查找的item
-    * @param startIndex 开始的索引
-    * @param endIndex 结束的索引
-    * @returns {*}
-    */
-function search (arr, item, startIndex, endIndex) {
-    if (startIndex > endIndex) {
-      // 递归返回
-      return false
-    }
-    let midIndex = Math.floor((endIndex + startIndex) / 2)
-    let midVal = arr[midIndex]
-    if (midVal > item) {
-      // 查找的数在中间索引的左侧
-      return search(arr, item, startIndex, midIndex - 1)
-    } else if (midVal < item) {
-      // 查找的数在中间索引的右侧
-      return search(arr, item, midIndex + 1, endIndex)
-    } else {
-      return midIndex
-    }
+
+```
+var arr1 = [1, 2, 3, 4, 4, 5, 6, 9, 9, 20, 80]
+function search (arr, leftIndex, rightIndex, value) {
+if (leftIndex > rightIndex) return -1
+var middleIndex = leftIndex + Math.floor((rightIndex - 1) / 2)
+if (arr[middleIndex] === value) {
+  return middleIndex
+} else if (arr[middleIndex] < value) {
+  // 右侧
+  return search(arr, middleIndex + 1, rightIndex)
+} else if (arr[middleIndex] > value) {
+  // 左侧
+  return search(arr, leftIndex, middleIndex - 1)
 }
+}
+
+console.log(search(arr1, 0, arr1.length, 5))
 ```

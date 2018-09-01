@@ -3,6 +3,7 @@
 - 虚拟dom
 - 测试
 - vuex原理
+- vuerouter原理
 - 数据双向绑定
 - 生命周期
 - computed，filters，watch的区别
@@ -12,6 +13,21 @@
 
 ## 生命周期
 > 创建 => 挂载 => 更新 => 销毁
+
+### 详细点
+#### beforeCreate/created
+> 请求后端数据
+- beforeCreate: 不能获取props/data/methods
+- created:能返回data,props,methods
+
+#### beforeMount/mounted
+> dom操作
+- beforeMount:能拿到dom，但真实数据没挂载上去
+- mounted:挂载dom
+
+#### beforeUpdate/updated
+#### beforeDestroy & destroyed
+
 
 ```vue
 // 对数据进行检测
@@ -163,3 +179,91 @@ export default {
   }
 }
 ```
+
+## `this.$router/this.$route`
+- `this.$router`为VueRouter实例，想要导航到不同URL，则使用$router.push方法
+- `this.$route`为当前router跳转对象，里面可以获取name、path、query、params等
+
+## scoped
+> 在Vue文件中的style标签上有一个特殊的属性，scoped。当一个style标签拥有scoped属性时候，它的css样式只能用于当前的Vue组件，可以使组件的样式不相互污染。如果一个项目的所有style标签都加上了scoped属性，相当于实现了样式的模块化。
+
+### 原理
+> 给元素一个独一无二的动态属性，给css选择器增加一个对应的属性选择器
+```vue
+.example[data-v-5558831a] {
+  color: red;
+}
+<template>
+    <div class="example" data-v-5558831a>scoped测试案例</div>
+</template>
+```
+
+### 问题：
+> 修改第三方组件库的时候出先scoped修改不了，不带scoped修改的了
+#### 方案一：使用样式穿透
+```less
+// 使用 /deep/ 实现样式穿透
+.wrapper /deep/ .el-button{
+    background:#fff;
+}
+```
+#### 方案二：增加全局基础样式文件，在入口文件引入
+
+## 组件设计思想
+- 这个组件可否再分
+- 这个组件是否可以复用于其他类似场景
+- 设计符合规范和大众习惯
+- 留一些钩子给父组件调用
+
+## vue方法的比较
+- watch 单一数据的监听，方法名于监听数据名相同，可以得到修改前和修改后的值
+- computed和methods都是方法，方法内部都有数据依赖
+- computed放置计算属性，js里面调用不需要加(),如果依赖值没发生变化，不管调用几次，都只执行一次
+- methods放操作方法，js里面调用需要加()，执行几次，就计算值就会执行几次
+
+## vue-router守卫
+```
+// main.js(全局守卫)
+router.beforeEach((to,from,next)=>{
+
+})
+router.beforeResolve((to,from,next)=>{
+
+})
+router.afterEach((to,from,next)=>{
+
+})
+// router.js(路由独享守卫)
+export default new VueRouter({
+    routes:[
+        {
+            path:'/',
+            component:foo,
+            beforeEnter(to,from,next){
+
+            }
+        }
+    ]
+})
+// index.vue (路由组件内的守卫)
+export default{
+    beforeRouteEnter(to,from,next){
+        // 获取不到this
+        // 变通的使用this
+        next(vm=>{
+            // vm代表this
+            vm._fetch()
+        })
+    },
+    beforeRouteUpdate(to,from,next){
+        // 可以访问this
+        // 主要用于/foo/:id在/foo/1和/foo/2之间跳转
+    },
+    beforeRouteLeave(to,from,next){
+
+    }
+}
+```
+
+## vue大概的原理
+- https://segmentfault.com/a/1190000006599500

@@ -7,7 +7,8 @@
 - meta
 - 视差滚动效果
 - 布局
-> https://juejin.im/post/5aa252ac518825558001d5de
+    - https://juejin.im/post/5aa252ac518825558001d5de
+    - https://segmentfault.com/a/1190000015750769
 
 - BFC
 > https://juejin.im/post/59b73d5bf265da064618731d

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+<script>
+  var obj = {
+    a: 1,
+    c: 'str',
+    h: null,
+    d: [1, 2, 3],
+    e: {
+      name: 'allen'
+    },
+    b: undefined,
+    f: function () {
+      console.log('function')
+    },
+    g: /[a-zA-Z]/,
+  }
+
+  function deepClone (origin, target = {}) {
+    let toStr = Object.prototype.toString
+    let arrStr = '[object Array]'
+    for (let key in origin) {
+      // 判断自身属性是否存在
+      if (origin.hasOwnProperty(key)) {
+        if (typeof origin[key] === 'object' && origin[key] !== null) {
+          target[key] = toStr.call(origin[key]) === arrStr ? [] : {}
+          deepClone(origin[key], target[key])
+        } else {
+          target[key] = origin[key]
+        }
+      }
+    }
+    return target
+  }
+
+  var obj1 = deepClone(obj, {})
+  obj.d.push(4)
+  console.log(obj1)
+  // console.log(JSON.parse(JSON.stringify(obj)))
+  /**
+   var obj = {
+      a:1,
+      c:'str',
+      d:[1,2,3],
+      e:{
+        name:'allen'
+      },
+      g:{},
+      h:null
+    }
+   */
+</script>
+</body>
+</html>
