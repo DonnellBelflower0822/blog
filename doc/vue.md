@@ -267,3 +267,13 @@ export default{
 
 ## vue大概的原理
 - https://segmentfault.com/a/1190000006599500
+
+## Proxy 与 Object.defineProperty 对比
+- 只能对属性进行数据劫持，所以需要深度遍历整个对象
+- 对于数组不能监听到数据的变化
+
+### Object.defineProperty在数组监听方面的hack方法
+> 在调用街区
+
+
+

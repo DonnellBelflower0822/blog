@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<div id="app">{{username}}</div>
+<div id="a">{{username}}</div>
+<script src="MVVM.js"></script>
+<script>
+  var data = {
+    name: 'yellow',
+    arr: [1, 2]
+  }
+  let updateValue = value => {
+    document.getElementById('app').innerText = value
+  }
+  let update = value => {
+    document.getElementById('a').innerText = value + ''
+  }
+  new Observer(data)
+  new Watcher(data, 'name', updateValue)
+  new Watcher(data, 'arr', update)
+  data.name = 'tom'
+  // data.arr.push(12)
+  // console.log(data)
+</script>
+</body>
+</html>

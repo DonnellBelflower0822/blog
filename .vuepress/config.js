@@ -28,18 +28,36 @@ module.exports = {
             link: '/doc/',
           },
           {
+            text: '笔记',
+            link: '/note/',
+          },
+          {
             text: '联系我',
             link: '/concat/'
           }
         ],
         sidebar: {
-          '/doc/': genSidebarConfig('指南')
+          '/doc/': genSidebarConfig('指南'),
+          '/note/': genSidebarConfig1('笔记'),
         }
       }
     }
   }
 }
-
+function genSidebarConfig1 (title) {
+  return [
+    {
+      title,
+      collapsable: false,
+      children: [
+        'base',
+        'oop',
+        'dom',
+        'bom'
+      ]
+    }
+  ]
+}
 function genSidebarConfig (title) {
   return [
     {
