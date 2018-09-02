@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+</head>
+<body>
+<script>
+  // console.log([] + {})  // [object Object]
+  // console.log({} + [])  // [object Object]
+  // console.log(Array.from(new Array(101).keys()))
+
+  var obj = {
+    a: 1,
+    c: 'str',
+    d: [1, 2, 3],
+    e: {
+      name: 'allen',
+      age: {
+        last: 24,
+        now: 25
+      }
+    }
+  }
+
+  function deepClone (obj, target = {}) {
+    for (let key in obj) {
+      if (typeof obj[key] !== 'object') {
+        target[key] = obj[key]
+      } else {
+        target[key] = Object.prototype.toString.call(obj[key]) === '[object Array]' ? [] : {}
+        deepClone(obj[key], target[key])
+      }
+    }
+    return target
+  }
+
+  var o = deepClone(obj, {})
+  obj.d.push(4)
+  console.log(o)
+</script>
+</body>
+</html>

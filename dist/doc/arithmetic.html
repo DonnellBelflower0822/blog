@@ -7,7 +7,7 @@
     <meta name="description" content="我要好好">
     
     
-    <link rel="preload" href="/inventory/dist/assets/css/0.styles.1f692f57.css" as="style"><link rel="preload" href="/inventory/dist/assets/js/app.ba50af0c.js" as="script"><link rel="preload" href="/inventory/dist/assets/js/12.380f4ef3.js" as="script"><link rel="prefetch" href="/inventory/dist/assets/js/3.e313a01f.js"><link rel="prefetch" href="/inventory/dist/assets/js/2.4d942548.js"><link rel="prefetch" href="/inventory/dist/assets/js/4.382ec2a0.js"><link rel="prefetch" href="/inventory/dist/assets/js/5.896de1f3.js"><link rel="prefetch" href="/inventory/dist/assets/js/6.e447072e.js"><link rel="prefetch" href="/inventory/dist/assets/js/7.1c21eeeb.js"><link rel="prefetch" href="/inventory/dist/assets/js/8.537ae93f.js"><link rel="prefetch" href="/inventory/dist/assets/js/9.e15466f8.js"><link rel="prefetch" href="/inventory/dist/assets/js/10.c2312c2b.js"><link rel="prefetch" href="/inventory/dist/assets/js/11.eca3bf43.js"><link rel="prefetch" href="/inventory/dist/assets/js/13.fdfd9546.js"><link rel="prefetch" href="/inventory/dist/assets/js/14.4586cbbf.js"><link rel="prefetch" href="/inventory/dist/assets/js/15.b46f307d.js">
+    <link rel="preload" href="/inventory/dist/assets/css/0.styles.1f692f57.css" as="style"><link rel="preload" href="/inventory/dist/assets/js/app.986b3ab3.js" as="script"><link rel="preload" href="/inventory/dist/assets/js/12.36dce918.js" as="script"><link rel="prefetch" href="/inventory/dist/assets/js/3.e313a01f.js"><link rel="prefetch" href="/inventory/dist/assets/js/2.4d942548.js"><link rel="prefetch" href="/inventory/dist/assets/js/4.382ec2a0.js"><link rel="prefetch" href="/inventory/dist/assets/js/5.896de1f3.js"><link rel="prefetch" href="/inventory/dist/assets/js/6.e447072e.js"><link rel="prefetch" href="/inventory/dist/assets/js/7.1c21eeeb.js"><link rel="prefetch" href="/inventory/dist/assets/js/8.537ae93f.js"><link rel="prefetch" href="/inventory/dist/assets/js/9.9fb55915.js"><link rel="prefetch" href="/inventory/dist/assets/js/10.c2312c2b.js"><link rel="prefetch" href="/inventory/dist/assets/js/11.eca3bf43.js"><link rel="prefetch" href="/inventory/dist/assets/js/13.fdfd9546.js"><link rel="prefetch" href="/inventory/dist/assets/js/14.4586cbbf.js"><link rel="prefetch" href="/inventory/dist/assets/js/15.b46f307d.js">
     <link rel="stylesheet" href="/inventory/dist/assets/css/0.styles.1f692f57.css">
   </head>
   <body>
@@ -82,27 +82,27 @@ console<span class="token punctuation">.</span><span class="token function">log<
 <span class="token punctuation">}</span>
 
 console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">quickSort</span><span class="token punctuation">(</span>arr<span class="token punctuation">)</span><span class="token punctuation">)</span>
-</code></pre></div><h2 id="二分查找"><a href="#二分查找" aria-hidden="true" class="header-anchor">#</a> 二分查找</h2> <div class="language- extra-class"><pre class="language-text"><code>var arr1 = [1, 2, 3, 4, 4, 5, 6, 9, 9, 20, 80]
-function search (arr, leftIndex, rightIndex, value) {
-if (leftIndex &gt; rightIndex) return -1
-var middleIndex = leftIndex + Math.floor((rightIndex - 1) / 2)
-if (arr[middleIndex] === value) {
-  return middleIndex
-} else if (arr[middleIndex] &lt; value) {
-  // 右侧
-  return search(arr, middleIndex + 1, rightIndex)
-} else if (arr[middleIndex] &gt; value) {
-  // 左侧
-  return search(arr, leftIndex, middleIndex - 1)
-}
-}
+</code></pre></div><h2 id="二分查找"><a href="#二分查找" aria-hidden="true" class="header-anchor">#</a> 二分查找</h2> <div class="language-javascript extra-class"><pre class="language-javascript"><code><span class="token keyword">var</span> arr1 <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token number">1</span><span class="token punctuation">,</span> <span class="token number">2</span><span class="token punctuation">,</span> <span class="token number">3</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">4</span><span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">,</span> <span class="token number">6</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">9</span><span class="token punctuation">,</span> <span class="token number">20</span><span class="token punctuation">,</span> <span class="token number">80</span><span class="token punctuation">]</span>
+<span class="token keyword">function</span> <span class="token function">search</span> <span class="token punctuation">(</span>arr<span class="token punctuation">,</span> leftIndex<span class="token punctuation">,</span> rightIndex<span class="token punctuation">,</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>leftIndex <span class="token operator">&gt;</span> rightIndex<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span>
+<span class="token keyword">var</span> middleIndex <span class="token operator">=</span> leftIndex <span class="token operator">+</span> Math<span class="token punctuation">.</span><span class="token function">floor</span><span class="token punctuation">(</span><span class="token punctuation">(</span>rightIndex <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">/</span> <span class="token number">2</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>arr<span class="token punctuation">[</span>middleIndex<span class="token punctuation">]</span> <span class="token operator">===</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> middleIndex
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>arr<span class="token punctuation">[</span>middleIndex<span class="token punctuation">]</span> <span class="token operator">&lt;</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 右侧</span>
+  <span class="token keyword">return</span> <span class="token function">search</span><span class="token punctuation">(</span>arr<span class="token punctuation">,</span> middleIndex <span class="token operator">+</span> <span class="token number">1</span><span class="token punctuation">,</span> rightIndex<span class="token punctuation">)</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>arr<span class="token punctuation">[</span>middleIndex<span class="token punctuation">]</span> <span class="token operator">&gt;</span> value<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 左侧</span>
+  <span class="token keyword">return</span> <span class="token function">search</span><span class="token punctuation">(</span>arr<span class="token punctuation">,</span> leftIndex<span class="token punctuation">,</span> middleIndex <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
 
-console.log(search(arr1, 0, arr1.length, 5))
-</code></pre></div></div> <div class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">8/31/2018, 7:31:28 AM</span></div></div> <div class="page-nav"><p class="inner"><span class="prev">
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token function">search</span><span class="token punctuation">(</span>arr1<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> arr1<span class="token punctuation">.</span>length<span class="token punctuation">,</span> <span class="token number">5</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+</code></pre></div></div> <div class="page-edit"><!----> <div class="last-updated"><span class="prefix">上次更新: </span> <span class="time">9/1/2018, 7:55:38 AM</span></div></div> <div class="page-nav"><p class="inner"><span class="prev">
         ←
         <a href="/inventory/dist/doc/HTTP.html" class="prev">
           HTTP
         </a></span> <!----></p></div> </div> <!----></div></div>
-    <script src="/inventory/dist/assets/js/12.380f4ef3.js" defer></script><script src="/inventory/dist/assets/js/app.ba50af0c.js" defer></script>
+    <script src="/inventory/dist/assets/js/12.36dce918.js" defer></script><script src="/inventory/dist/assets/js/app.986b3ab3.js" defer></script>
   </body>
 </html>

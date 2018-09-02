@@ -98,7 +98,7 @@ console.log(quickSort(arr))
 
 ## 二分查找
 
-```
+```javascript
 var arr1 = [1, 2, 3, 4, 4, 5, 6, 9, 9, 20, 80]
 function search (arr, leftIndex, rightIndex, value) {
 if (leftIndex > rightIndex) return -1

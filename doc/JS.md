@@ -106,14 +106,14 @@ console.log([ 1, 2 ] + [ 3, 4 ])  // 1,23,4
 // => [1,2].toString() + [3,4].toString()
 // => '1,2'+'3,4'
 
-console.log([] + {})  // ?
-console.log({} + [])  // ?
+// [].toString + Object.prototype.toString.call({})
+// ""+"[object Object]"
+console.log([] + {})  // [object Object]
+console.log({} + [])  // [object Object]
 ```
 
 ## 异步编程
 ### 回调函数
-> 是解决异步的核心代码
-
 ```javascript
 function myTimer (callback, time) {
   setTimeout(function () {
@@ -409,13 +409,6 @@ let obj2 = {
 }
 console.log(JSON.stringify(obj)==JSON.stringify(obj1))  // true
 console.log(JSON.stringify(obj)==JSON.stringify(obj2))  // false
-```
-
-## ? 对象克隆
-### JSON.parse
-- 无法对函数，正则等特殊对象的克隆
-```javascript
-const newObj = JSON.parse(JSON.stringify(oldObj))
 ```
 
 ## 不用遍历生成0->100的数组
