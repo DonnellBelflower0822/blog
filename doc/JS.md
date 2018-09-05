@@ -494,6 +494,8 @@ var obj = {
 ```
 
 ### 考虑数组和对象的深克隆
+> 遍历到只剩下基本数据类型，然后完成复制
+
 ```javascript
 function deepClone (origin, target = {}) {
     for (let key in origin) {

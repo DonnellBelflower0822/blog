@@ -101,17 +101,17 @@ console.log(quickSort(arr))
 ```javascript
 var arr1 = [1, 2, 3, 4, 4, 5, 6, 9, 9, 20, 80]
 function search (arr, leftIndex, rightIndex, value) {
-if (leftIndex > rightIndex) return -1
-var middleIndex = leftIndex + Math.floor((rightIndex - 1) / 2)
-if (arr[middleIndex] === value) {
-  return middleIndex
-} else if (arr[middleIndex] < value) {
-  // 右侧
-  return search(arr, middleIndex + 1, rightIndex)
-} else if (arr[middleIndex] > value) {
-  // 左侧
-  return search(arr, leftIndex, middleIndex - 1)
-}
+    if (leftIndex > rightIndex) return -1
+    var middleIndex = leftIndex + Math.floor((rightIndex - 1) / 2)
+    if (arr[middleIndex] === value) {
+      return middleIndex
+    } else if (arr[middleIndex] < value) {
+      // 右侧
+      return search(arr, middleIndex + 1, rightIndex)
+    } else if (arr[middleIndex] > value) {
+      // 左侧
+      return search(arr, leftIndex, middleIndex - 1)
+    }
 }
 
 console.log(search(arr1, 0, arr1.length, 5))
