@@ -44,6 +44,7 @@ module.exports = {
     }
   }
 }
+
 function genSidebarConfig1 (title) {
   return [
     {
@@ -53,11 +54,20 @@ function genSidebarConfig1 (title) {
         'base',
         'oop',
         'dom',
-        'bom'
+        'bom',
+        'htmlAndCss',
+        'vue',
+        'mp',
+        'canvas',
+        'React',
+        'http',
+        'node',
+        'arithmetic',
       ]
     }
   ]
 }
+
 function genSidebarConfig (title) {
   return [
     {
