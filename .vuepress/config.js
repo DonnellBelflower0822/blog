@@ -1,3 +1,40 @@
+const docMap = [
+  {
+    title: '基础',
+    link: '/doc/',
+    children: [
+      'JS',
+      'OOP',
+      'DOM',
+      'CSS',
+      'blog',
+      'vue',
+      'mp',
+      'HTTP',
+      'arithmetic',
+    ]
+  },
+  {
+    title: 'electron',
+    link: '/electronjs/',
+    children: [
+      'base'
+    ]
+  }
+];
+
+const nav = docMap.map(({ title, link }) => ({ text: title, link }));
+const sidebar = docMap.reduce((obj, { link, title, children }) => ({
+  ...obj,
+  [link]: [
+    {
+      title,
+      children,
+      collapsable: false
+    }
+  ]
+}), {});
+
 module.exports = {
   base: '/blog/dist/',
   dest: 'dist',
@@ -5,7 +42,7 @@ module.exports = {
     '/': {
       lang: 'en-zh',
       title: '学习笔记',
-      description: '我要好好'
+      description: '天天向上'
     }
   },
   themeConfig: {
@@ -22,68 +59,9 @@ module.exports = {
             buttonText: '刷新'
           }
         },
-        nav: [
-          {
-            text: '指南',
-            link: '/doc/',
-          },
-          {
-            text: '笔记',
-            link: '/note/',
-          },
-          {
-            text: '联系我',
-            link: '/concat/'
-          }
-        ],
-        sidebar: {
-          '/doc/': genSidebarConfig('指南'),
-          '/note/': genSidebarConfig1('笔记'),
-        }
+        nav,
+        sidebar
       }
     }
   }
-}
-
-function genSidebarConfig1 (title) {
-  return [
-    {
-      title,
-      collapsable: false,
-      children: [
-        'base',
-        'oop',
-        'dom',
-        'bom',
-        'htmlAndCss',
-        'vue',
-        'mp',
-        'canvas',
-        'React',
-        'http',
-        'node',
-        'arithmetic',
-      ]
-    }
-  ]
-}
-
-function genSidebarConfig (title) {
-  return [
-    {
-      title,
-      collapsable: false,
-      children: [
-        'JS',
-        'OOP',
-        'DOM',
-        'CSS',
-        'blog',
-        'vue',
-        'mp',
-        'HTTP',
-        'arithmetic',
-      ]
-    }
-  ]
-}
+};
