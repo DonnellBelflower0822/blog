@@ -20,6 +20,9 @@ module.exports = {
           children: [
             '/basic/es-basic/',
             '/basic/es-basic/transform',
+            '/basic/es-basic/object',
+            '/basic/es-basic/array',
+            '/basic/es-basic/function',
           ]
         },
         {
@@ -28,6 +31,7 @@ module.exports = {
           children: [
             '/basic/es-adv/',
             '/basic/es-adv/context',
+            '/basic/es-adv/async',
           ]
         }
       ],
