@@ -1,6 +1,9 @@
 # 工程化篇
 
 ## 模块化
+- tree shake
+
+## babel 
 
 ## webpack
 - 配置
@@ -8,6 +11,7 @@
   - 常用loader，plugin
   - 优化
 - 手写
+  - tapable
   - webpack
   - loader
   - plugin
@@ -24,3 +28,5 @@
 ## monorepo
 
 ## lenra
+
+## 脚手架

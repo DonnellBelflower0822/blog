@@ -19,6 +19,7 @@ module.exports = {
           path: '/basic/es-basic/',
           children: [
             '/basic/es-basic/',
+            '/basic/es-basic/transform',
           ]
         }
       ],

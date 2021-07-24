@@ -15,6 +15,7 @@
 - Set/Map数据结构
 - Reflect
 - Iterator
+- Decorator
 - 工具
   - 深浅拷贝
   - 防抖截流
