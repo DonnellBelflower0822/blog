@@ -5,20 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "vuepress dev .",
+    "dev": "vuepress dev src",
     "build": "vuepress build ."
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/xuxiaozhou/inventory.git"
+    "url": "git+https://github.com/xuxiaozhou/web.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/xuxiaozhou/inventory/issues"
+    "url": "https://github.com/xuxiaozhou/web/issues"
   },
-  "homepage": "https://github.com/xuxiaozhou/inventory#readme",
+  "homepage": "https://github.com/xuxiaozhou/web#readme",
   "devDependencies": {
-    "vuepress": "^0.14.2"
+    "vuepress": "^1.8.2"
   }
 }
