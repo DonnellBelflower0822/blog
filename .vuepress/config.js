@@ -21,6 +21,14 @@ module.exports = {
             '/basic/es-basic/',
             '/basic/es-basic/transform',
           ]
+        },
+        {
+          title: 'ES-高级',
+          path: '/basic/es-adv/',
+          children: [
+            '/basic/es-adv/',
+            '/basic/es-adv/context',
+          ]
         }
       ],
       '/frame/': [],
