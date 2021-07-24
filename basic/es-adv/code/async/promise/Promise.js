@@ -148,6 +148,21 @@ class Promise {
   catch(onRejected) {
     return this.then(null, onRejected)
   }
+
+  finally(callback) {
+    // 无论成功或失败都会走
+    // 走完finally, 
+    // 1. 进入finally之前是成功态后续还是成功态,值还是原来的值
+    // 2. 进入finally之前是失败态后续还是失败态,值还是原来的值
+    return this.then(
+      value => Promise.resolve(callback()).then(() => value),
+      reason => {
+        return Promise.resolve(callback()).then(() => {
+          throw reason
+        })
+      }
+    )
+  }
 }
 
 Promise.all = function (promises) {

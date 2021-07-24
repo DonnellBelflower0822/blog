@@ -22,10 +22,6 @@
 - this
   - this指向
   - call/apply/bind
-- 异步编程
-  - prmoise
-  - generator
-  - async-await
 
 ## ts
 - 基础语法

@@ -286,6 +286,21 @@ class Promise {
   catch(onRejected) {
     return this.then(null, onRejected)
   }
+
+  finally(callback) {
+    // 无论成功或失败都会走
+    // 走完finally, 
+    // 1. 进入finally之前是成功态后续还是成功态,值还是原来的值
+    // 2. 进入finally之前是失败态后续还是失败态,值还是原来的值
+    return this.then(
+      value => Promise.resolve(callback()).then(() => value),
+      reason => {
+        return Promise.resolve(callback()).then(() => {
+          throw reason
+        })
+      }
+    )
+  }
 }
 
 Promise.all = function (promises) {
@@ -353,3 +368,178 @@ Promise.deferred = function () {
 
 module.exports = Promise
 ```
+
+## Generator
+
+### 基础用法
+
+**调用fn不会执行函数内部代码**
+
+```js
+function* fn() {
+  console.log('hello')
+}
+
+// 执行fn返回遍历器.
+// 此时不会输出hello
+const generator = fn()
+console.log(generator)
+```
+
+**基础执行流程**
+```js
+function* fn() {
+  console.log('hello')
+  const a = yield 'aa'
+  console.log(a)
+  const b = yield 'bb'
+  console.log(b)
+  return 'end'
+}
+
+// 返回迭代器
+const generator = fn()
+
+/**
+ * 执行语句
+ * console.log('hello')
+ * yield 'aa'
+ * result0 = {value: 'aa', done:false}
+ */
+const result0 = generator.next(1)
+console.log(result0)
+
+/**
+ * 执行语句
+ * a = 2
+ * console.log(a)
+ * yield 'bb'
+ * result1 = {value:'bb',done:false}
+ */
+const result1 = generator.next(2)
+console.log(result1)
+
+/**
+ * 执行语句
+ * b = 3
+ * console.log(b)
+ * // 如果有return的值作为result2.value
+ * // 如果没有return, result2.value 为undefined
+ * result2 = {value:'end',done:true}
+ */
+const result2 = generator.next(3)
+console.log(result2)
+```
+
+### 异步应用
+```js
+function wait(data) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(data)
+    }, 1000)
+  })
+}
+
+function* gen() {
+  const a = yield wait('hello')
+  const b = yield wait('world')
+  console.log(a, b)
+}
+
+const g = gen()
+
+// g.next().value 返回其实就是wait('hello'), 也就是promise
+g.next().value.then(data => {
+  // g.next(data).value
+  // 1. 将wait('hello')的结果给到 a
+  // 2. 执行wait('world')
+  // g.next(data).value也是一个promise
+  g.next(data).value.then(data => {
+    // 1. 将wait('world')的结果给到 b
+    // 2. 执行console.log(a,b)
+    g.next(data)
+  })
+})
+```
+
+### 改成自动执行
+
+> 自动调用
+
+```js
+
+function* gen() {
+  const a = yield wait('hello')
+  const b = yield wait('world')
+  console.log(a, b)
+}
+
+function co(gen) {
+  // 生成一个迭代器
+  const g = gen()
+
+  function next(data) {
+    // 执行next
+    const result = g.next(data)
+
+    // 如果结束
+    if (result.done) {
+      return result.value
+    }
+
+    // 没有执行结束, 就处理primose
+    result.value.then(data => {
+      // 将promise的结果给到上一个yield的左边变量
+      next(data)
+    })
+  }
+
+  next()
+}
+
+co(gen)
+```
+
+## async
+> 它就是 Generator 函数的语法糖。
+
+```js
+function wait(data) {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve(data)
+    }, 1000)
+  })
+}
+
+async function fn() {
+  console.log('hello')
+  const a = await wait('aa')
+  console.log(a)
+  const b = await wait('bb')
+  console.log(b)
+  return 'end'
+}
+
+fn()
+```
+
+### async和generator的区别
+
+- 执行器
+  - Generator 函数的执行必须靠执行器,需要依赖co才能自动执行
+  - async函数自带执行器, 自动执行
+- 语义化
+  - async
+    - async表示函数有异步操作
+    - await表示后续代码等待结果
+- 适用性
+  - async
+    - 后面可以接Promise,thunk,原始值(会被Promise.resolve)
+  - genertor
+    - 后面只能接Promise,thunk
+- 返回值
+  - async: 返回promise
+
+
