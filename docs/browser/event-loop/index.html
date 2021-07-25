@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>事件环Event Loop | 前端博客</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    
+    <meta name="description" content="">
+    
+    <link rel="preload" href="/web/assets/css/0.styles.c853d03e.css" as="style"><link rel="preload" href="/web/assets/js/app.13bddb0d.js" as="script"><link rel="preload" href="/web/assets/js/2.24e341c0.js" as="script"><link rel="preload" href="/web/assets/js/27.04907916.js" as="script"><link rel="prefetch" href="/web/assets/js/10.30ac15a6.js"><link rel="prefetch" href="/web/assets/js/11.4f8f939c.js"><link rel="prefetch" href="/web/assets/js/12.a6d583db.js"><link rel="prefetch" href="/web/assets/js/13.47f9e9c7.js"><link rel="prefetch" href="/web/assets/js/14.28319d08.js"><link rel="prefetch" href="/web/assets/js/15.9ba0f9dc.js"><link rel="prefetch" href="/web/assets/js/16.0d0380df.js"><link rel="prefetch" href="/web/assets/js/17.0fc7d03d.js"><link rel="prefetch" href="/web/assets/js/18.b4a77621.js"><link rel="prefetch" href="/web/assets/js/19.50476166.js"><link rel="prefetch" href="/web/assets/js/20.b885c01f.js"><link rel="prefetch" href="/web/assets/js/21.154c3420.js"><link rel="prefetch" href="/web/assets/js/22.e7bc37be.js"><link rel="prefetch" href="/web/assets/js/23.677db2f0.js"><link rel="prefetch" href="/web/assets/js/24.ff9c03d9.js"><link rel="prefetch" href="/web/assets/js/25.5a8d2dd3.js"><link rel="prefetch" href="/web/assets/js/26.3e9fdac1.js"><link rel="prefetch" href="/web/assets/js/28.ad3339c5.js"><link rel="prefetch" href="/web/assets/js/29.8b52de18.js"><link rel="prefetch" href="/web/assets/js/3.bc7264b4.js"><link rel="prefetch" href="/web/assets/js/30.2a13c9b2.js"><link rel="prefetch" href="/web/assets/js/31.9343bbd9.js"><link rel="prefetch" href="/web/assets/js/32.8c4ed925.js"><link rel="prefetch" href="/web/assets/js/33.c447b66b.js"><link rel="prefetch" href="/web/assets/js/34.0ee8087f.js"><link rel="prefetch" href="/web/assets/js/35.a6ba7033.js"><link rel="prefetch" href="/web/assets/js/36.d90f277a.js"><link rel="prefetch" href="/web/assets/js/37.068a4a03.js"><link rel="prefetch" href="/web/assets/js/4.00dd2b8a.js"><link rel="prefetch" href="/web/assets/js/5.6365cd13.js"><link rel="prefetch" href="/web/assets/js/6.4366d562.js"><link rel="prefetch" href="/web/assets/js/7.7e1f9369.js"><link rel="prefetch" href="/web/assets/js/8.7c2b25a4.js"><link rel="prefetch" href="/web/assets/js/9.53c8ed34.js">
+    <link rel="stylesheet" href="/web/assets/css/0.styles.c853d03e.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/web/" class="home-link router-link-active"><!----> <span class="site-name">前端博客</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/web/basic/" class="nav-link">
+  基础篇
+</a></div><div class="nav-item"><a href="/web/frame/" class="nav-link">
+  框架篇
+</a></div><div class="nav-item"><a href="/web/browser/" class="nav-link router-link-active">
+  浏览器
+</a></div><div class="nav-item"><a href="/web/engine/" class="nav-link">
+  工程化
+</a></div><div class="nav-item"><a href="/web/http/" class="nav-link">
+  http
+</a></div><div class="nav-item"><a href="/web/algorithm/" class="nav-link">
+  算法
+</a></div> <!----></nav></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><nav class="nav-links"><div class="nav-item"><a href="/web/basic/" class="nav-link">
+  基础篇
+</a></div><div class="nav-item"><a href="/web/frame/" class="nav-link">
+  框架篇
+</a></div><div class="nav-item"><a href="/web/browser/" class="nav-link router-link-active">
+  浏览器
+</a></div><div class="nav-item"><a href="/web/engine/" class="nav-link">
+  工程化
+</a></div><div class="nav-item"><a href="/web/http/" class="nav-link">
+  http
+</a></div><div class="nav-item"><a href="/web/algorithm/" class="nav-link">
+  算法
+</a></div> <!----></nav>  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><a href="/web/browser/event-loop/" aria-current="page" class="sidebar-heading clickable router-link-exact-active router-link-active open active"><span>event-loop</span> <span class="arrow down"></span></a> <ul class="sidebar-links sidebar-group-items"><li><a href="/web/browser/event-loop/" aria-current="page" class="active sidebar-link">事件环Event Loop</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#chrome浏览器进程" class="sidebar-link">chrome浏览器进程</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#浏览器渲染进程" class="sidebar-link">浏览器渲染进程</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#gui-渲染线程" class="sidebar-link">GUI 渲染线程</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#js-引擎线程" class="sidebar-link">JS 引擎线程</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#事件触发线程" class="sidebar-link">事件触发线程</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#定时器触发线程" class="sidebar-link">定时器触发线程</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#http-请求线程" class="sidebar-link">HTTP 请求线程</a></li></ul></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#任务分类" class="sidebar-link">任务分类</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#宏任务-macrotask" class="sidebar-link">宏任务（MacroTask）</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#微任务-microtask" class="sidebar-link">微任务（MicroTask）</a></li></ul></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#任务执行队列" class="sidebar-link">任务执行队列</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第一个例子" class="sidebar-link">第一个例子</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#步骤1-执行script全部代码-同步任务" class="sidebar-link">步骤1: 执行script全部代码，同步任务</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第二步-取出第一个微任务-promise1" class="sidebar-link">第二步: 取出第一个微任务, promise1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第三步-取出第一个宏任务settimeout1" class="sidebar-link">第三步: 取出第一个宏任务setTimeout1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第四步-取出当前第一个微任务-promise2" class="sidebar-link">第四步: 取出当前第一个微任务, promise2</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第五步-取出当前第一个宏任务-settimeout2" class="sidebar-link">第五步: 取出当前第一个宏任务, setTimeout2</a></li></ul></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#理解async-await" class="sidebar-link">理解async/await</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第二个例子" class="sidebar-link">第二个例子</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第一步-script代码" class="sidebar-link">第一步：script代码</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第二步-取出第一个微任务promise1" class="sidebar-link">第二步: 取出第一个微任务promise1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第三步-取出第一个微任务promise2" class="sidebar-link">第三步: 取出第一个微任务promise2</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第四步-取出第一个微任务promise3" class="sidebar-link">第四步: 取出第一个微任务promise3</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第五步-取出第一个微任务promise5" class="sidebar-link">第五步: 取出第一个微任务promise5</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第五步-取出第一个微任务promise4" class="sidebar-link">第五步: 取出第一个微任务promise4</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第六步-取出第一个宏任务settimeout1" class="sidebar-link">第六步：取出第一个宏任务settimeout1</a></li></ul></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第三个例子" class="sidebar-link">第三个例子</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第一步-宏任务-script代码" class="sidebar-link">第一步: 宏任务：script代码</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第二步-取出第一个微任务-promise1-2" class="sidebar-link">第二步：取出第一个微任务:promise1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第三步-取出第一个微任务-promise2" class="sidebar-link">第三步：取出第一个微任务:promise2</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第四步-取出第一个宏任务-settimeout1" class="sidebar-link">第四步：取出第一个宏任务:setTimeout1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第五步-取出第一个微任务-promise2-1" class="sidebar-link">第五步：取出第一个微任务:promise2-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第六步-取出第一个微任务-promise2-2" class="sidebar-link">第六步：取出第一个微任务:promise2-2</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第七步-取出第一个宏任务-settimeout2" class="sidebar-link">第七步：取出第一个宏任务:settimeout2</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第八步-取出第一个微任务-promise3-1" class="sidebar-link">第八步：取出第一个微任务: promise3-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第九步-取出第一个微任务-promise3-2" class="sidebar-link">第九步：取出第一个微任务: promise3-2</a></li></ul></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第四个例子" class="sidebar-link">第四个例子</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第一步-宏任务-scirpt代码" class="sidebar-link">第一步: 宏任务 scirpt代码</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第二步-取出第一个微任务-promise1-1" class="sidebar-link">第二步: 取出第一个微任务: promise1-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第三步-取出第一个宏任务-settimeout1-1" class="sidebar-link">第三步: 取出第一个宏任务: settimeout1-1,</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第四步-取出第一个微任务-promise5-1" class="sidebar-link">第四步: 取出第一个微任务: promise5-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第五步-取出第一个宏任务-settimeout2-1" class="sidebar-link">第五步: 取出第一个宏任务: settimeout2-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第六步-取出第一个微任务-promise2-1" class="sidebar-link">第六步: 取出第一个微任务: promise2-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第七步-取出第一个微任务-promise4-1" class="sidebar-link">第七步: 取出第一个微任务：promise4-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第七步-取出第一个微任务-promise6-1" class="sidebar-link">第七步: 取出第一个微任务：promise6-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第七步-取出第一个微任务-promise5-1" class="sidebar-link">第七步: 取出第一个微任务：promise5-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第八步-取出第一个宏任务-settimeout5-1" class="sidebar-link">第八步: 取出第一个宏任务：settimeout5-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第八步-取出第一个宏任务-settimeout6-1" class="sidebar-link">第八步: 取出第一个宏任务：settimeout6-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第八步-取出第一个微任务-promise8-1" class="sidebar-link">第八步: 取出第一个微任务：promise8-1</a></li><li class="sidebar-sub-header"><a href="/web/browser/event-loop/#第八步-取出第一个微任务-promise9-1" class="sidebar-link">第八步: 取出第一个微任务：promise9-1</a></li></ul></li></ul></li></ul></section></li><li><section class="sidebar-group collapsable depth-0"><a href="/web/browser/dom/" class="sidebar-heading clickable"><span>dom</span> <span class="arrow right"></span></a> <!----></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="事件环event-loop"><a href="#事件环event-loop" class="header-anchor">#</a> 事件环Event Loop</h1> <ul><li>MutationObserver</li></ul> <blockquote><p>Event Loop即事件循环，是指浏览器或Node的一种解决javaScript单线程运行时不会阻塞的一种机制</p></blockquote> <h2 id="chrome浏览器进程"><a href="#chrome浏览器进程" class="header-anchor">#</a> chrome浏览器进程</h2> <ul><li>浏览器是多进程</li> <li>每个tab就是一个进程</li> <li>浏览器主进程
+<ul><li>控制其他子进程的创建和销毁</li> <li>浏览器界面显示，比如用户交互，前进，后退</li> <li>将渲染内容绘制到用户界面</li></ul></li> <li>渲染进程：浏览器内核
+<ul><li>负责页面的渲染，脚本执行，事件处理
+<ul><li>页面渲染和脚本执行互斥</li></ul></li> <li>每个tab都是一个渲染进程
+<ul><li>同源算一个</li></ul></li></ul></li> <li>网络进程
+<ul><li>处理网络请求，文件访问</li></ul></li> <li>GPU进程
+<ul><li>3D绘制</li></ul></li> <li>第三方插件进程</li></ul> <h2 id="浏览器渲染进程"><a href="#浏览器渲染进程" class="header-anchor">#</a> 浏览器渲染进程</h2> <h3 id="gui-渲染线程"><a href="#gui-渲染线程" class="header-anchor">#</a> GUI 渲染线程</h3> <ul><li>绘制页面，解析 HTML、CSS，构建 DOM 树，布局和绘制等</li> <li>页面重绘和回流</li> <li>与 JS 引擎线程互斥，也就是所谓的 JS 执行阻塞页面更新</li></ul> <h3 id="js-引擎线程"><a href="#js-引擎线程" class="header-anchor">#</a> JS 引擎线程</h3> <ul><li>负责 JS 脚本代码的执行</li> <li>负责准执行准备好待执行的事件，即定时器计数结束，或异步请求成功并正确返回的事件</li> <li>与 GUI 渲染线程互斥，执行时间过长将阻塞页面的渲染</li></ul> <h3 id="事件触发线程"><a href="#事件触发线程" class="header-anchor">#</a> 事件触发线程</h3> <ul><li>负责将准备好的事件交给 JS 引擎线程执行</li> <li>多个事件加入任务队列的时候需要排队等待(JS 的单线程)</li></ul> <h3 id="定时器触发线程"><a href="#定时器触发线程" class="header-anchor">#</a> 定时器触发线程</h3> <ul><li>负责执行异步的定时器类的事件，如 setTimeout、setInterval</li> <li>定时器到时间之后把注册的回调加到任务队列的队尾</li></ul> <h3 id="http-请求线程"><a href="#http-请求线程" class="header-anchor">#</a> HTTP 请求线程</h3> <ul><li>负责执行异步请求</li> <li>主线程执行代码遇到异步请求的时候会把函数交给该线程处理，当监听到状态变更事件，如果有回调函数，该线程会把回调函数加入到任务队列的队尾等待执行</li></ul> <h2 id="任务分类"><a href="#任务分类" class="header-anchor">#</a> 任务分类</h2> <h3 id="宏任务-macrotask"><a href="#宏任务-macrotask" class="header-anchor">#</a> 宏任务（MacroTask）</h3> <ul><li>script脚本</li> <li>setTimeout</li> <li>setInterval</li> <li>setImmediate</li> <li>requestAnimationFrame</li> <li>UI事件</li> <li>UI rendering</li> <li>网络请求</li></ul> <h3 id="微任务-microtask"><a href="#微任务-microtask" class="header-anchor">#</a> 微任务（MicroTask）</h3> <ul><li>Process.nextTick</li> <li>Promise.then/catch/finally</li> <li>MutationObserver</li></ul> <h2 id="任务执行队列"><a href="#任务执行队列" class="header-anchor">#</a> 任务执行队列</h2> <div class="language-js extra-class"><pre class="language-js"><code>setTimeout <span class="token comment">// 会注册一个宏任务</span>
+
+<span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 会注册一个微任务</span>
+  <span class="token function">reject</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// 会注册一个微任务</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 会注册一个微任务</span>
+Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token comment">// 会注册一个微任务</span>
+</code></pre></div><h2 id="第一个例子"><a href="#第一个例子" class="header-anchor">#</a> 第一个例子</h2> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">// setTimeout1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">// promise2</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve<span class="token punctuation">,</span> reject</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">// promise1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token number">5</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">data</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>  <span class="token comment">// setTimeout2</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="步骤1-执行script全部代码-同步任务"><a href="#步骤1-执行script全部代码-同步任务" class="header-anchor">#</a> 步骤1: 执行script全部代码，同步任务</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册setTimeout1的宏任务</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">4</span><span class="token punctuation">)</span>
+<span class="token comment">// 注册promise1的微任务</span>
+<span class="token comment">// 注册setTimeout2的宏任务</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">7</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>task <span class="token operator">=</span> <span class="token punctuation">{</span>
+    MacroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      setTimeout1<span class="token punctuation">,</span>
+      setTimeout2
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    MicroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      promise1
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h3 id="第二步-取出第一个微任务-promise1"><a href="#第二步-取出第一个微任务-promise1" class="header-anchor">#</a> 第二步: 取出第一个微任务, promise1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>data<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>task <span class="token operator">=</span> <span class="token punctuation">{</span>
+    MacroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      setTimeout1<span class="token punctuation">,</span>
+      setTimeout2
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    MicroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h3 id="第三步-取出第一个宏任务settimeout1"><a href="#第三步-取出第一个宏任务settimeout1" class="header-anchor">#</a> 第三步: 取出第一个宏任务setTimeout1</h3> <blockquote><p>此处的代码setTimeout都没设置事件，所以拿第一个。其他情况按那个宏任务先执行完成，调用回调</p></blockquote> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册promise2的微任务</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>task <span class="token operator">=</span> <span class="token punctuation">{</span>
+    MacroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      setTimeout2
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    MicroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      promise2
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h3 id="第四步-取出当前第一个微任务-promise2"><a href="#第四步-取出当前第一个微任务-promise2" class="header-anchor">#</a> 第四步: 取出当前第一个微任务, promise2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">3</span><span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>task <span class="token operator">=</span> <span class="token punctuation">{</span>
+    MacroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+      setTimeout2
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    MicroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h3 id="第五步-取出当前第一个宏任务-settimeout2"><a href="#第五步-取出当前第一个宏任务-settimeout2" class="header-anchor">#</a> 第五步: 取出当前第一个宏任务, setTimeout2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">6</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>task <span class="token operator">=</span> <span class="token punctuation">{</span>
+    MacroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">]</span><span class="token punctuation">,</span>
+    MicroTask<span class="token operator">:</span> <span class="token punctuation">[</span>
+    <span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+</code></pre></div><h2 id="理解async-await"><a href="#理解async-await" class="header-anchor">#</a> 理解async/await</h2> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token constant">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span>Date<span class="token punctuation">.</span><span class="token function">now</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token constant">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token keyword">let</span> now <span class="token operator">=</span> <span class="token keyword">await</span> <span class="token constant">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token constant">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>等价写法</strong></p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">function</span> <span class="token constant">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">random</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token constant">A</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">now</span><span class="token operator">=&gt;</span><span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>now<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">1</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token constant">B</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token number">2</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h2 id="第二个例子"><a href="#第二个例子" class="header-anchor">#</a> 第二个例子</h2> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>    <span class="token comment">// settimeout1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'settimout1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token number">2000</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>   <span class="token comment">// promise1</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token keyword">function</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>   <span class="token comment">// promise5</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">await</span> <span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async1 end'</span><span class="token punctuation">)</span>   <span class="token comment">// promise2</span>
+<span class="token punctuation">}</span>
+<span class="token function">foo</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+<span class="token keyword">function</span> <span class="token function">bar</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async2 end'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">async</span> <span class="token keyword">function</span> <span class="token function">errorFunc</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// 等价于</span>
+
+  <span class="token comment">/***
+   Promise.reject('error!!!').then(()=&gt;{
+      console.log(e)
+      console.log('async1');
+      return Promise.resolve('async1 success')
+   })
+   */</span>
+  <span class="token keyword">try</span> <span class="token punctuation">{</span>
+    <span class="token keyword">await</span> Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span><span class="token string">'error!!!'</span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>e<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// promise3</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// 执行到这里采取注册下面的.then微任务</span>
+  <span class="token keyword">return</span> Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token string">'async1 success'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token function">errorFunc</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token parameter">res</span> <span class="token operator">=&gt;</span> console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token comment">// promise4</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script end'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><h3 id="第一步-script代码"><a href="#第一步-script代码" class="header-anchor">#</a> 第一步：script代码</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册宏任务settimeout1</span>
+<span class="token comment">// 注册微任务promise1</span>
+
+<span class="token comment">// foo() =&gt; await bar() =&gt; bar().then(()=&gt;{console.log('async1 end')})</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async2 end'</span><span class="token punctuation">)</span>
+<span class="token comment">// 注册微任务promise2</span>
+
+<span class="token comment">// errorFunc()  =&gt; Prmosise.reject().catch(()=&gt;{  })  </span>
+<span class="token comment">// 注册微任务promise3</span>
+
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'script end'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+    promise1,
+    promise2,
+    promise3
+  ]
+}
+</code></pre></div><h3 id="第二步-取出第一个微任务promise1"><a href="#第二步-取出第一个微任务promise1" class="header-anchor">#</a> 第二步: 取出第一个微任务promise1</h3> <p><strong>执行</strong></p> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册微任务： promise5</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+    promise2,
+    promise3,
+    promise5
+  ]
+}
+</code></pre></div><h3 id="第三步-取出第一个微任务promise2"><a href="#第三步-取出第一个微任务promise2" class="header-anchor">#</a> 第三步: 取出第一个微任务promise2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async1 end'</span><span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+    promise3,
+    promise5
+  ]
+}
+</code></pre></div><h3 id="第四步-取出第一个微任务promise3"><a href="#第四步-取出第一个微任务promise3" class="header-anchor">#</a> 第四步: 取出第一个微任务promise3</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token comment">// Promise.resolve('async1 success')</span>
+<span class="token comment">// 然后注册 promise4</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+    promise5,
+    promise4
+  ]
+}
+</code></pre></div><h3 id="第五步-取出第一个微任务promise5"><a href="#第五步-取出第一个微任务promise5" class="header-anchor">#</a> 第五步: 取出第一个微任务promise5</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+    promise4
+  ]
+}
+</code></pre></div><h3 id="第五步-取出第一个微任务promise4"><a href="#第五步-取出第一个微任务promise4" class="header-anchor">#</a> 第五步: 取出第一个微任务promise4</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 2秒后执行
+    settimeout1
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第六步-取出第一个宏任务settimeout1"><a href="#第六步-取出第一个宏任务settimeout1" class="header-anchor">#</a> 第六步：取出第一个宏任务settimeout1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'settimout1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h2 id="第三个例子"><a href="#第三个例子" class="header-anchor">#</a> 第三个例子</h2> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>      <span class="token comment">// setTimeout1</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'2'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>     <span class="token comment">// promise2-1</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'4'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>   <span class="token comment">// promise2-2</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'5'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+Promise<span class="token punctuation">.</span><span class="token function">reject</span><span class="token punctuation">(</span><span class="token punctuation">)</span>  <span class="token comment">// promise1</span>
+  <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'13'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'12'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'7'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>  <span class="token comment">// promise2</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'8'</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+<span class="token function">setTimeout</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>    <span class="token comment">// settimeout2</span>
+  console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'9'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  Promise<span class="token punctuation">.</span><span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span>   <span class="token comment">// promise3-1</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'10'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+  <span class="token keyword">new</span> <span class="token class-name">Promise</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token parameter">resolve</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+    console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'11'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+    <span class="token function">resolve</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>  <span class="token comment">// promise3-2</span>
+    <span class="token punctuation">.</span><span class="token function">then</span><span class="token punctuation">(</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+      console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'12'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span><span class="token punctuation">)</span>
+</code></pre></div><h3 id="第一步-宏任务-script代码"><a href="#第一步-宏任务-script代码" class="header-anchor">#</a> 第一步: 宏任务：script代码</h3> <div class="language- extra-class"><pre class="language-text"><code>console.log('1');
+// 注册宏任务: setTimeout1
+// 注册微任务：promise1
+console.log('7');
+// 注册微任务: promise2
+// 注册宏任务：settimeout2
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    setTimeout1,
+    settimeout2
+  ],
+  MicroTask: [
+    promise1,
+    promise2
+  ]
+}
+</code></pre></div><h3 id="第二步-取出第一个微任务-promise1-2"><a href="#第二步-取出第一个微任务-promise1-2" class="header-anchor">#</a> 第二步：取出第一个微任务:promise1</h3> <div class="language- extra-class"><pre class="language-text"><code>// 由于是reject
+console.log('12');
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    setTimeout1,
+    settimeout2
+  ],
+  MicroTask: [
+    promise2
+  ]
+}
+</code></pre></div><h3 id="第三步-取出第一个微任务-promise2"><a href="#第三步-取出第一个微任务-promise2" class="header-anchor">#</a> 第三步：取出第一个微任务:promise2</h3> <div class="language- extra-class"><pre class="language-text"><code>console.log('8')
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    setTimeout1,
+    settimeout2
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第四步-取出第一个宏任务-settimeout1"><a href="#第四步-取出第一个宏任务-settimeout1" class="header-anchor">#</a> 第四步：取出第一个宏任务:setTimeout1</h3> <div class="language- extra-class"><pre class="language-text"><code>console.log('2');
+// 注册微任务: promise2-1
+console.log('4');
+// 注册微任务：promise2-2
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout2
+  ],
+  MicroTask: [
+    promise2-1，
+    promise2-2
+  ]
+}
+</code></pre></div><h3 id="第五步-取出第一个微任务-promise2-1"><a href="#第五步-取出第一个微任务-promise2-1" class="header-anchor">#</a> 第五步：取出第一个微任务:promise2-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'3'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout2
+  ],
+  MicroTask: [
+    promise2-2
+  ]
+}
+</code></pre></div><h3 id="第六步-取出第一个微任务-promise2-2"><a href="#第六步-取出第一个微任务-promise2-2" class="header-anchor">#</a> 第六步：取出第一个微任务:promise2-2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'5'</span><span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout2
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第七步-取出第一个宏任务-settimeout2"><a href="#第七步-取出第一个宏任务-settimeout2" class="header-anchor">#</a> 第七步：取出第一个宏任务:settimeout2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'9'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册微任务： promise3-1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'11'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册微任务：promise3-2</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+     promise3-1,
+     promise3-2
+  ]
+}
+</code></pre></div><h3 id="第八步-取出第一个微任务-promise3-1"><a href="#第八步-取出第一个微任务-promise3-1" class="header-anchor">#</a> 第八步：取出第一个微任务: promise3-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'10'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+     promise3-2
+  ]
+}
+</code></pre></div><h3 id="第九步-取出第一个微任务-promise3-2"><a href="#第九步-取出第一个微任务-promise3-2" class="header-anchor">#</a> 第九步：取出第一个微任务: promise3-2</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'12'</span><span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h2 id="第四个例子"><a href="#第四个例子" class="header-anchor">#</a> 第四个例子</h2> <h3 id="第一步-宏任务-scirpt代码"><a href="#第一步-宏任务-scirpt代码" class="header-anchor">#</a> 第一步: 宏任务 scirpt代码</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 注册微任务: promise1-1</span>
+<span class="token comment">// 注册宏任务：settimeout1-1</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'start'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout1-1
+  ],
+  MicroTask: [
+    promise1-1
+  ]
+}
+</code></pre></div><h3 id="第二步-取出第一个微任务-promise1-1"><a href="#第二步-取出第一个微任务-promise1-1" class="header-anchor">#</a> 第二步: 取出第一个微任务: promise1-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册宏任务：settimeout2-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 0秒
+    settimeout1-1,
+    // 0秒
+    settimeout2-1
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第三步-取出第一个宏任务-settimeout1-1"><a href="#第三步-取出第一个宏任务-settimeout1-1" class="header-anchor">#</a> 第三步: 取出第一个宏任务: settimeout1-1,</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'timer1'</span><span class="token punctuation">)</span>
+<span class="token comment">// 注册微任务：promise5-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 0秒
+    settimeout2-1
+  ],
+  MicroTask: [
+    promise5-1
+  ]
+}
+</code></pre></div><h3 id="第四步-取出第一个微任务-promise5-1"><a href="#第四步-取出第一个微任务-promise5-1" class="header-anchor">#</a> 第四步: 取出第一个微任务: promise5-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'promise3'</span><span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    // 0秒
+    settimeout2-1
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第五步-取出第一个宏任务-settimeout2-1"><a href="#第五步-取出第一个宏任务-settimeout2-1" class="header-anchor">#</a> 第五步: 取出第一个宏任务: settimeout2-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'timer2'</span><span class="token punctuation">)</span>
+<span class="token comment">// 注册微任务：promise2-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+    promise2-1
+  ]
+}
+</code></pre></div><h3 id="第六步-取出第一个微任务-promise2-1"><a href="#第六步-取出第一个微任务-promise2-1" class="header-anchor">#</a> 第六步: 取出第一个微任务: promise2-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 注册宏任务：settimeout5-1</span>
+<span class="token comment">// 注册微任务: promise4-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout5-1
+  ],
+  MicroTask: [
+    promise4-1
+  ]
+}
+</code></pre></div><h3 id="第七步-取出第一个微任务-promise4-1"><a href="#第七步-取出第一个微任务-promise4-1" class="header-anchor">#</a> 第七步: 取出第一个微任务：promise4-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 注册宏任务：settimeout6-1</span>
+<span class="token comment">// 注册微任务：promise6-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout5-1,
+    settimeout6-1
+  ],
+  MicroTask: [
+    promise6-1
+  ]
+}
+</code></pre></div><h3 id="第七步-取出第一个微任务-promise6-1"><a href="#第七步-取出第一个微任务-promise6-1" class="header-anchor">#</a> 第七步: 取出第一个微任务：promise6-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// undefined</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>res<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册微任务：promise5-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout5-1,
+    settimeout6-1
+  ],
+  MicroTask: [
+    promise5-1
+  ]
+}
+</code></pre></div><h3 id="第七步-取出第一个微任务-promise5-1"><a href="#第七步-取出第一个微任务-promise5-1" class="header-anchor">#</a> 第七步: 取出第一个微任务：promise5-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// new Error('error2')</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>err<span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout5-1,
+    settimeout6-1
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第八步-取出第一个宏任务-settimeout5-1"><a href="#第八步-取出第一个宏任务-settimeout5-1" class="header-anchor">#</a> 第八步: 取出第一个宏任务：settimeout5-1</h3> <div class="language-js extra-class"><pre class="language-js"><code>console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">'async1'</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+    settimeout6-1
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div><h3 id="第八步-取出第一个宏任务-settimeout6-1"><a href="#第八步-取出第一个宏任务-settimeout6-1" class="header-anchor">#</a> 第八步: 取出第一个宏任务：settimeout6-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// new Error('error1')</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span>ret<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token comment">// 注册微任务：promise8-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+    promise8-1
+  ]
+}
+</code></pre></div><h3 id="第八步-取出第一个微任务-promise8-1"><a href="#第八步-取出第一个微任务-promise8-1" class="header-anchor">#</a> 第八步: 取出第一个微任务：promise8-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 注册微任务：promise9-1</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+    promise9-1
+  ]
+}
+</code></pre></div><h3 id="第八步-取出第一个微任务-promise9-1"><a href="#第八步-取出第一个微任务-promise9-1" class="header-anchor">#</a> 第八步: 取出第一个微任务：promise9-1</h3> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// catch: new Error('error!!!')</span>
+console<span class="token punctuation">.</span><span class="token function">log</span><span class="token punctuation">(</span><span class="token string">&quot;catch: &quot;</span><span class="token punctuation">,</span> err<span class="token punctuation">)</span>
+</code></pre></div><p><strong>执行完毕后的调用队列</strong></p> <div class="language- extra-class"><pre class="language-text"><code>stack = {
+  MacroTask:[
+  ],
+  MicroTask: [
+  ]
+}
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><!----> <span class="next"><a href="/web/browser/dom/">
+        浏览器
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/web/assets/js/app.13bddb0d.js" defer></script><script src="/web/assets/js/2.24e341c0.js" defer></script><script src="/web/assets/js/27.04907916.js" defer></script>
+  </body>
+</html>
