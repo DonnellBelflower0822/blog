@@ -985,6 +985,8 @@ export function useImperativeHandle(ref, factoy) {
 
 ### React.useRef
 
+> 除了DOM的refs,也可以作为类似class的实例属性
+
 **使用**
 
 ```js
@@ -1064,6 +1066,121 @@ export default function App() {
 }
 ```
 
+### hook进行数据获取
+
+```js
+import React from 'react'
+export default function Request() {
+  React.useEffect(() => {
+    // todo some request
+    console.log(1)
+  }, [])
+  return (
+    <div>aaaaa</div>
+  )
+}
+```
+
+### 类似类实例属性
+```js
+import React from 'react'
+
+export default function App() {
+  const intervalRef = React.useRef()
+  React.useEffect(() => {
+    intervalRef.current = setInterval(() => {
+      // do some thing
+    }, 100);
+    return () => {
+      clearInterval(intervalRef.current)
+    }
+  })
+
+  function stop() {
+    // 类似实例的属性
+    clearInterval(intervalRef.current)
+  }
+
+  return (
+    <div onClick={stop}>Hello</div>
+  )
+}
+```
+
+### 只有在更新时执行
+
+```js
+import React from 'react'
+
+// 只有在更新时执行
+function useUpdateEffect(updateFn) {
+  const flagRef = React.useRef()
+
+  React.useEffect(() => {
+    if (!flagRef.current) {
+      flagRef.current = true
+    } else {
+      updateFn()
+    }
+  })
+}
+
+export default function Request() {
+  const [state, setState] = React.useState(0)
+  useUpdateEffect(() => {
+    console.log('update')
+  })
+
+  return (
+    <div onClick={() => { setState(state + 1) }}>{state}</div>
+  )
+}
+```
+
+### 获取上一次的值
+```js
+import React from 'react'
+
+function usePrevious(count) {
+  const prevCountRef = React.useRef();
+  React.useEffect(() => {
+    prevCountRef.current = count
+    debugger
+  })
+  return prevCountRef.current
+}
+
+export default function Request() {
+  const [state, setState] = React.useState(0)
+  const previousState = usePrevious(state)
+
+  return (
+    <div onClick={() => {
+      console.log('上一次state', previousState)
+      console.log('当前state', state)
+      setState(state + 1)
+    }}>{state}</div>
+  )
+}
+```
+
+### 强制更新
+```js
+import React from 'react'
+
+function useForceUpdate() {
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0)
+  return forceUpdate
+}
+
+export default function Request() {
+  const forceUpdate = useForceUpdate()
+  console.log('更新')
+  return (
+    <div onClick={forceUpdate}>11</div>
+  )
+}
+```
 
 ## react-router-dom
 
