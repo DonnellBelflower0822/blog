@@ -1,7 +1,7 @@
 module.exports = {
   title: '前端博客',
   base: '/web/',
-  dest: './dist',
+  dest: './docs',
   themeConfig: {
     sidebarDepth: 3,
     nav: [
