@@ -1,6 +1,6 @@
 module.exports = {
   title: '前端博客',
-  base: '/web/',
+  base: '/blog/',
   dest: './docs',
   themeConfig: {
     sidebarDepth: 3,
