@@ -171,3 +171,25 @@ console.log([1, [2, [3]]].flat(Infinity))
 // [ 1, 2, 4, 5 ] 空位被过滤
 console.log([1, 2, , 4, 5].flat())
 ```
+
+## 类数组转数组
+
+```js
+var arrayLike = {
+  0: 'name',
+  1: 'age',
+  2: 'sex',
+  length: 3
+}
+```
+
+> 转换方法
+```js
+console.log(arguments)
+
+console.log(Array.from(arguments))
+console.log([...arguments])
+console.log(Array.prototype.slice.call(arguments))
+console.log(Array.prototype.splice.call(arguments))
+Array.prototype.concat.apply([], arrayLike)
+```
