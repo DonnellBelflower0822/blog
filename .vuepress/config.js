@@ -32,10 +32,20 @@ module.exports = {
             '/basic/es-adv/',
             '/basic/es-adv/context',
             '/basic/es-adv/async',
+            '/basic/es-adv/cg',
           ]
         }
       ],
-      '/frame/': [],
+      '/frame/': [
+        {
+          title: 'React',
+          path: '/frame/react/',
+          children: [
+            '/frame/react/',
+            '/frame/react/my-react',
+          ]
+        }
+      ],
       '/browser/': [],
       '/engine/': [],
       '/http/': [],
