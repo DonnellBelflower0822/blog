@@ -103,6 +103,7 @@ function workLoop(deadline) {
 
 // 执行任务
 function executeTask(fiber) {
+  // 只构建当前fiber的第一层子fiber
   if (fiber.tag === 'class_component') {
     if (fiber.stateNode.__fiber && fiber.stateNode.__fiber.partialState) {
       fiber.stateNode.state = {
@@ -118,6 +119,7 @@ function executeTask(fiber) {
     reconcileChildren(fiber, fiber.props.children)
   }
 
+  // 如果有大儿子,则优先递归大儿子
   if (fiber.child) {
     return fiber.child
   }

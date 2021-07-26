@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start": "webpack serve"
+    "start": "webpack serve --port=8800"
   },
   "devDependencies": {
     "@babel/core": "^7.14.8",
