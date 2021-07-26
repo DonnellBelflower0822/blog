@@ -51,6 +51,7 @@ module.exports = {
           children: [
             '/frame/react/',
             '/frame/react/my-react',
+            '/frame/react/fiber',
           ]
         },
         {

@@ -1184,6 +1184,12 @@ export default function Request() {
 
 ## react-router-dom
 
+```
+react-router-dom = react-router + history
+```
+
+
+
 ## react-redux
 
 
