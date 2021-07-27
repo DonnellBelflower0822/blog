@@ -1,5 +1,5 @@
 import { createReactInstance } from './createReactInstance'
-export { default as createTaskQueue } from './createTaskQueue'
+export { default as taskQueue } from './taskQueue'
 export { getRoot } from './getRoot'
 
 export const arrified = arr => Array.isArray(arr) ? arr : [arr]

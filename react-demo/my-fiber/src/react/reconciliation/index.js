@@ -1,4 +1,4 @@
-import { createTaskQueue, arrified, createStateNode, getTag, updateNodeElement, getRoot } from '../utils'
+import { taskQueue, arrified, createStateNode, getTag, updateNodeElement, getRoot } from '../utils'
 
 let pendingCommit = null
 
@@ -49,7 +49,6 @@ function commitAllWork(rootFiber) {
 
 // 要执行的子任务
 let subTask = null
-const taskQueue = createTaskQueue()
 
 // 获取第一个任务
 function getFirstTask() {
@@ -96,12 +95,25 @@ function workLoop(deadline) {
     subTask = executeTask(subTask)
   }
 
+  // 如有有pendingCommit就证明已经构建完成
   if (pendingCommit) {
+    // 开始commit
     commitAllWork(pendingCommit)
   }
 }
 
-// 执行任务
+/**
+ * 执行任务: 
+ *    构建子级children的fiber
+ *    不考虑孙子级
+ * 返回值:
+ *    如果有大儿子child就返回大儿子
+ *    如果没有大儿子
+ *      返回父亲的兄弟
+ *      如果没有父亲的兄弟就递归爷爷的兄弟
+ * @param {*} fiber 
+ * @returns 
+ */
 function executeTask(fiber) {
   // 只构建当前fiber的第一层子fiber
   if (fiber.tag === 'class_component') {
@@ -124,22 +136,27 @@ function executeTask(fiber) {
     return fiber.child
   }
 
+  // 走到这里就到头了.需要往上回去
   let currentExecutelyFiber = fiber
 
   while (currentExecutelyFiber.parent) {
+    // 记录当前effect
     currentExecutelyFiber.parent.effects = (
       currentExecutelyFiber.parent.effects.concat(
         currentExecutelyFiber.effects.concat([currentExecutelyFiber])
       )
     )
-
+    
+    // 返回兄弟节点
     if (currentExecutelyFiber.sibling) {
       return currentExecutelyFiber.sibling
     }
 
+    // 指向父亲
     currentExecutelyFiber = currentExecutelyFiber.parent
   }
 
+  // 到这里的化就是
   pendingCommit = currentExecutelyFiber
 }
 
@@ -229,7 +246,7 @@ function preformTask(deadline) {
   }
 }
 
-// 构建fiber
+// 构建根的fiber
 export function render(element, dom) {
   // 往任务队列添加任务
   taskQueue.push({

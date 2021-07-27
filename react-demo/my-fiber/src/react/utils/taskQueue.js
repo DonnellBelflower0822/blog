@@ -1,4 +1,4 @@
-export default function createTaskQueue() {
+function createTaskQueue() {
   const taskQueue = []
   return {
     push: item => taskQueue.push(item),
@@ -8,3 +8,5 @@ export default function createTaskQueue() {
     isEmpty: () => taskQueue.length === 0
   }
 }
+
+export default createTaskQueue()

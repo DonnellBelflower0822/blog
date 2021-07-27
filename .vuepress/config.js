@@ -51,6 +51,8 @@ module.exports = {
           children: [
             '/frame/react/',
             '/frame/react/my-react',
+            '/frame/react/my-redux',
+            '/frame/react/my-router',
             '/frame/react/fiber',
           ]
         },
