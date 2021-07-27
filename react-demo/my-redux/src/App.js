@@ -1,7 +1,13 @@
+import Counter from './components/Counter';
+import Modal from './components/Modal';
 
 function App() {
   return (
-    <div>hello App</div>
+    <div>
+      hello App
+      <Counter />
+      <Modal />
+    </div>
   );
 }
 
