@@ -2,7 +2,7 @@ import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
 import * as modalAction from '../store/actions/modal'
 
-function Modal({ visible, toggle }) {
+function Modal({ visible, toggle, toggle_sync }) {
   const style = {
     width: '100px',
     height: '100px',
@@ -16,7 +16,7 @@ function Modal({ visible, toggle }) {
   return (
     <div>
       <button onClick={toggle}>显示</button>
-      <button onClick={toggle}>隐藏</button>
+      <button onClick={toggle_sync}>隐藏</button>
       <div style={style}></div>
     </div>
   )

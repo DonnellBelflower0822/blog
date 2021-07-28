@@ -7,8 +7,9 @@ import rootReducer from './reducer'
 // import thunk from 'redux-thunk'
 
 import createSageMiddleware from 'redux-saga'
-import counterSaga from './saga/counter.saga'
+import rootSaga from './saga/root.saga'
 
+// 创建saga的中间件
 const sageMiddleWare = createSageMiddleware()
 
 export default createStore(
@@ -16,4 +17,5 @@ export default createStore(
   applyMiddleware(sageMiddleWare)
 )
 
-sageMiddleWare.run(counterSaga)
+// 启用saga
+sageMiddleWare.run(rootSaga)

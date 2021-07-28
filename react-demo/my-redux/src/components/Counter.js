@@ -13,7 +13,13 @@ function Counter(props) {
       <span>{props.count}</span>
       <button
         onClick={() => {
+          // 传递参数
           props.add_sync(22)
+        }}
+      >+</button>
+      <button
+        onClick={() => {
+          console.log(props)
         }}
       >+</button>
     </div>
