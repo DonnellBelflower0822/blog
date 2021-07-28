@@ -1,5 +1,6 @@
 ---
 home: true
+lang: zh-CN
 # heroImage: /hero.png
 heroText: 前端
 tagline: 前端小体系
