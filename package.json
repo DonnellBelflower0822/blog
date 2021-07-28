@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "vuepress dev .",
-    "build": "vuepress build .",
+    "dev": "vuepress dev web",
+    "build": "vuepress build web",
     "test": "jest"
   },
   "repository": {
@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/xuxiaozhou/web#readme",
   "devDependencies": {
-    "vuepress": "^1.8.2"
+    "vuepress": "1.8.0"
   },
   "dependencies": {
     "lodash": "^4.17.21"
