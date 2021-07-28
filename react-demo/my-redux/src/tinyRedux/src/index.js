@@ -76,18 +76,33 @@ export const applyMiddleware = (...middlewares) => {
   }
 }
 
+// 举例: applyMiddleware(logger, thunk)
+// const chain = middlewares.map(middleware => middleware(middlewareApi))
+// chain = [
+//    logger: (next) => (action) => {}, 
+//    thunk: (next) => (action) => {}
+// ]
+// compose(已经执行过第一层的中间件)(真正的dispatch)
+// const _dispatch = compose(...chain)(store.dispatch)
+/**
+logger: (next ==> thunk) => (action) => {}
+thunk: (next ==> store.dispatch) => (action) => {}
+ */
 function compose(...chains) {
-  // thunk的next拿到的是真正的dispatch
-  // logger的next是thunk的
-  // applyMiddleware(logger, thunk)
-  return (dispatch) => {
-    // console.log(chains, dispatch)
-    // chains.reduceRight()
-    for (let i = chains.length - 1;i >= 0;i--) {
-      dispatch = chains[i](dispatch)
-    }
+  // return (dispatch) => {
+  //   // console.log(chains, dispatch)
+  //   // chains.reduceRight()
+  //   for (let i = chains.length - 1;i >= 0;i--) {
+  //     dispatch = chains[i](dispatch)
+  //   }
 
-    return dispatch
+  //   return dispatch
+  // }
+
+  return dispatch => {
+    return chains.reduceRight((next, chain) => {
+      return chain(next)
+    }, dispatch)
   }
 }
 

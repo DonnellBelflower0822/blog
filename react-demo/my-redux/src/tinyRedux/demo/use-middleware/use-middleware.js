@@ -1,6 +1,6 @@
-import { applyMiddleware, createStore } from './src/index.js'
-import logger from './middlewares/logger.js'
-import thunk from './middlewares/thunk.js'
+import { applyMiddleware, createStore } from '../../src/index.js'
+import logger from '../../middlewares/logger.js'
+import thunk from '../../middlewares/thunk.js'
 
 const initalState = { count: 0 }
 // 创建reducer.在这里进行state的初始化
