@@ -53,6 +53,7 @@ module.exports = {
             '/frame/react/my-react',
             '/frame/react/my-redux',
             '/frame/react/my-router',
+            '/frame/react/optimize',
             '/frame/react/fiber',
           ]
         },

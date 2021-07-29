@@ -1,13 +1,33 @@
 # react-redux
 
-## redux
+## redux概念
 
 > js状态容器,提供可预测化的状态管理
 
-## 组成
+### 组成
 <img src='./img/redux.png'/>
 
+### 在react中使用redux的原因
+
+- 在React中组件通信的数据流是单向的, 
+- 顶层组件可以通过props属性向下层组件传递数据, 
+- ⽽下层组件不能向上层组件传递数据, 要实现下层组件修改数据, 需要上层组件传递修改数据的⽅法到下层组件. 
+- 当项⽬越来越⼤的时候, `组件之间传递数据变得越来越困难`.
+
+**使用**
+
+- 使⽤Redux管理数据，由于Store独⽴于组件，使得数据管理独⽴于组件，解决了组件与组件之间传递数据困难的问题。
+
+### 原则
+- 单一数据源
+  - 整个应用的 state 被储存在一棵 object tree 中，并且这个 object tree 只存在于唯一一个 store 中。
+- State 是只读的
+  - 唯一改变 state 的方法就是触发 action，action 是一个用于描述已发生事件的普通对象。
+- 使用纯函数来执行修改
+  - 为了描述 action 如何改变 state tree ，你需要编写 reducers。
+
 ## 基础用法
+### redux 基础用法
 ```js
 import { createStore } from 'redux'
 
@@ -50,50 +70,7 @@ descBtn.onclick = () => {
 }
 ```
 
-## 在react中使用redux的原因
-
-- 在React中组件通信的数据流是单向的, 
-- 顶层组件可以通过props属性向下层组件传递数据, 
-- ⽽下层组件不能向上层组件传递数据, 要实现下层组件修改数据, 需要上层组件传递修改数据的⽅法到下层组件. 
-- 当项⽬越来越⼤的时候, `组件之间传递数据变得越来越困难`.
-
-**使用**
-
-- 使⽤Redux管理数据，由于Store独⽴于组件，使得数据管理独⽴于组件，解决了组件与组件之间传递数据困难的问题。
-
-## redux基础用法
-```js
-const initalState = { count: 0 }
-// 创建reducer
-// 在这里进行state的初始化
-// redux默认会一开始派发@@INIT初始化
-function rootReducer(state = initalState, action) {
-  switch (action.type) {
-    case 'ADD':
-      return { count: state.count + 1 }
-    case 'DESC':
-      return { count: state.count - 1 }
-    default:
-      return state
-  }
-}
-
-// 创建store
-const store = Redux.createStore(rootReducer)
-
-// 派发动作
-store.dispatch({type:'ADD'})
-
-// 订阅:store更新
-store.subscribe(() => {
-  // do some thing
-})
-
-// 获取state
-store.getState()
-```
-
-## react-redux
+### react-redux
 
 - 在react中比较方便使用redux.不用考虑订阅更新
 - Provider提供store
@@ -147,8 +124,6 @@ export default createStore(rootReducer)
 ### actions: 生成action对象
 
 格式: `const actionName = (payload)=>({type:actionType,payload})`
-
-### middleware: 中间件
 
 ### reducer:  
 

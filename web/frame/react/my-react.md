@@ -292,14 +292,15 @@ export class PureComponent extends Component {
 
 ### React.memo
 
-> 为函数组件提供类组件shouldComponentUpdate的功能
+- 为函数组件提供类组件shouldComponentUpdate的功能
+- 如果 props 相等，areEqual 会返回 true；如果 props 不相等，则返回 false
 
 ```ts
 export function memo(FunctionComponent, compare?: (prevProps, nextProps) => boolean) {
   if (compare) {
     return class extends Component {
       shouldComponentUpdate(nextProps) {
-        return compare(this.props, nextProps);
+        return !compare(this.props, nextProps);
       }
       render() {
         return FunctionComponent(this.props);
