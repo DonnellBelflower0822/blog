@@ -363,3 +363,27 @@ function unique2(arr) {
   }, [])
 }
 ```
+
+## 替换eval
+
+```js
+const response = 'this.wx_errcode=402;this.wx_code=1024'
+const vm = {}
+new Function(response).call(vm)
+// {wx_errcode:402;wx_code:1024}
+console.log(vm)
+```
+
+```js
+ const response = 'window.wx_errcode=402;window.wx_code=1024'
+function myEval(str) {
+  const script = document.createElement('script')
+  script.text = str
+  script.type = 'text/javascript'
+  document.body.appendChild(script)
+  document.body.removeChild(script)
+}
+myEval(response)
+
+console.log(window.wx_errcode)
+```
