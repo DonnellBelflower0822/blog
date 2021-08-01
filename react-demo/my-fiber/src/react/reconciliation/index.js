@@ -2,6 +2,15 @@ import { taskQueue, arrified, createStateNode, getTag, updateNodeElement, getRoo
 
 let pendingCommit = null
 
+function findDom(parentFiber) {
+  while (parentFiber) {
+    if (parentFiber.stateNode.nodeType === 1) {
+      return parentFiber.stateNode
+    }
+    parentFiber = parentFiber.return
+  }
+}
+
 function commitAllWork(rootFiber) {
   rootFiber.effects.forEach(item => {
     if (item.tag === 'class_component') {
@@ -9,8 +18,9 @@ function commitAllWork(rootFiber) {
     }
 
     if (item.effectTags === 'delete') {
+      debugger
       // 删除操作
-      item.return.stateNode.removeChild(item.stateNode)
+      findDom(item.return).removeChild(item.stateNode)
     }
     else if (item.effectTags === 'update') {
       // 更新
@@ -23,7 +33,7 @@ function commitAllWork(rootFiber) {
         )
       } else {
         // 节点类型不同
-        item.return.stateNode.replaceChild(
+        findDom(item.return).replaceChild(
           item.stateNode,
           item.alternate.stateNode
         )
@@ -38,7 +48,7 @@ function commitAllWork(rootFiber) {
       }
 
       if (currentFiber.tag === 'host_component') {
-        parentFiber.stateNode.appendChild(currentFiber.stateNode)
+        findDom(parentFiber).appendChild(currentFiber.stateNode)
       }
     }
   })
@@ -97,6 +107,7 @@ function workLoop(deadline) {
 
   // 如有有pendingCommit就证明已经构建完成
   if (pendingCommit) {
+    console.log(pendingCommit)
     // 开始commit
     commitAllWork(pendingCommit)
   }
@@ -110,7 +121,7 @@ function workLoop(deadline) {
  *    如果有大儿子child就返回大儿子
  *    如果没有大儿子
  *      返回父亲的兄弟
- *      如果没有父亲的兄弟就递归爷爷的兄弟
+ *      如果没有父亲的兄弟就返回爷爷的兄弟
  * @param {*} fiber 
  * @returns 
  */
@@ -146,7 +157,7 @@ function executeTask(fiber) {
         currentExecutelyFiber.effects.concat([currentExecutelyFiber])
       )
     )
-    
+
     // 返回兄弟节点
     if (currentExecutelyFiber.sibling) {
       return currentExecutelyFiber.sibling
@@ -156,7 +167,7 @@ function executeTask(fiber) {
     currentExecutelyFiber = currentExecutelyFiber.return
   }
 
-  // 到这里的化就是
+  // 到这里的就是
   pendingCommit = currentExecutelyFiber
 }
 
@@ -235,6 +246,7 @@ function reconcileChildren(fiber, children) {
   }
 }
 
+// 执行任务
 function preformTask(deadline) {
   // 执行任务
   workLoop(deadline)
