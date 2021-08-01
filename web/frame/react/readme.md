@@ -263,15 +263,170 @@ const oldFiberMap = {
 
 
 ## 合成事件
-- react16
-  - 将事件委托到document
-  - 当真实dom触发事件,先处理原生事件,然后冒泡到document,再处理react事件
-  - React事件绑定是在reconciliation阶段,会在原生事件绑定之前执行,都绑定定到document身上时 
-- react17
-  - 将事件委托到容器
 - 使用合成事件优势
   - 浏览器兼容
   - 采用最顶层事件代理机制,能够保证冒泡一致
+
+### React16
+- 将事件委托到`document`
+- 当真实dom触发事件,先处理原生事件,
+- 然后冒泡到document,
+- 再处理react事件: 模拟捕获->冒泡
+- React事件绑定是在reconciliation阶段,会在原生事件绑定之前执行,都绑定定到document身上时 
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+function App() {
+  const parentRef = React.useRef()
+  const childRef = React.useRef()
+  React.useEffect(() => {
+    parentRef.current.addEventListener('click', () => {
+      console.log('parent 原生冒泡')
+    })
+    parentRef.current.addEventListener('click', () => {
+      console.log('parent 原生捕获')
+    }, true)
+
+    childRef.current.addEventListener('click', () => {
+      console.log('child 原生冒泡')
+    })
+    childRef.current.addEventListener('click', () => {
+      console.log('child 原生捕获')
+    }, true)
+
+    document.addEventListener('click', () => {
+      console.log('document 原生冒泡')
+    })
+    document.addEventListener('click', () => {
+      console.log('document 原生捕获')
+    }, true)
+  }, [])
+
+  return (
+    <div
+      ref={parentRef}
+      onClick={() => {
+        console.log('parent react事件冒泡')
+      }}
+      onClickCapture={() => {
+        console.log('parent react事件捕获')
+      }}
+    >
+      <div
+        ref={childRef}
+        onClick={() => {
+          console.log('child react事件冒泡')
+        }}
+        onClickCapture={() => {
+          console.log('child react事件捕获')
+        }}
+      >child</div>
+    </div>
+  )
+}
+```
+
+**输出**
+
+```js
+document 原生捕获
+
+parent 原生捕获
+child 原生捕获
+
+child 原生冒泡
+parent 原生冒泡
+
+parent react事件捕获
+child react事件捕获
+
+child react事件冒泡
+parent react事件冒泡
+
+document 原生冒泡
+```
+
+### React17
+
+- 将事件委托到容器
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+function App() {
+  const parentRef = React.useRef()
+  const childRef = React.useRef()
+  React.useEffect(() => {
+    parentRef.current.addEventListener('click', () => {
+      console.log('parent 原生冒泡')
+    })
+    parentRef.current.addEventListener('click', () => {
+      console.log('parent 原生捕获')
+    }, true)
+
+    childRef.current.addEventListener('click', () => {
+      console.log('child 原生冒泡')
+    })
+    childRef.current.addEventListener('click', () => {
+      console.log('child 原生捕获')
+    }, true)
+
+    document.addEventListener('click', () => {
+      console.log('document 原生冒泡')
+    })
+    document.addEventListener('click', () => {
+      console.log('document 原生捕获')
+    }, true)
+  }, [])
+
+  return (
+    <div
+      ref={parentRef}
+      onClick={() => {
+        console.log('parent react事件冒泡')
+      }}
+      onClickCapture={() => {
+        console.log('parent react事件捕获')
+      }}
+    >
+      <div
+        ref={childRef}
+        onClick={() => {
+          console.log('child react事件冒泡')
+        }}
+        onClickCapture={() => {
+          console.log('child react事件捕获')
+        }}
+      >child</div>
+    </div>
+  )
+}
+```
+
+**输出**
+
+```
+document 原生捕获
+
+parent react事件捕获
+child react事件捕获
+
+parent 原生捕获
+child 原生捕获
+
+child 原生冒泡
+parent 原生冒泡
+
+child react事件冒泡
+parent react事件冒泡
+
+document 原生冒泡
+```
+
+### 模拟实现
 
 ```js
 const paths = [];
@@ -300,6 +455,82 @@ for (let i = 0; i < paths.length - 1; i += 1) {
     const listener = store[eventType];
     listener(syntheticEvent);
   }
+}
+```
+
+### 场景
+
+**react17中**
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+function App() {
+  const [visible, setVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    document.addEventListener('click', () => {
+      setVisible(false)
+    })
+  }, [])
+
+  // 此处的是绑定到root容器身上,所以stopPropagation可以阻止向上冒泡, 所以document的click事件绑定不会执行
+  function show(e) {
+    e.stopPropagation();
+    setVisible(true)
+  }
+
+  return (
+    <div>
+      <button onClick={show}>显示</button>
+      {visible && <div
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >模态框</div>}
+    </div>
+  )
+}
+```
+
+#### React16
+
+- 在react16中事件绑定到document身上
+- e是合成事件
+- e.nativeEvent: 原事件,
+- e.stopPropagation: 是阻止向上冒泡,但没法阻止当前元素剩余click事件绑定的执行
+- e.nativeEvent.stopImmediatePropagation: 阻止向上冒泡啊, 并且阻止当前元素剩余click事件绑定的执行
+
+```js
+import React from 'react'
+import ReactDOM from 'react-dom'
+
+function App() {
+  const [visible, setVisible] = React.useState(false)
+
+  React.useEffect(() => {
+    document.addEventListener('click', () => {
+      setVisible(false)
+    })
+  }, [])
+
+  function show(e) {
+    // e.stopPropagation();
+    e.nativeEvent.stopImmediatePropagation();
+    setVisible(true)
+  }
+
+  return (
+    <div>
+      <button onClick={show}>显示</button>
+      {visible && <div
+        onClick={(e) => {
+          e.stopPropagation()
+        }}
+      >模态框</div>}
+    </div>
+  )
 }
 ```
 
