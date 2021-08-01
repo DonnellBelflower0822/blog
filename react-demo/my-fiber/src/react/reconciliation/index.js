@@ -10,7 +10,7 @@ function commitAllWork(rootFiber) {
 
     if (item.effectTags === 'delete') {
       // 删除操作
-      item.parent.stateNode.removeChild(item.stateNode)
+      item.return.stateNode.removeChild(item.stateNode)
     }
     else if (item.effectTags === 'update') {
       // 更新
@@ -23,7 +23,7 @@ function commitAllWork(rootFiber) {
         )
       } else {
         // 节点类型不同
-        item.parent.stateNode.replaceChild(
+        item.return.stateNode.replaceChild(
           item.stateNode,
           item.alternate.stateNode
         )
@@ -31,10 +31,10 @@ function commitAllWork(rootFiber) {
     } else if (item.effectTags === "placement") {
       // 挂载
       let currentFiber = item
-      let parentFiber = item.parent
+      let parentFiber = item.return
 
       while (parentFiber.tag === 'class_component' || parentFiber.tag === 'function_component') {
-        parentFiber = parentFiber.parent
+        parentFiber = parentFiber.return
       }
 
       if (currentFiber.tag === 'host_component') {
@@ -139,10 +139,10 @@ function executeTask(fiber) {
   // 走到这里就到头了.需要往上回去
   let currentExecutelyFiber = fiber
 
-  while (currentExecutelyFiber.parent) {
+  while (currentExecutelyFiber.return) {
     // 记录当前effect
-    currentExecutelyFiber.parent.effects = (
-      currentExecutelyFiber.parent.effects.concat(
+    currentExecutelyFiber.return.effects = (
+      currentExecutelyFiber.return.effects.concat(
         currentExecutelyFiber.effects.concat([currentExecutelyFiber])
       )
     )
@@ -153,7 +153,7 @@ function executeTask(fiber) {
     }
 
     // 指向父亲
-    currentExecutelyFiber = currentExecutelyFiber.parent
+    currentExecutelyFiber = currentExecutelyFiber.return
   }
 
   // 到这里的化就是
@@ -189,7 +189,7 @@ function reconcileChildren(fiber, children) {
         tag: getTag(element),
         effects: [],
         effectTags: 'update',
-        parent: fiber,
+        return: fiber,
         stateNode: null,
         alternate
       }
@@ -209,7 +209,7 @@ function reconcileChildren(fiber, children) {
         tag: getTag(element),
         effects: [],
         effectTags: 'placement',
-        parent: fiber,
+        return: fiber,
         stateNode: null
       }
 
