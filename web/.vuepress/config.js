@@ -103,6 +103,13 @@ module.exports = {
           children: [
             '/engine/vite/',
           ]
+        },
+        {
+          title: 'monorepo',
+          path: '/engine/monorepo/',
+          children: [
+            '/engine/monorepo/',
+          ]
         }
       ],
       '/http/': [],
