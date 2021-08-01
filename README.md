@@ -15,3 +15,5 @@ features:
   details: Webpack/Rollup/Vite
 footer: MIT Licensed | Copyright © 2018-present Allen
 ---
+
+https://github.com/GoogleChromeLabs/webpack-libs-optimizations

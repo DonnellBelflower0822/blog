@@ -55,6 +55,7 @@ module.exports = {
             '/frame/react/my-router',
             '/frame/react/optimize',
             '/frame/react/fiber',
+            '/frame/react/immutable',
           ]
         },
         {
