@@ -1,3 +1,4 @@
+// 创建任务队列: 先进先出
 function createTaskQueue() {
   const taskQueue = []
   return {
@@ -5,6 +6,7 @@ function createTaskQueue() {
     pop: () => {
       return taskQueue.shift()
     },
+    // 判断是否还有任务
     isEmpty: () => taskQueue.length === 0
   }
 }
