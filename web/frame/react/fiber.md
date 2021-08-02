@@ -1,5 +1,62 @@
 # fiber
 
+## 概念
+### 目的
+> 为了提高 React 渲染页面的效率，减少页面卡顿，提升用户体验。
+
+### 在 Fiber 出现之前 React 存在什么问题
+> 核心就是递归比对的过程长期占用主线程产生了性能问题。
+
+- 在 Virtual DOM 比对的过程中 React 使用了递归，递归调用的过程不能被终止，
+- 如果 Virtual DOM 的层级比较深，递归比对的过程就会长期占用主线程，
+- 而 JavaScript 又是单线程，不能同时执行多个任务，其他任务只能等待执行，而且 JavaScript 的执行和 UI 的渲染又是互斥的，
+- 此时用户要么看到的就是空白界面，要么就是有界面但是不能响应用户操作，处于卡顿状态，用户体验差。
+
+### Fiber 如何解决性能问题
+
+- 在 Fiber 架构中 React 放弃了递归调用，采用循环来模拟递归，因为循环可以随时被中断。
+- React 利用`浏览器空闲时间`执行比对任务， 解决了 React 执行比对任务长期占用主线程的问题。
+- React 在执行完一个任务单元后，查看是否有其他的`高优先级任务`，如果有，放弃占用主线程，先执行优先级高的任务。
+
+### 什么是 Fiber
+- Fiber 是一个执行单元
+  - 在 React 15 中，将 VirtualDOM 树整体看成一个任务进行递归处理，任务整体庞大执行耗时且不能中断。
+  - 在 React 16 中，将整个任务拆分成了一个一个小的任务进行处理，每一个小的任务指的就是一个 Fiber 节点的构建。
+  - 任务会在浏览器的空闲时间被执行，每个单元执行完成后，React 都会检查是否还有空余时间，如果有就交还主线程的控制权。
+
+<img src='./img/run-fiber.png'/>
+
+
+- Fiber 是一种数据结构
+  - Fiber 是一种数据结构，支撑 Fiber 构建任务的运转。 
+  - React 通过链表结构找到下一个要执行的任务单元。
+  - 要构建链表结构，需要知道每一个节点的父级节点是谁，要知道他的子级节点是谁，要知道他的下一个兄弟节点是谁。
+  - Fiber 其实就是 JavaScript 对象，在这个对象中有 child 属性表示节点的子节点，有 sibling 属性表示节点的下一个兄弟节点，有 return 属性表示节点的父级节点。
+
+```ts
+type Fiber = {
+  // 组件类型 div、span、组件构造函数
+  type: any,
+  // DOM 对象, 函数组件, 类组件实例
+  stateNode: any,  
+  // 指向自己的父级 Fiber 对象
+  return: Fiber | null,
+  // 指向自己的第一个子级 Fiber 对象
+  child: Fiber | null,
+  // 指向自己的下一个兄弟 iber 对象
+  sibling: Fiber | null,
+};
+```
+
+<img src='./img/fiber.png'/>
+
+### Fiber 的工作方式
+
+- fiber 的工作分为两个阶段：render 阶段和 commit 阶段。
+  - render 阶段：构建 Fiber 对象，构建链表，在链表中标记要执行的 DOM 操作 ，可中断。
+    - 先从上向下走，构建节点对应的 Fiber 对象，然后再从下向上走，构建 Fiber 对象及链表。
+  - commit 阶段：根据构建好的链表进行 DOM 操作，不可中断。
+
 ## 架构
 
 - Scheduler（调度器）—— 调度任务的优先级，高优任务优先进入Reconciler
@@ -76,7 +133,7 @@ Fiber 对象
 ## 步骤
 ### 挂载
 - 调用render,往任务队列添加任务,
-- 将虚拟dom构建成fiber(Reconciler协调器)(申请浏览器空闲时执行任务)(异步可中断)
+- 将虚拟dom构建成fiber(render)(申请浏览器空闲时执行任务)(异步可中断)
   - 处理children
     - 为每个child构建fiber
       - 记录return(父fiber),child(大儿子fiber),slibing(兄弟fiber)
@@ -85,7 +142,7 @@ Fiber 对象
   - 如果有slibing(兄弟节点): 处理slibing
   - 都没有处理父亲的兄弟节点(slibing)
   - 记录当前的effects, 从里到外的顺序
-- commitAllWork(将更新effects插入dom上)(renderer)(同步)
+- commitAllWork(将更新effects插入dom上)(commit)(同步)
   - 根据遍历effects执行更新,删除,挂载等操作
 ### 更新
 - 往任务队列添加组件更新任务
