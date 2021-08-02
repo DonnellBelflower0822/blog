@@ -18,10 +18,11 @@ export default function createChannel() {
   function put(action) {
     currentTakers.forEach(taker => {
       if (taker.actionType === action.type) {
+        taker.cancel()
         taker(action)
       }
     })
   }
 
-  return { take, put }
+  return { take, channelPut: put }
 }

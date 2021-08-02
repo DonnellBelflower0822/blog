@@ -9,10 +9,10 @@ export default function createSagaMiddleware() {
     return (next) => {
       return action => {
         next(action)
+        channel.channelPut(action)
       }
     }
   }
-
-  sagaMiddleware.run = boundRunSaga
+  sagaMiddleware.run = (saga) => boundRunSaga(saga)
   return sagaMiddleware
 }
