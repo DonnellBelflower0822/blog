@@ -11,6 +11,7 @@ module.exports = {
       { text: '工程化', link: '/engine/' },
       { text: 'http', link: '/http/' },
       { text: '算法', link: '/algorithm/' },
+      { text: '简历', link: '/resume' },
     ],
     sidebar: {
       '/basic/': [
