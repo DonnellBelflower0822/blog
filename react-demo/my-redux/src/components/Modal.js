@@ -1,4 +1,4 @@
-import { connect } from 'react-redux'
+import { connect } from '../tinyReactRedux'
 import { bindActionCreators } from 'redux'
 import * as modalAction from '../store/actions/modal'
 
