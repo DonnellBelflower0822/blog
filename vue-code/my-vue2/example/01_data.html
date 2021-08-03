@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src='../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      data() {
+        // console.log(this)
+        return {
+          name: 'zf',
+          a: {
+            b: 2
+          },
+          arr: [1, 2, 3],
+          // 数组中是对象,也会继续数据劫持
+          arr1: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],
+        }
+      },
+      el: '#app'
+    })
+    // 设置新加的属性名不会数据劫持
+    // vm._data.a.c = 10
+
+    // 可以通过已存在的属性名进行覆盖设置
+    // vm._data.a = { ...vm._data.a, d: 20 }
+    // vm.$set(vm, 'a', { ...vm.a, d: 20 })
+
+    // 没有对数据进行数据劫持,重写数组实例的原型方法
+    // console.log(vm.a)
+
+    // 简单数组的
+    // vm.arr.push(11)
+
+    // console.log(vm.arr1[0])
+
+    // 往数组新值数据也会数据劫持
+    vm.arr1.push({ name: 'd' })
+
+  </script>
+</body>
+
+</html>

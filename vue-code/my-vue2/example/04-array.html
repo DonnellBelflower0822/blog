@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">
+    <div>{{arr}}</div>
+    <div>{{arr1}}</div>
+    <div>{{arr2}}</div>
+  </div>
+  <script src='../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      data() {
+        return {
+          arr: [1, 2, 3],
+          // 数组中是对象,也会继续数据劫持
+          arr1: [{ name: 'a' }, { name: 'b' }, { name: 'c' }],
+          arr2: [[0, 1, 2]]
+        }
+      },
+      el: '#app'
+    })
+    setTimeout(() => {
+      // vm.arr.push(4)
+      vm.arr2[0].push(3)
+    }, 1000)
+  </script>
+</body>
+
+</html>

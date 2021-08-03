@@ -34,11 +34,11 @@ function initData(vm) {
   let { data } = vm.$options;
   data = vm._data = isFunction(data) ? data.call(vm) : data;
 
+  // 数据劫持
   observe(data);
 
+  // 将data的每个属性代理到vm身上
   for (let key in data) {
     proxy(vm, '_data', key);
   }
-
-  console.log(vm);
 }

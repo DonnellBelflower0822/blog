@@ -1,9 +1,39 @@
+import { compileToFunction } from './compiler';
+import { mountComponent } from './lifecycle';
 import { initState } from './state';
 
 export function initMixin(Vue) {
   Vue.prototype._init = function (options) {
-    this.$options = options;
+    const vm = this;
+    vm.$options = options;
     // 对数据进行响应式(data,computed)
-    initState(this);
+    initState(vm);
+
+    if (vm.$options.el) {
+      vm.$mount(vm.$options.el);
+    }
+  };
+
+  Vue.prototype.$mount = function (el) {
+    const vm = this;
+    el = vm.$el = document.querySelector(el);
+
+    // 把模板转换成渲染函数, -> 调用渲染函数产生vnode -> diff 更新虚拟dom -> 产生真实节点,更新
+
+    // 准备好render渲染函数
+    if (!vm.$options.render) {
+      let template = vm.$options.template;
+
+      if (!template && el) {
+        template = el.outerHTML;
+      }
+
+      // 通过template生成渲染函数
+      const render = compileToFunction(template);
+      vm.$options.render = render;
+    }
+
+    // 挂载组件
+    mountComponent(vm, el);
   };
 }
