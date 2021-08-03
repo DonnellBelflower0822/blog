@@ -574,4 +574,11 @@ function App() {
   - 一种常用的方法是使用React Context。通过定义提供数据的Provider组件，并允许嵌套的组件通过Consumer组件或useContext Hook 使用上下文数据。
   - redux
 
+## 高阶组件
+
+- 代码复用，逻辑抽象，抽离底层准备（bootstrap）代码
+- 渲染劫持
+- State 抽象和更改
+- Props 更改
+
 

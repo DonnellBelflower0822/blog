@@ -75,6 +75,13 @@ module.exports = {
       ],
       '/browser/': [
         {
+          title: '浏览器',
+          path: '/browser/browser/',
+          children: [
+            '/browser/browser/',
+          ]
+        },
+        {
           title: 'event-loop',
           path: '/browser/event-loop/',
           children: [
@@ -113,7 +120,15 @@ module.exports = {
           ]
         }
       ],
-      '/http/': [],
+      '/http/': [
+        {
+          title: 'http',
+          path: '/http/http/',
+          children: [
+            '/http/http/',
+          ]
+        }
+      ],
       '/algorithm/': [],
     }
   }
