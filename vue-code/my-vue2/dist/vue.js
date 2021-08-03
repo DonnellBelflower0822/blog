@@ -4,6 +4,129 @@
   (global = typeof globalThis !== 'undefined' ? globalThis : global || self, global.Vue = factory());
 }(this, (function () { 'use strict';
 
+  const isFunction = (val) => typeof val === 'function';
+  const isObject = (val) => val !== null && typeof val === 'object';
+  let waiting = false;
+  const callbacks = [];
+  let timerFn;
+  if (Promise) {
+      timerFn = () => { Promise.resolve().then(flushCallbacks); };
+  }
+  else if (MutationObserver) {
+      const textNode = document.createTextNode('1');
+      const observe = new MutationObserver(flushCallbacks);
+      observe.observe(textNode, { characterData: true });
+      timerFn = () => {
+          textNode.textContent = '2';
+      };
+  }
+  else if (setImmediate) {
+      timerFn = () => {
+          setImmediate(flushCallbacks);
+      };
+  }
+  else {
+      timerFn = () => {
+          setTimeout(flushCallbacks);
+      };
+  }
+  function flushCallbacks() {
+      callbacks.forEach(cb => cb());
+      waiting = false;
+  }
+  const nextTick = (cb) => {
+      callbacks.push(cb);
+      if (!waiting) {
+          waiting = true;
+          timerFn();
+      }
+  };
+  const lifecycleHooks = ['beforeCreate', 'created', 'beforeMount', 'mounted'];
+  const stats = {
+      components(parentVal, childVal) {
+          const options = Object.create(parentVal);
+          if (childVal) {
+              for (const key in childVal) {
+                  options[key] = childVal[key];
+              }
+          }
+          return options;
+      }
+  };
+  lifecycleHooks.forEach(key => {
+      stats[key] = (parentVal, childVal) => {
+          if (childVal) {
+              if (parentVal) {
+                  return [...parentVal, childVal];
+              }
+              else {
+                  return [childVal];
+              }
+          }
+          else {
+              return parentVal;
+          }
+      };
+  });
+  // {} {beforeCreate:fn} => {beforeCreate:[fn]}
+  // {beforeCreate:[fn]} {beforeCreate:fn} => {beforeCreate:[fn,fn]}
+  function mergeOptions(parent, child = {}) {
+      const options = {};
+      for (let key in parent) {
+          mergeField(key);
+      }
+      for (let key in child) {
+          if (parent[key] === undefined) {
+              mergeField(key);
+          }
+      }
+      function mergeField(key) {
+          const parentVal = parent[key];
+          const childVal = child[key];
+          if (stats[key]) {
+              options[key] = stats[key](parentVal, childVal);
+          }
+          else {
+              if (isObject(parentVal) && isObject(childVal)) {
+                  options[key] = { ...parentVal, ...childVal };
+              }
+              else {
+                  options[key] = childVal || parentVal;
+              }
+          }
+      }
+      return options;
+  }
+  function isBuiltinTag(str) {
+      const builtinTags = ['div'];
+      return builtinTags.includes(str);
+  }
+
+  function initGlobalApi(Vue) {
+      Vue.options = {};
+      Vue.mixins = function (options) {
+          // {} {beforeCreate:fn} => {beforeCreate:[fn]}
+          // {beforeCreate:[fn]} {beforeCreate:fn} => {beforeCreate:[fn,fn]}
+          this.options = mergeOptions(this.options, options);
+          return this;
+      };
+      Vue.options._base = Vue;
+      Vue.options.components = {};
+      Vue.component = function (id, defintion) {
+          defintion = this.options._base.extend(defintion);
+          this.options.components[id] = defintion;
+      };
+      Vue.extend = function (opts) {
+          const Sub = function VueComponent() {
+              this._init();
+          };
+          Sub.prototype = Object.create(this.prototype);
+          Sub.prototype.constructor = Sub;
+          Sub.options = mergeOptions(this.options, opts);
+          return Sub;
+      };
+  }
+
   const defaultTagRE = /\{\{((?:.|\r?\n)+?)\}\}/g; // {{aaaaa}}
   function genProps(attrs) {
       return attrs.reduce((str, attr, index) => {
@@ -216,44 +339,6 @@
       Dep.target = stack[stack.length - 1];
   }
 
-  const isFunction = (val) => typeof val === 'function';
-  const isObject = (val) => val !== null && typeof val === 'object';
-  let waiting = false;
-  const callbacks = [];
-  let timerFn;
-  if (Promise) {
-      timerFn = () => { Promise.resolve().then(flushCallbacks); };
-  }
-  else if (MutationObserver) {
-      const textNode = document.createTextNode('1');
-      const observe = new MutationObserver(flushCallbacks);
-      observe.observe(textNode, { characterData: true });
-      timerFn = () => {
-          textNode.textContent = '2';
-      };
-  }
-  else if (setImmediate) {
-      timerFn = () => {
-          setImmediate(flushCallbacks);
-      };
-  }
-  else {
-      timerFn = () => {
-          setTimeout(flushCallbacks);
-      };
-  }
-  function flushCallbacks() {
-      callbacks.forEach(cb => cb());
-      waiting = false;
-  }
-  const nextTick = (cb) => {
-      callbacks.push(cb);
-      if (!waiting) {
-          waiting = true;
-          timerFn();
-      }
-  };
-
   let queue = [];
   let has = {};
   let pending = false;
@@ -369,6 +454,10 @@
    * @param newVnode  新的vnode
    */
   function patch(oldVnode, newVnode) {
+      if (!oldVnode) {
+          console.log(1);
+          return;
+      }
       if (oldVnode.nodeType === 1) {
           // 渲染
           const parentElm = oldVnode.parentNode;
@@ -379,10 +468,19 @@
       }
       // 更新
   }
+  function createComponent(vnode) {
+      let i = vnode.data;
+      // i = i.hook?.init
+      if ((i = i.hook) && (i = i.init)) {
+          i();
+      }
+      return false;
+  }
   // 根据vnode创建真实dom
   function createElm(vnode) {
       const { vm, tag, key, data, children, text } = vnode;
       if (typeof tag === 'string') {
+          if (createComponent(vnode)) ;
           // el指向真实节点
           vnode.el = document.createElement(tag);
           children.forEach(child => {
@@ -396,6 +494,7 @@
   }
 
   function mountComponent(vm, el) {
+      callHook(vm, 'beforeMount');
       // 渲染和更新都会调用
       const updateComponent = () => {
           vm._update(vm._render());
@@ -413,6 +512,12 @@
           vm.$el = patch(vm.$el, vnode);
       };
       Vue.prototype.$nextTick = nextTick;
+  }
+  function callHook(vm, hook) {
+      const hooks = vm.$options[hook] || [];
+      hooks.forEach(item => {
+          item.call(vm);
+      });
   }
 
   let arrayMethods = Object.create(Array.prototype);
@@ -642,9 +747,13 @@
   function initMixin(Vue) {
       Vue.prototype._init = function (options) {
           const vm = this;
-          vm.$options = options;
+          // this.constructor = Vue
+          vm.$options = mergeOptions(this.constructor.options, options);
+          // 处理数据之前
+          callHook(vm, 'beforeCreate');
           // 对数据进行响应式(data,computed)
           initState(vm);
+          callHook(vm, 'created');
           if (vm.$options.el) {
               vm.$mount(vm.$options.el);
           }
@@ -669,20 +778,37 @@
   }
 
   function createElement(vm, tag, data = {}, children) {
-      return vnode(vm, tag, data, data.key, children);
+      if (isBuiltinTag(tag)) {
+          return vnode(vm, tag, data, data.key, children);
+      }
+      const Ctor = vm.$options.components[tag];
+      return createrComponent(vm, tag, data, data.key, children, Ctor);
   }
   function createTextElement(vm, text) {
       return vnode(vm, undefined, undefined, undefined, undefined, text);
   }
-  function vnode(vm, tag, data = {}, key, children, text) {
+  function vnode(vm, tag, data = {}, key, children, text, componentOptions) {
       return {
           vm,
           tag,
           key,
           data,
           children,
-          text
+          text,
+          componentOptions
       };
+  }
+  function createrComponent(vm, tag, data, key, children, Ctor) {
+      if (isObject(Ctor)) {
+          Ctor = vm.$options._base.extend(Ctor);
+      }
+      data.hook = {
+          init() {
+              const subVm = new Ctor({ _isComponent: true });
+              subVm.$mount();
+          }
+      };
+      return vnode(vm, `vue-component-${tag}`, data, key, undefined, undefined, { Ctor, children });
   }
 
   function renderMixin(Vue) {
@@ -711,6 +837,7 @@
   renderMixin(Vue);
   lifecycleMixin(Vue);
   stateMixin(Vue);
+  initGlobalApi(Vue);
 
   return Vue;
 

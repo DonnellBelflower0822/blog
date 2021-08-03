@@ -3,6 +3,8 @@ import { nextTick } from './utils';
 import { patch } from './vdom/patch';
 
 export function mountComponent(vm, el) {
+  callHook(vm, 'beforeMount');
+  
   // 渲染和更新都会调用
   const updateComponent = () => {
     vm._update(vm._render());
@@ -28,4 +30,11 @@ export function lifecycleMixin(Vue) {
   };
 
   Vue.prototype.$nextTick = nextTick;
+}
+
+export function callHook(vm, hook) {
+  const hooks = vm.$options[hook] || [];
+  hooks.forEach(item => {
+    item.call(vm);
+  });
 }

@@ -4,6 +4,11 @@
  * @param newVnode  新的vnode
  */
 export function patch(oldVnode, newVnode) {
+  if (!oldVnode) {
+    console.log(1);
+    return;
+  }
+  
   if (oldVnode.nodeType === 1) {
     // 渲染
     const parentElm = oldVnode.parentNode;
@@ -17,10 +22,24 @@ export function patch(oldVnode, newVnode) {
   // 更新
 }
 
+function createComponent(vnode) {
+  let i = vnode.data;
+
+  // i = i.hook?.init
+  if ((i = i.hook) && (i = i.init)) {
+    i();
+  }
+  return false;
+}
+
 // 根据vnode创建真实dom
 function createElm(vnode) {
   const { vm, tag, key, data, children, text } = vnode;
   if (typeof tag === 'string') {
+
+    if (createComponent(vnode)) {
+
+    }
     // el指向真实节点
     vnode.el = document.createElement(tag);
 

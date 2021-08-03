@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <zf-collapse>
+    <zf-collapse-item title='vue2'>
+      <div>vue2</div>
+    </zf-collapse-item>
+    <zf-collapse-item title='vue3'>
+      <div>vue3</div>
+    </zf-collapse-item>
+  </zf-collapse>
+
+  <template id='zf-collapse_tmpl'>
+    <div class="zf-collapse">
+      <slot></slot>
+    </div>
+  </template>
+
+  <template id='zf-collapse-item_tmpl'>
+    <div class="zf-collapse-item">
+      <div class="title"></div>
+      <div class="content">
+        <slot></slot>
+      </div>
+    </div>
+  </template>
+  <script type="module" src='./index.js'></script>
+</body>
+
+</html>

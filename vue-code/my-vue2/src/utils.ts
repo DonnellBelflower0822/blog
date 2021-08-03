@@ -37,3 +37,68 @@ export const nextTick = (cb) => {
     timerFn();
   }
 };
+
+const lifecycleHooks = ['beforeCreate', 'created', 'beforeMount', 'mounted'];
+
+const stats = {
+  components(parentVal, childVal) {
+    const options = Object.create(parentVal);
+    if (childVal) {
+      for (const key in childVal) {
+        options[key] = childVal[key];
+      }
+    }
+
+    return options;
+  }
+};
+lifecycleHooks.forEach(key => {
+  stats[key] = (parentVal, childVal) => {
+    if (childVal) {
+      if (parentVal) {
+        return [...parentVal, childVal];
+      } else {
+        return [childVal];
+      }
+    } else {
+      return parentVal;
+    }
+  };
+});
+
+// {} {beforeCreate:fn} => {beforeCreate:[fn]}
+// {beforeCreate:[fn]} {beforeCreate:fn} => {beforeCreate:[fn,fn]}
+export function mergeOptions(parent, child = {}) {
+  const options = {};
+  for (let key in parent) {
+    mergeField(key);
+  }
+
+  for (let key in child) {
+    if (parent[key] === undefined) {
+      mergeField(key);
+    }
+  }
+
+  function mergeField(key) {
+    const parentVal = parent[key];
+    const childVal = child[key];
+
+    if (stats[key]) {
+      options[key] = stats[key](parentVal, childVal);
+    } else {
+      if (isObject(parentVal) && isObject(childVal)) {
+        options[key] = { ...parentVal, ...childVal };
+      } else {
+        options[key] = childVal || parentVal;
+      }
+    }
+  }
+
+  return options;
+}
+
+export function isBuiltinTag(str) {
+  const builtinTags = ['div'];
+  return builtinTags.includes(str);
+}
