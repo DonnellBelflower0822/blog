@@ -241,7 +241,7 @@ class Promise {
             setTimeout(() => {
               try {
                 const x = onFulfilled(that.value)
-                resolve(p, x, resolve, reject)
+                resolvePromise(p, x, resolve, reject)
               } catch (e) {
                 reject(e)
               }
@@ -254,7 +254,7 @@ class Promise {
             setTimeout(() => {
               try {
                 const x = onRejected(that.reason)
-                resolve(p, x, resolve, reject)
+                resolvePromise(p, x, resolve, reject)
               } catch (e) {
                 reject(e)
               }
@@ -266,16 +266,24 @@ class Promise {
 
       if (that.state === 'FULFILLED') {
         if (typeof onFulfilled === 'function') {
-          const x = onFulfilled(that.value)
-          resolvePromise(p, x, resolve, reject)
+          try{
+            const x = onFulfilled(that.value)
+            resolvePromise(p, x, resolve, reject)
+          }catch(e){
+            reject(e)
+          }
         }
         return
       }
 
       if (that.state === 'REJECTED') {
         if (typeof onRejected === 'function') {
-          const x = onRejected(that.reason)
-          resolvePromise(p, x, resolve, reject)
+          try{
+            const x = onRejected(that.reason)
+            resolvePromise(p, x, resolve, reject)
+          }catch(e){
+            reject(e)
+          }
         }
       }
     })
