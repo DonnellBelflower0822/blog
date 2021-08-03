@@ -1,27 +1,56 @@
 # 框架篇
 
-## 通识
-  - 路由
-  - 虚拟dom
+## hash和history
 
-## vue
-- 数据响应式
-  - Object.defineProperty
-  - Proxy
-- Vue2
-  - 原理
-  - router
-  - vuex
-- Vue3
-  - 原理
-  - router
-  - vuex
+**表现形式**
 
-## React
-- react
-- hook
-- router
-- redux
-- saga
-- dva
-- umi
+```
+# hash
+http://192.168.1.104:8081/#/about/12
+# history
+http://192.168.1.104:8081/about/12?a=1
+```
+
+**原理**
+- hash
+  - 基于锚点
+  - onhashchange
+  - 改变 `location.hash ='aa'`
+- history
+  - 基于html5的History API
+  - history.pushState()
+  - history.replaceState()
+
+**history需要服务器支持**
+
+```
+location / {
+  try_files $uri $uri/ /index.html;
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

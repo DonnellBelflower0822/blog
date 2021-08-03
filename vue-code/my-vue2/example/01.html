@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div id="app">{{name}}</div>
+  <script src='../dist/vue.js'></script>
+  <script>
+    const vm = new Vue({
+      data() {
+        // console.log(this)
+        return {
+          name: 'zf',
+          a: {
+            b: 2
+          },
+          arr: [1, 2, 3]
+        }
+      },
+      el: '#app'
+    })
+    // 后加的属性不会数据劫持
+    // vm._data.a.c = 10
+    // 设置
+    // vm._data.a = { ...vm._data.a, d: 20 }
+
+    console.log(vm.a)
+  </script>
+</body>
+
+</html>
