@@ -1,7 +1,7 @@
 import { nextTick } from 'src/utils';
 import Wacther from './watcher';
 
-let queue = [];
+let queue: Wacther[] = [];
 let has = {};
 let pending = false;
 

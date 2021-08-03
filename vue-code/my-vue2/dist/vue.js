@@ -66,7 +66,7 @@
   const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/; // a=b  a="b"  a='b'
   const startTagClose = /^\s*(\/?)>/; //     />   <div/>
   let root;
-  const stack = [];
+  const stack$1 = [];
   function createAstElement(tagName, attrs) {
       return {
           tag: tagName,
@@ -77,7 +77,7 @@
       };
   }
   function start(tagName, attributes) {
-      const parent = stack[stack.length - 1];
+      const parent = stack$1[stack$1.length - 1];
       const element = createAstElement(tagName, attributes);
       if (!root) {
           root = element;
@@ -86,17 +86,17 @@
       if (parent) {
           parent.children.push(element);
       }
-      stack.push(element);
+      stack$1.push(element);
   }
   function end(tagName) {
-      const last = stack.pop();
+      const last = stack$1.pop();
       if (last.tag !== tagName) {
           console.error('标签有误');
       }
   }
   function chars(text) {
       text = text.replace(/\s/g, '');
-      const parent = stack[stack.length - 1];
+      const parent = stack$1[stack$1.length - 1];
       if (text) {
           parent.children.push({ type: 3, text });
       }
@@ -206,11 +206,14 @@
           });
       }
   }
+  const stack = [];
   function pushTarget(watcher) {
       Dep.target = watcher;
+      stack.push(watcher);
   }
   function popTarget() {
-      Dep.target = null;
+      stack.pop();
+      Dep.target = stack[stack.length - 1];
   }
 
   const isFunction = (val) => typeof val === 'function';
@@ -284,30 +287,65 @@
       id;
       deps;
       depsId;
+      user;
+      value;
+      lazy;
+      dirty;
       constructor(vm, expOrFn, callback, options) {
           this.vm = vm;
           this.expOrFn = expOrFn;
+          // 用户watcher,
+          this.user = !!options.user;
+          // 计算watcher
+          this.lazy = !!options.lazy;
+          this.dirty = options.lazy;
           this.callback = callback;
           this.options = options;
           this.id = id++;
           this.deps = [];
           this.depsId = new Set();
-          this.getter = expOrFn;
-          this.get();
+          if (typeof expOrFn === 'string') {
+              this.getter = () => {
+                  // 取值, 将name收集watch的watcher
+                  return expOrFn.split('.').reduce((obj, key) => (obj[key]), vm);
+              };
+          }
+          else {
+              // 下面的逻辑也是去vm获取值
+              this.getter = expOrFn;
+          }
+          this.value = this.lazy ? undefined : this.get();
       }
       get() {
           // 会走render, 走vm.a, 会走Object.defineProperty
           // 一个属性对应多个watcher
           // 一个watcher对应多个属性
           pushTarget(this);
-          this.getter();
+          const newValue = this.getter.call(this.vm);
           popTarget();
+          return newValue;
+      }
+      evaluate() {
+          this.value = this.get();
+          // 标记当前不脏了
+          this.dirty = false;
       }
       update() {
-          queueWatcher(this);
+          if (this.lazy) {
+              this.dirty = true;
+          }
+          else {
+              queueWatcher(this);
+          }
       }
       run() {
-          this.get();
+          const newValue = this.get();
+          const oldValue = this.value;
+          if (this.user) {
+              // wath 的 watcher
+              this.callback.call(this.vm, newValue, oldValue);
+          }
+          this.value = newValue;
       }
       addDep(dep) {
           // 去重
@@ -315,6 +353,12 @@
               this.depsId.add(dep.id);
               this.deps.push(dep);
               dep.addSub(this);
+          }
+      }
+      depend() {
+          for (let i = 0; i < this.deps.length; i += 1) {
+              // 让当前的属性收集渲染watcher
+              this.deps[i].depend();
           }
       }
   }
@@ -500,13 +544,22 @@
       return new Observer(data);
   }
 
+  function stateMixin(Vue) {
+      Vue.prototype.$watch = function (key, handler, options = {}) {
+          new Wacther(this, key, handler, { ...options, user: true });
+      };
+  }
   function initState(vm) {
       const { $options } = vm;
       if ($options.data) {
           initData(vm);
       }
-      if ($options.computed) ;
-      if ($options.watch) ;
+      if ($options.computed) {
+          initComputed(vm);
+      }
+      if ($options.watch) {
+          initWatch(vm);
+      }
   }
   // 将vm.a 代理到 vm._data.a
   function proxy(vm, source, key) {
@@ -529,6 +582,61 @@
       for (let key in data) {
           proxy(vm, '_data', key);
       }
+  }
+  function initWatch(vm) {
+      const { watch } = vm.$options;
+      for (const key in watch) {
+          const handler = watch[key];
+          if (Array.isArray(handler)) {
+              handler.forEach(item => {
+                  createWatcher(vm, key, item);
+              });
+          }
+          else {
+              createWatcher(vm, key, handler);
+          }
+      }
+  }
+  function createWatcher(vm, key, handler) {
+      vm.$watch(key, handler);
+  }
+  function initComputed(vm) {
+      const { computed } = vm.$options;
+      const watchers = vm._computedWatchers = {};
+      for (const key in computed) {
+          const userDef = computed[key];
+          const getter = typeof userDef === 'function' ? userDef : userDef.get;
+          watchers[key] = new Wacther(vm, getter, () => { }, { lazy: true });
+          // 将key定义到vm上
+          defineComputed(vm, key, userDef);
+      }
+  }
+  function defineComputed(vm, key, userDef) {
+      const sharedProperty = {};
+      if (typeof userDef === 'function') {
+          sharedProperty.get = createComputedGetter(key);
+      }
+      else {
+          sharedProperty.get = createComputedGetter(key);
+          sharedProperty.set = userDef.set;
+      }
+      Object.defineProperty(vm, key, sharedProperty);
+  }
+  function createComputedGetter(key) {
+      return function () {
+          const watcher = this._computedWatchers[key];
+          // 如果是脏的计算
+          if (watcher.dirty) {
+              watcher.evaluate();
+          }
+          // 如果取值后还存在watcher, 也要收集
+          // 存在渲染watcher, 计算watcher,
+          // 但计算属性名不会生成dep,不进行依赖收集
+          if (Dep.target) {
+              watcher.depend();
+          }
+          return watcher.value;
+      };
   }
 
   function initMixin(Vue) {
@@ -602,6 +710,7 @@
   initMixin(Vue);
   renderMixin(Vue);
   lifecycleMixin(Vue);
+  stateMixin(Vue);
 
   return Vue;
 

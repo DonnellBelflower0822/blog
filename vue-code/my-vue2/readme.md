@@ -12,3 +12,9 @@
 ### 数组
 - 对数组并不是采用defineProperty进行数据劫持(主要从性能上考虑)
 - 通过push,shift,pop,unshift,sort,splice,
+
+### computed
+- 页面使用computed不会收集渲染watcher
+- 在computed的函数体内使用属性会收集computed的watcher
+
+
