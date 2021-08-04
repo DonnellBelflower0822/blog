@@ -226,6 +226,10 @@ function _new(constcutor,...args){
 ## [ ] interface/type
 
 
+## 渲染机制
+- HTML被解析DOM树
+- CSS被解析程CSSOM
+- 将DOM树和CSSOM生成一棵渲染树
 
 
 
