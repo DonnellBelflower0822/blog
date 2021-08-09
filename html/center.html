@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    .item1 {
+      margin: 0 auto;
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+
+    .box2 {
+      text-align: center;
+    }
+
+    .box2 .item2 {
+      width: 100px;
+      height: 100px;
+      background: red;
+      display: inline-block;
+    }
+
+    .box3 {
+      position: relative;
+      height: 150px;
+    }
+
+    .box3 .item3 {
+      width: 100px;
+      height: 100px;
+      display: block;
+      background: red;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .box4 {
+      position: relative;
+      height: 150px;
+    }
+
+    .box4 .item4 {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      margin: auto;
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+
+    .box5 {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 150px;
+    }
+    .box5 .item5 {
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="item1">item1</div>
+  <hr />
+  <div class="box2">
+    <div class="item2">item2</div>
+  </div>
+  <hr />
+  <div class="box3">
+    <div class="item3">item3</div>
+  </div>
+  <hr />
+  <div class="box4">
+    <div class="item4">item4</div>
+  </div>
+  <hr />
+  <div class="box5">
+    <div class="item5">item5</div>
+  </div>
+  <hr />
+</body>
+
+</html>
