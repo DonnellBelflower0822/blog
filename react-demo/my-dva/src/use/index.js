@@ -1,4 +1,3 @@
-import { pullAt } from 'lodash';
 import React from 'react';
 import dva from '../dva'
 import App from './App'
@@ -18,9 +17,9 @@ app.model({
      * @param {*} action 动作
      * @param {*} effects saga/effects
      */
-    *asyncAdd(action, { call }) {
+    *asyncAdd(action, { call, put }) {
       yield call(delay, 1000)
-      yield pullAt({ type: 'add' })
+      yield put({ type: 'add' })
     }
   }
 })
