@@ -134,6 +134,7 @@ module.exports = {
           path: '/http/http/',
           children: [
             '/http/http/',
+            '/http/http/request',
           ]
         }
       ],
