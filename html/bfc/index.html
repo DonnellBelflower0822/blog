@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+</head>
+
+<body>
+  <style>
+    #box1-1,
+    #box1-2 {
+      width: 100px;
+      height: 100px;
+      background: red;
+      float: left;
+    }
+
+    #container1 {
+      background: #000;
+      border: 1px solid #000;
+
+      /* 使用Float脱离文档流，高度塌陷 */
+      /* 可以给父容器触发BFC */
+      /* display: flex; */
+      /* overflow: hidden; */
+      /* position: absolute; */
+      /* display: table-cell; */
+    }
+  </style>
+  <div id="container1">
+    <div id="box1-1"></div>
+    <div id="box1-2"></div>
+  </div>
+
+  <style>
+    #box2-1,
+    #box2-2 {
+      height: 100px;
+      width: 100px;
+      background: red;
+      margin: 10px;
+    }
+  </style>
+  <div id="container2">
+    <div id='box2-1'></div>
+    <p>
+    <div id='box2-2'></div>
+    </p>
+  </div>
+</body>
+
+</html>
