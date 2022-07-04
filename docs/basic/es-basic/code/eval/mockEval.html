@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <script>
+    const response = 'window.wx_errcode=402;window.wx_code=1024'
+    function myEval(str) {
+      const script = document.createElement('script')
+      script.text = str
+      script.type = 'text/javascript'
+      document.body.appendChild(script)
+      document.body.removeChild(script)
+    }
+    myEval(response)
+
+    console.log(window.wx_errcode)
+  </script>
+</body>
+
+</html>
