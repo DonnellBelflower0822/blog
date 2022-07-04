@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"dev": "vuepress dev web",
-		"build": "vuepress build web && npm run deploy",
+		"dev": "vuepress dev docs",
+		"build": "vuepress build docs && npm run deploy",
 		"test": "jest",
-		"deploy": "gh-pages -d docs"
+		"deploy": "gh-pages -d dist"
 	},
 	"repository": {
 		"type": "git",
