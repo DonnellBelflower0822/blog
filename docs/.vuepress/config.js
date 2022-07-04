@@ -39,13 +39,13 @@ module.exports = {
         },
         {
           title: 'TS',
-          path: '/basic/ts/',
+          path: '/basic/ts-md/',
           children: [
-            '/basic/ts/',
+            '/basic/ts-md/',
           ]
         },
         {
-          title: 'html/css',
+          title: 'html-css',
           path: '/basic/html-css/',
           children: [
             '/basic/html-css/',
@@ -55,28 +55,28 @@ module.exports = {
       '/frame/': [
         {
           title: 'React',
-          path: '/frame/react/',
+          path: '/frame/react-md/',
           children: [
-            '/frame/react/',
-            '/frame/react/my-react',
-            '/frame/react/hook',
-            '/frame/react/my-redux',
+            '/frame/react-md/',
+            '/frame/react-md/my-react',
+            '/frame/react-md/hook',
+            '/frame/react-md/my-redux',
             // '/frame/react/my-router',
-            '/frame/react/optimize',
-            '/frame/react/fiber',
-            '/frame/react/immutable',
+            '/frame/react-md/optimize',
+            '/frame/react-md/fiber',
+            '/frame/react-md/immutable',
           ]
         },
         {
           title: 'Vue',
-          path: '/frame/vue/',
+          path: '/frame/vue-md/',
           children: [
-            '/frame/vue/',
-            '/frame/vue/my-vue2',
-            '/frame/vue/my-vue2-router',
-            '/frame/vue/my-vue2-vuex',
-            '/frame/vue/my-vue2-ssr',
-            '/frame/vue/my-vue3',
+            '/frame/vue-md/',
+            '/frame/vue-md/my-vue2',
+            '/frame/vue-md/my-vue2-router',
+            '/frame/vue-md/my-vue2-vuex',
+            '/frame/vue-md/my-vue2-ssr',
+            '/frame/vue-md/my-vue3',
           ]
         }
       ],
@@ -107,24 +107,24 @@ module.exports = {
       '/engine/': [
         {
           title: 'webpack',
-          path: '/engine/webpack/',
+          path: '/engine/webpack-md/',
           children: [
-            '/engine/webpack/',
-            '/engine/webpack/my-webpack',
+            '/engine/webpack-md/',
+            '/engine/webpack-md/my-webpack',
           ]
         },
         {
           title: 'vite',
-          path: '/engine/vite/',
+          path: '/engine/vite-md/',
           children: [
-            '/engine/vite/',
+            '/engine/vite-md/',
           ]
         },
         {
           title: 'monorepo',
-          path: '/engine/monorepo/',
+          path: '/engine/monorepo-md/',
           children: [
-            '/engine/monorepo/',
+            '/engine/monorepo-md/',
           ]
         }
       ],
