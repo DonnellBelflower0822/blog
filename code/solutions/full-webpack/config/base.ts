@@ -13,7 +13,8 @@ const baseConfig: webpack.Configuration = {
         path: path.resolve(__dirname, '..', 'dist'),
         // 如果文件内容不改, 生成文件名不变
         filename: '[name].[contenthash].js',
-        clean: true
+        clean: true,
+        chunkFilename: '[id].[contenthash].js',
     },
     devServer: {
         static: './dist',
@@ -28,7 +29,8 @@ const baseConfig: webpack.Configuration = {
                     // 'style-loader',
                     MiniCssExtractPlugin.loader,
                     // path.resolve(__dirname, './loader/style-loader/index.js'),
-                    'css-loader'
+                    'css-loader',
+                    'postcss-loader'
                 ]
             },
             {
@@ -37,6 +39,7 @@ const baseConfig: webpack.Configuration = {
                     // 'style-loader',
                     MiniCssExtractPlugin.loader,
                     'css-loader',
+                    'postcss-loader',
                     'less-loader',
                 ],
             },
@@ -51,42 +54,12 @@ const baseConfig: webpack.Configuration = {
             {
                 test: /\.m?js$/,
                 exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            [
-                                '@babel/preset-env',
-                                {
-                                    "useBuiltIns": "entry",
-                                    "corejs": "3.22"
-                                }
-                            ],
-                            '@babel/preset-typescript',
-                            '@babel/preset-react'
-                        ]
-                    }
-                }
+                use: 'babel-loader'
             },
             {
                 test: /\.tsx?$/,
                 use: [
-                    {
-                        loader: 'babel-loader',
-                        options: {
-                            presets: [
-                                [
-                                    '@babel/preset-env',
-                                    {
-                                        "useBuiltIns": "entry",
-                                        "corejs": "3.22"
-                                    }
-                                ],
-                                '@babel/preset-typescript',
-                                '@babel/preset-react'
-                            ]
-                        }
-                    },
+                    'babel-loader',
                     'ts-loader'
                 ],
                 exclude: /node_modules/,
@@ -94,7 +67,8 @@ const baseConfig: webpack.Configuration = {
         ]
     },
     resolve: {
-        extensions: ['.tsx', '.ts', '.js'],
+        // 将高频使用的文件名后缀放在前面, 提前命中
+        extensions: ['.tsx', '.ts', '.js', '.json'],
         alias: {
             '@': path.resolve(__dirname, '..', 'src')
         }
@@ -120,12 +94,28 @@ const baseConfig: webpack.Configuration = {
     ],
     optimization: {
         runtimeChunk: 'single',
+        usedExports: true,
+        sideEffects: true,
         splitChunks: {
+            chunks: 'async',
+            minSize: 20000,
+            minRemainingSize: 0,
+            minChunks: 1,
+            maxAsyncRequests: 30,
+            maxInitialRequests: 30,
+            enforceSizeThreshold: 50000,
             cacheGroups: {
-                vendor: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: 'vendors',
+                common: {
+                    name: 'commons',
                     chunks: 'all',
+                    test: /[\\/]node_modules[\\/]/,
+                    priority: -10,
+                    // reuseExistingChunk: true,
+                },
+                default: {
+                    minChunks: 2,
+                    priority: -20,
+                    // reuseExistingChunk: true,
                 },
             },
         },

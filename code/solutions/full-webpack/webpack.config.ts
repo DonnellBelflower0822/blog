@@ -1,5 +1,6 @@
 import * as webpack from 'webpack'
 import merge from 'webpack-merge'
+// import SpeedMeasurePlugin from 'speed-measure-webpack-plugin'
 
 import baseConfig from "./config/base"
 
@@ -28,7 +29,7 @@ export default (env: ENV) => {
     const mode = env.WEBPACK_SERVE ? 'development' : 'production'
     const { env: currentConfigEnv, ...currentConfig } = configMap[envMode]
 
-    return merge(
+    const webpackConfig = merge(
         baseConfig,
         currentConfig,
         {
@@ -41,4 +42,12 @@ export default (env: ENV) => {
             ]
         }
     )
+
+    // if (envMode === 'development') {
+    //     // const smp = new SpeedMeasurePlugin();
+    //     // return smp.wrap(webpackConfig as any)
+    //     // return smp.wrap(webpackConfig as any)
+    // }
+
+    return webpackConfig
 }

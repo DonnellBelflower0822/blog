@@ -11,6 +11,7 @@ const prod: webpack.Configuration = {
         proxy: {}
     },
     plugins: [
+        // 打包结果分析
         new BundleAnalyzerPlugin()
     ]
 }

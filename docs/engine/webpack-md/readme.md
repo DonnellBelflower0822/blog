@@ -16,7 +16,7 @@
 
 webpack 是一个用于现代 JavaScript 应用程序的 静态模块打包工具
 
-1. 默认只对js进行处理，其他类型需要借助loader
+1. 默认只对js和json进行处理，其他类型需要借助loader
 2. 打包：它会在内部构建一个 依赖图(dependency graph)，此依赖图对应映射到项目所需的每个模块，并生成一个或多个 bundle
 
 ## 什么是模块？
