@@ -3,8 +3,8 @@ import * as webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
-const ESLintPlugin = require('eslint-webpack-plugin');
-const { VueLoaderPlugin } = require('vue-loader')
+import ESLintPlugin from 'eslint-webpack-plugin'
+import { VueLoaderPlugin } from 'vue-loader'
 
 const baseConfig: webpack.Configuration = {
     entry: {
