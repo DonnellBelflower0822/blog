@@ -6,6 +6,7 @@ export const wait = (time = 1000) => {
     })
 }
 
-export const tmp = () => {
-    console.log('纯无用代码')
+export const sum = (a: number, b: number) => {
+    // console.log('纯无用代码')
+    return a + b
 }
