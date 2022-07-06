@@ -3,10 +3,11 @@ import * as webpack from 'webpack'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import CopyPlugin from 'copy-webpack-plugin'
 import MiniCssExtractPlugin from "mini-css-extract-plugin"
+const { VueLoaderPlugin } = require('vue-loader')
 
 const baseConfig: webpack.Configuration = {
     entry: {
-        index: './src/main.ts',
+        index: './src/main.tsx',
         login: './src/login.ts'
     },
     output: {
@@ -64,6 +65,10 @@ const baseConfig: webpack.Configuration = {
                 ],
                 exclude: /node_modules/,
             },
+            {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            }
         ]
     },
     resolve: {
@@ -90,7 +95,8 @@ const baseConfig: webpack.Configuration = {
                 }
             ]
         }),
-        new MiniCssExtractPlugin()
+        new MiniCssExtractPlugin(),
+        new VueLoaderPlugin()
     ],
     optimization: {
         runtimeChunk: 'single',
@@ -109,14 +115,7 @@ const baseConfig: webpack.Configuration = {
                     name: 'commons',
                     chunks: 'all',
                     test: /[\\/]node_modules[\\/]/,
-                    priority: -10,
-                    // reuseExistingChunk: true,
-                },
-                default: {
-                    minChunks: 2,
-                    priority: -20,
-                    // reuseExistingChunk: true,
-                },
+                }
             },
         },
     }

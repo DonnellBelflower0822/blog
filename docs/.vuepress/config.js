@@ -110,7 +110,9 @@ module.exports = {
           path: '/engine/webpack-md/',
           children: [
             '/engine/webpack-md/',
+            '/engine/webpack-md/principle',
             '/engine/webpack-md/my-webpack',
+            '/engine/webpack-md/modules',
           ]
         },
         {
