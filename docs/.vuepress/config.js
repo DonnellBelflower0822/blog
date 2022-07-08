@@ -16,27 +16,27 @@ module.exports = {
     sidebar: {
       '/basic/': [
         {
-          title: 'ES-基础',
-          path: '/basic/es-basic/',
+          title: 'ES',
+          path: '/basic/es/',
           children: [
-            '/basic/es-basic/',
-            '/basic/es-basic/transform',
-            '/basic/es-basic/object',
-            '/basic/es-basic/array',
-            '/basic/es-basic/function',
-            '/basic/es-basic/question',
+            '/basic/es/',
+            '/basic/es/function',
+            '/basic/es/async',
+            '/basic/es/array',
+            '/basic/es/object',
+            '/basic/es/cg',
           ]
         },
-        {
-          title: 'ES-高级',
-          path: '/basic/es-adv/',
-          children: [
-            '/basic/es-adv/',
-            '/basic/es-adv/context',
-            '/basic/es-adv/async',
-            '/basic/es-adv/cg',
-          ]
-        },
+        // {
+        //   title: 'ES-高级',
+        //   path: '/basic/es-adv/',
+        //   children: [
+        //     '/basic/es-adv/',
+        //     '/basic/es-adv/context',
+        //     '/basic/es-adv/async',
+        //     '/basic/es-adv/cg',
+        //   ]
+        // },
         {
           title: 'TS',
           path: '/basic/ts-md/',

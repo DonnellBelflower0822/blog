@@ -1,5 +1,41 @@
 # 函数式编程
 
+## 函数是第一公民
+- 函数可以存储在`变量`中
+- 函数作为`参数`
+- 函数作为`返回值`
+
+```js
+const square = (x) => x * x
+
+const arr = [1, 2]
+
+arr.map(square)
+
+const once = (fn) => {
+    let flag = false
+
+    return function (...args) {
+        if (flag) {
+            return
+        }
+
+        flag = true
+        fn.apply(this, ...args)
+    }
+}
+
+const pay = once(() => {
+    console.log('支付')
+})
+
+// 仅会支付一次
+pay()
+pay()
+pay()
+pay()
+```
+
 ## IIFE:立即调用的函数表达式
 
 > 避免污染全局命名空间
@@ -136,7 +172,7 @@ function checkAge(age) {
 }
 ```
 
-## 柯里化
+## 柯里化 curry
 
 **定义**
 
@@ -192,56 +228,56 @@ console.log(getSumCurry(1, 2, 3))
 - 让函数变的更灵活，让函数的粒度更小
 - 可以把多元函数转换成一元函数，可以组合使用函数产生强大的功能
 
-## 函数组合
+## 函数组合 compose
 
-> 如果一个函数要经过多个函数处理才能得到最终值，这个时候可以把中间过程的函数合并成一个函数
+- 如果一个函数要经过多个函数处理才能得到最终值，这个时候可以把中间过程的函数合并成一个函数
+- 函数组合默认是`从右到左`执行
 
-> 函数组合默认是从右到左执行
+```ts
+const compose = (...fns) => (
+    (...args) => (
+        fns.reduceRight((prevFnOrResult, currentFn, index) => (
+            currentFn.apply(
+                null,
+                index === 0 ? prevFnOrResult : [prevFnOrResult]
+            )
+        ), args)
+    )
+)
 
-```js
-// 组合函数
-function compose(f, g) {
-  return function (x) {
-    return f(g(x))
-  }
-}
-function first(arr) {
-  return arr[0]
-}
-function reverse(arr) {
-  return arr.reverse()
-}
-// 函数数组是从右到左运行
-let last = compose(first, reverse)
-console.log(last([1, 2, 3, 4]))
-```
-
-### lodash.flowRight
-
-```js
-const lodash = require('lodash')
-const toUpper = s => s.toUpperCase()
-const reverse = arr => arr.reverse()
-const first = arr => arr[0]
-const f = lodash.flowRight(toUpper, first, reverse)
-console.log(f(['one', 'two', 'three'])) // "THREE"
-```
-
-### 模拟compose
-
-```js
-function flowRight(...fns) {
-  return (value) => {
-    // 倒序
-    // 拿到上一个的结果作为当前函数的参数进行执行
-    return fns.reduceRight((prevValue, fn) => fn(prevValue), value)
-  }
-}
-
-function flowRight1(...fns) {
-  return fns.reduce((prevFn, currentFn) => (
-    (...args) => prevFn(currentFn(...args))
+const simpleCompose = (...fns) => (
+  fns.reduce((prevFn, currentFn) => (
+      (...args) => prevFn(currentFn(...args))
   ))
+)
+```
+
+> 案例
+
+```js
+function upperCase(str) {
+    debugger
+    return str.toUpperCase()
 }
+
+function first(arr) {
+    debugger
+    return arr[0]
+}
+
+function reverse(arr) {
+    debugger
+    return arr.reverse()
+}
+
+const array = ['hello', 'world', 'allen']
+
+console.log(111, upperCase(first(reverse(array))))
+
+const fn = compose(upperCase, first, reverse)
+console.log(222, fn(array))
+
+const fn1 = simpleCompose(upperCase, first, reverse)
+console.log(333, fn1(array))
 ```
 
