@@ -1,5 +1,5 @@
 module.exports = {
-  title: '许晓周的前端博客',
+  title: '答案的前端博客',
   base: '/blog/',
   dest: './dist',
   themeConfig: {

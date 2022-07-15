@@ -371,5 +371,40 @@ console.log(objectToMap(obj))
   - 没有Map的size
   - 没有Map的clear()
 
+## 存储空间
 
+- 基础类型:
+  - 存储在栈
+- 引用类型:
+  - 在栈存储引用地址
+  - 存储在堆内存
 
+<img src="./img/save.png" />  
+
+```js
+var a = { name: '前端开发' }
+var b = a;
+// 只是把a在栈存储改为null, 
+// b的引用地址没变
+a = null;
+console.log(b)
+```
+
+```js
+var a = { n: 1 };
+var b = a;
+a.x = a = { n: 2 };
+
+console.log(a.x)
+console.log(b.x)
+
+/**
+var a = { n: 1 };
+var b = a;
+a.x = { n: 2 };
+a = { n: 2 };
+
+console.log(a.x)
+console.log(b.x)
+ */
+```
