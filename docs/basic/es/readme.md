@@ -168,9 +168,7 @@ console.log(Object.prototype.toString.call(p))  // [object Object]
 undefined == null // true
 ```
 
-## 新数据类型
-
-### Symbol
+## Symbol
 
 > 一种新的原始数据类型, 表示`独一无二`的值
 
@@ -191,7 +189,7 @@ console.log(Symbol('hello symbol').description) // hello symbo
 // console.log(s1 + 'hello')   // TypeError: Cannot convert a Symbol value to a string
 ```
 
-#### 遍历`Object.getOwnPropertySymbols,Reflect.ownKeys`
+### `Object.getOwnPropertySymbols,Reflect.ownKeys`
 
 ```js
 const s = Symbol('foo')
@@ -212,7 +210,7 @@ console.log(Object.getOwnPropertySymbols(obj))  // [ Symbol(foo) ]
 console.log(Reflect.ownKeys(obj))   // [ Symbol(foo) ]
 ```
 
-#### Symbol.for
+### Symbol.for
 ```js
 console.log(Symbol.for('foo') === Symbol.for('foo'))    // true
 
@@ -384,6 +382,8 @@ console.log(objectToMap(obj))
 ```js
 var a = { name: '前端开发' }
 var b = a;
+// 因为null是基础类型,所以只是将a存储在栈的值改为null, 删除原来的引用地址
+// 而原来{name: '前端开发'}这个存储在堆内存的对象并为替换
 // 只是把a在栈存储改为null, 
 // b的引用地址没变
 a = null;

@@ -31,7 +31,9 @@ module.exports = {
             '/basic/es/scope',
             '/basic/es/this',
             '/basic/es/prototype',
+            '/basic/es/write',
             '/basic/es/cg',
+            '/basic/es/question',
           ]
         },
         {
@@ -54,6 +56,19 @@ module.exports = {
       '/frame/': [
         {
           title: 'React',
+          path: '/frame/react/',
+          children: [
+            '/frame/react/',
+            '/frame/react/router',
+            '/frame/react/redux',
+            '/frame/react/dva',
+            '/frame/react/umi',
+            '/frame/react/source',
+            '/frame/react/interview',
+          ]
+        },
+        {
+          title: 'React-md',
           path: '/frame/react-md/',
           children: [
             '/frame/react-md/',
@@ -68,6 +83,17 @@ module.exports = {
         },
         {
           title: 'Vue',
+          path: '/frame/vue/',
+          children: [
+            '/frame/vue/',
+            '/frame/vue/router',
+            '/frame/vue/vuex',
+            '/frame/vue/pina',
+            '/frame/vue/source',
+          ]
+        },
+        {
+          title: 'Vue-md',
           path: '/frame/vue-md/',
           children: [
             '/frame/vue-md/',

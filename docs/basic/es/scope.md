@@ -61,9 +61,9 @@ console.log(checkscope()());
 ```
 
 ## 作用域链 
-当查找变量的时候，会先从`当前上下文的变量对象`中查找，如果没有找到，就会从父级(词法层面上的父级)执行上下文的变量对象中查找，一直找到全局上下文的变量对象，也就是全局对象。这样由多个执行上下文的变量对象构成的链表就叫做作用域链。
+当查找变量或者函数时，会先从`当前上下文的变量对象`中查找，如果没有找到，就会从父级(词法层面上的父级)执行上下文的变量对象中查找，一直找到全局执行上下文的变量对象，也就是全局对象。这样由多个执行上下文的变量对象构成的链表就叫做作用域链。
 
-## 完整执行流程
+### 完整执行流程
 - 函数声明时用[[scope]]会记录当前的作用域链(重点)
 - 初始化执行上下文
   - 变量对象
@@ -73,6 +73,10 @@ console.log(checkscope()());
   - 作用域链：
     - 用函数[[scope]]去初始化作用域链
     - 将当前变量对象压入作用域链顶端
+
+> 由于js采用静态作用域, 函数定义时就决定作用域 (用父级作用域和当前作用域去初始化当前函数的作用域链)
+
+**示例代码**
 
 ```js
 var scope = "global scope";
@@ -86,104 +90,87 @@ function checkscope(name) {
 checkscope('tom');
 ```
 
-```
-// 全局执行上下文
-ECStack = [globalContext]
+**伪代码执行**
 
-// 初始化globalContext
-globalContext = {
-  VO: [
-    {
-      scope: undefined,
-      checkscope: Reference function
+```ts
+var scope = "global scope";
+function checkscope(name) {
+    var scope = "local scope";
+    function f() {
+        return scope;
     }
-  ],
-  Scope: [globalContext.VO],
-  this: globalContext.VO
+    return f();
+}
+checkscope('tom');
+
+type ExectionContext = any[]
+
+// 创建全局执行上下文
+interface GlobalExectionContext {
+    VO: Window & {
+        scope: string | undefined
+        checkscope: {
+            (name): void,
+            // 函数定义时就决定了其作用域
+            '[[Scopes]]': [GlobalExectionContext['VO']]
+        }
+    }
 }
 
-// 遇到checkscope: funciton checkscope() {...}
-checkscope.[[scope]] = [globalContext.VO]
+// 当前执行上下文
+// ExectionContext = [GlobalExectionContext]
 
-// 执行checkscope： checkscope()
-ECStack = [
-  checkscopeContext,
-  globalContext
-]
+// 执行checkscope('tom')
 
-// 初始化checkscopeContext
-checkscopeContext = {
-  AO: {
-    // 参数初始化
-    arguments: {
-      0: 'tom'
-      length: 0
+// 创建checkscope执行上文
+interface CheckscopeExectionContext {
+    AO: {
+        name: 'tom',
+        scope: string | undefined
+        f: {
+            (): void,
+            '[[Scopes]]': [
+                CheckscopeExectionContext['AO']
+                GlobalExectionContext['VO'],
+            ]
+        }
     },
-    name: 'tom',
-    // 函数声明
-    f: reference to function f(){}
-    // 变量声明
-    scope: undefined,
-  },
-  // 作用域组成
-  // 1. 赋值函数[[scope]]
-  // 2. 将checkscopeContext.AO压入Scope的顶端
-  // 等于 [checkscopeContext.AO,globalContext.VO]
-  Scope: [
-    checkscopeContext.AO, 
-    ...checkscope.[[scope]]
-  ],
-  this: undefined
+    '[[Scopes]]': [
+        // ...GlobalExectionContext['VO']['checkscope']['[[Scopes]]']
+        GlobalExectionContext['VO']
+    ]
 }
 
-// 遇到function f(){}
-f.[[scope]] = [checkscopeContext.AO,globalContext.VO]
+// 当前执行上下文
+// ExectionContext = [GlobalExectionContext, CheckscopeExectionContext]
 
 // 执行f()
-ECStack = [
-  fContext,
-  checkscopeContext,
-  globalContext
-]
-
-// 初始化fContext
-fContext = {
-  AO:{
-    arguments: {
-      length: 0
+interface FExectionContext {
+    AO: {
     },
-  },
-  // [ fContext.AO, checkscopeContext.AO, globalContext.VO ]
-  Scope: [fContext.AO,...f.[[scope]] ],
-  this: undefined
+    '[[Scopes]]': [
+        CheckscopeExectionContext['AO'],
+        // ...CheckscopeExectionContext['AO']['f']['[[Scopes]]']
+        GlobalExectionContext['VO'],
+    ]
 }
 
-// console.log(scope) 就会从fContext.Scope从左往右去找是否存在
+// 当前执行上下文
+// ExectionContext = [GlobalExectionContext, CheckscopeExectionContext, FExectionContext]
 
-// f执行完毕
-ECStack = [
-  checkscopeContext,
-  globalContext
-]
-
-// checkscope执行完毕
-ECStack = [
-  globalContext
-]
+// f函数里面的scope就会从 当前变量对象(AO) 和 [[Scopes]] 里面去一层层找scope变量的值
 ```
 
 ## 闭包
 
-## 定义
+### 定义
 
-> 闭包是指那些能够访问自由变量的函数。
+- 闭包是指那些能够访问自由变量的函数。
+- 闭包是指有权访问另外一个函数作用域中的变量的函数
 
 **自由变量**
 
 > 自由变量是指在函数中使用的，但既不是函数参数也不是函数的局部变量的变量。
-
-> 使用闭包主要是为了设计私有的方法和变量。闭包的优点是可以避免全局变量的污染，缺点是闭包会常驻内存，会增大内存使用量，使用不当很容易造成内存泄露
-
 > 可以在另外一个作用域中调用一个函数的内部函数并访问到该函数作用域中的成员
 
 ```js
@@ -205,7 +192,7 @@ console.log(power2(4))
 - 避免全局变量污染
 
 ### 缺点
-- 会造成内存泄漏
+- 会常驻内存，会增大内存使用量，使用不当很容易造成内存泄露
 
 ### 常见的内存泄漏
 - 意外的全局变量
@@ -374,6 +361,37 @@ ECStack = [
 ]
 ```
 
+## 块级作用域
+
+```ts
+var data: Array<() => void> = [];
+
+for (let i = 0; i < 3; i++) {
+    data[i] = function () {
+        console.log(i);
+    };
+}
+
+data[0]();
+data[1]();
+data[2]();
+
+interface LetGlobalContext {
+    VO: {
+        data: Array<() => void> | undefined
+    }
+}
+
+interface BlockContext {
+    VO: {
+        i: number,
+        // Scopes: [LetGlobalContext.VO, BlockContext.VO]
+        // 所以i的存在于BlockContext.VO
+        unknowFn: () => {}
+    }
+}
+```
+
 ## 例子
 
 **例子0**
@@ -479,7 +497,7 @@ function checkscope() {
 checkscope();
 ```
 
-## 执行过程
+### 执行过程
 
 1. 执行全局代码。创建全局执行上下文，并把全局上下文压入执行上下文栈
 

@@ -47,6 +47,7 @@ interface GlobalExectionContext {
         // 全局环境 -> null
         outer: null
     },
+    Scopes?: []
 }
 
 // 函数执行上下文: 可以存在多个
