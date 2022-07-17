@@ -1,8 +1,5 @@
 # this
 
-## 资料
-- https://muyiy.cn/blog/2/2.1.html#%E4%BD%9C%E7%94%A8%E5%9F%9F%E9%93%BE
-
 ## 规则
 
 > 代码执行时, 谁调用函数，函数内部的this指向谁
@@ -526,26 +523,4 @@ const f1 = func1
     .bind({ a: 3 })
 // 1
 f1()
-```
-
-## 手写new
-
-1. 创建一个新对象。
-2. 这个新对象会被执行[[Prototype]]连接。__proto__ = 构造函数.prototype
-3. 这个新对象会绑定到函数调用的this。
-4. 如果函数没有返回其他对象，那么new表达式中的函数调用会自动返回这个新对象。
-
-```js
-function customNew(Construtor, ...args) {
-    const obj = new Object()
-
-    obj.__proto__ = Construtor.proptype
-
-    const result = Construtor.apply(obj, args)
-
-    return result instanceof Object ? result : obj
-}
-
-const woman = customNew(Person, 'tiya')
-console.log(woman)
 ```

@@ -23,6 +23,7 @@ module.exports = {
           path: '/basic/es/',
           children: [
             '/basic/es/',
+            '/basic/es/tranform',
             '/basic/es/function',
             '/basic/es/async',
             '/basic/es/array',

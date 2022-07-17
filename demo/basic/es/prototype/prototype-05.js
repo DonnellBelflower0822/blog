@@ -1,0 +1,1 @@
+console.log(Function.prototype === Function.__proto__)  // true
