@@ -24,6 +24,7 @@ module.exports = {
           children: [
             '/basic/es/',
             '/basic/es/tranform',
+            '/basic/es/grammar',
             '/basic/es/function',
             '/basic/es/async',
             '/basic/es/array',

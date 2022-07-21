@@ -1,5 +1,8 @@
 # 函数式编程
 
+## 资料
+- https://llh911001.gitbooks.io/mostly-adequate-guide-chinese/content/
+
 ## 函数是第一公民
 - 函数可以存储在`变量`中
 - 函数作为`参数`
@@ -160,6 +163,34 @@ function sum(a, b) {
 - 并行处理
   - 在多线程环境下并行操作共享的内存数据很可能会出现意外情况
   - 纯函数不需要访问共享的内存数据，所以在并行环境下可以任意运行纯函数 (Web Worker)
+
+### 可缓存
+
+```js
+const memoize = (fn) => {
+    const cache = {}
+
+    function realFunction(...args) {
+        const query = JSON.stringify(args)
+
+        if (!Object.prototype.hasOwnProperty.call(cache, query)) {
+            console.log('calc')
+            cache[query] = fn.apply(this, args)
+        } else {
+            console.log('cache')
+        }
+
+        return cache[query]
+    }
+    return realFunction
+}
+
+const calc = memoize((a, b) => a + b)
+
+calc(1, 2)  // calc
+calc(2, 2)  // calc
+calc(1, 2)  // cache
+```
 
 **副作用**
 

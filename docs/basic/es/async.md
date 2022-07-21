@@ -7,9 +7,15 @@
   - Promise
   - generoter
   - async/await
+- 迭代器
+  - Iterator 和 for...of 循环 https://es6.ruanyifeng.com/#docs/iterator
+- 异步遍历器
+  - https://es6.ruanyifeng.com/#docs/async-iterator
 - 手写
   - 手写Promise
+    - https://promisesaplus.com/#notes
   - 手写async/await
+    - https://es6.ruanyifeng.com/#docs/async-iterator
 
 ## 回调
 
@@ -33,7 +39,7 @@ wait(() => {
 ## Promise
 
 ### 特点
-- 对象的状态不受外界影响。Promise对象代表一个异步操作，有三种状态：pending（进行中）、fulfilled（已成功）和rejected（已失败）
+- 对象的状态不受外界影响。Promise对象代表一个异步操作，有三种状态：`pending（进行中）`、`fulfilled（已成功）`和`rejected（已失败）`
 - 一旦状态改变，就不会再变
 
 ### 缺点
@@ -41,7 +47,9 @@ wait(() => {
 - 如果不设置回调函数，Promise内部抛出的错误，不会反应到外部。
 - 当处于pending状态时，无法得知目前进展到哪一个阶段
 
-### 使用-同步任务
+### 使用
+
+#### 同步任务
 
 ```js
 const p = new Promise((resolve, reject) => {
@@ -53,7 +61,7 @@ p.then(res => {
 })
 ```
 
-### 异步任务
+#### 异步任务
 
 ```js
 const p = new Promise((resolve, reject) => {
@@ -66,7 +74,8 @@ p.then(res => {
   console.log(res)
 })
 ```
-### 链式调用
+
+#### 链式调用
 
 ```js
 function readFile(filename) {
@@ -115,14 +124,20 @@ readFile('name')
   )
 ```
 
-### catch
+#### 汇总
 ```js
-readFile().catch(e => {
-  console.log(e)
-})
+readFile()
+.then((result)=>{})
+.catch(error => {})
+.finally(()=>{})
 ```
 
 ### Promise.all
+
+- 将多个 Promise 实例，包装成一个新的 Promise 实例
+- `全部`promise实例都变为fulfilled -> fulfilled
+- 其中有`一个`为rejected -> rejected
+
 ```js
 Promise
   .all([readFile('name'), readFile('age'), 1])
@@ -134,6 +149,8 @@ Promise
 ```
 
 ### Promise.rece
+- 返回第一个promise实例率先改变状态
+
 ```js
 Promise
   .race([readFile('name'), readFile('age'), 1, 2])
@@ -143,6 +160,19 @@ Promise
     console.log(error)
   })
 ```
+
+### Promise.allSettled
+
+- 所有的promise实例都执行完毕
+- 返回格式
+
+```ts
+type allSettledResult = Array<{status: 'fulfilled',value: unknown }|{status: 'rejected', reason: unknown}>
+```
+
+### Promise.resolve
+
+将现有对象转为 Promise 对象
 
 ### 其他用法
 ```js
@@ -399,33 +429,51 @@ module.exports = Promise
 
 **调用fn不会执行函数内部代码**
 
+> 返回一个迭代器
+
 ```js
-function* fn() {
-  console.log('hello')
+function* helloGenerate() {
+    console.log('hello')
 }
 
-// 执行fn返回遍历器.
-// 此时不会输出hello
-const generator = fn()
-console.log(generator)
+const it = helloGenerate()
+console.log(it) // Object [Generator] {}
+
 ```
 
-**基础执行流程**
+### 基础执行流程分析
+
+**代码**
 ```js
 function* fn() {
-  console.log('hello')
-  const a = yield 'aa'
-  console.log(a)
-  const b = yield 'bb'
-  console.log(b)
-  return 'end'
+    console.log('hello')
+    const a = yield 'aa'
+    console.log(a)
+    const b = yield 'bb'
+    console.log(b)
+    return 'end'
 }
 
+const it = fn()
+const result0 = it.next(1)
+console.log(result0)
+const result1 = it.next(2)
+console.log(result1)
+const result2 = it.next(3)
+console.log(result2)
+const result3 = it.next(4)
+console.log(result3)
+```
+
+**执行分析**
+
+```js
+// 第一步
 // 返回迭代器
-const generator = fn()
+const it = fn()
 
 /**
- * 执行语句
+ * 执行函数内部语句
  * console.log('hello')
  * yield 'aa'
  * result0 = {value: 'aa', done:false}
@@ -434,7 +482,7 @@ const result0 = generator.next(1)
 console.log(result0)
 
 /**
- * 执行语句
+ * 执行函数内部语句
  * a = 2
  * console.log(a)
  * yield 'bb'
@@ -453,6 +501,10 @@ console.log(result1)
  */
 const result2 = generator.next(3)
 console.log(result2)
+
+// 执行result3 = {value:undefined,done:true}
+const result3 = it.next(4)
+console.log(result3)
 ```
 
 ### 异步应用
@@ -492,37 +544,143 @@ g.next().value.then(data => {
 > 自动调用
 
 ```js
+function run(generate) {
+    const it = generate()
 
-function* gen() {
-  const a = yield wait('hello')
-  const b = yield wait('world')
-  console.log(a, b)
-}
+    function next(value) {
+        const result = it.next(value)
+        if (result.done) {
+            return result.value
+        }
 
-function co(gen) {
-  // 生成一个迭代器
-  const g = gen()
-
-  function next(data) {
-    // 执行next
-    const result = g.next(data)
-
-    // 如果结束
-    if (result.done) {
-      return result.value
+        result.value.then(next)
     }
 
-    // 没有执行结束, 就处理primose
-    result.value.then(data => {
-      // 将promise的结果给到上一个yield的左边变量
-      next(data)
-    })
-  }
+    next()
+}
+```
 
-  next()
+## co库
+
+- yield后面只支持promise和thunk
+
+```js
+function toPromise(obj) {
+    if (!obj) {
+        return obj
+    }
+
+    if (isPromise(obj)) {
+        return obj
+    }
+
+    // 如果是函数会以thunk的形式执行
+    if (typeof obj === 'function') {
+        return new Promise((resolve, reject) => {
+            obj.call(this, (err, ...args) => {
+                if (err) {
+                    reject(err)
+                } else {
+                    resolve(args.length === 1 ? args[0] : args)
+                }
+            })
+        })
+    }
+
+    return obj
+}
+
+function isPromise(obj) {
+    return typeof obj.then === 'function'
+}
+
+function co(generate) {
+    const _this = this
+
+    return new Promise((resolve, reject) => {
+        // 初始化迭代器
+        if (typeof generate === 'function') {
+            generate = generate.call(_this)
+        }
+
+        // 如果不是迭代器就直接resolve
+        if (!generate || typeof generate.next !== 'function') {
+            return resolve(generate)
+        }
+
+        function onFulfilled(res) {
+            let ret
+            try {
+                ret = generate.next(res)
+            } catch (e) {
+                return reject(e)
+            }
+
+            next(ret)
+        }
+
+        function onRejected(err) {
+            let ret
+
+            try {
+                ret = generate.throw(err)
+            } catch (e) {
+                return reject(ret)
+            }
+            next(ret)
+        }
+
+        onFulfilled()
+
+        function next(result) {
+            if (result.done) {
+                return resolve(result.value)
+            }
+
+            // 转换为promise
+            const value = toPromise.call(_this, result.value)
+            if (value && isPromise(value)) {
+                // 执行promise
+                value.then(onFulfilled, onRejected)
+            }
+        }
+    })
+}
+
+module.exports = co
+```
+
+**例子**
+
+```js
+const co = require('./co')
+function wait(data) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (data === 'error') {
+                reject(data)
+            }
+            resolve(data)
+        }, 1000)
+    })
+}
+
+function thunk() {
+    return function (callback) {
+        setTimeout(() => {
+            callback(null, 'thunk')
+        }, 1000)
+    }
+}
+
+function* gen() {
+    const a = yield wait('hello')
+    const b = yield thunk()
+    console.log(a, b)
 }
 
 co(gen)
+// hello thunk
 ```
 
 ## async
@@ -565,6 +723,75 @@ fn()
     - 后面只能接Promise,thunk
 - 返回值
   - async: 返回promise
+  - genertor: 返回迭代器
 
+### async
 
+```js
+function wait() {
+    return new Promise(resolve => {
+        setTimeout(() => {
+            resolve('allen')
+        }, 1000)
+    })
+}
 
+async function fn() {
+    const res = await wait()
+    const a = await 'string';
+    console.log('111', res, a)
+}
+
+fn()
+```
+
+**模拟实现**
+
+```js
+function spawn(generateFn) {
+    return new Promise((resolve, reject) => {
+        const it = generateFn()
+
+        function step(nextFn) {
+            let next
+            try {
+                next = nextFn()
+            } catch (e) {
+                return reject(e)
+            }
+
+            if (next.done) {
+                return resolve(next.value)
+            }
+
+            Promise.resolve(next.value).then(
+                (value) => {
+                    step(() => {
+                        return it.next(value)
+                    })
+                },
+                (reason) => {
+                    return it.throw(reason)
+                }
+            )
+        }
+
+        step(() => {
+            return it.next(undefined)
+        })
+    })
+}
+
+function fn1() {
+    return spawn(function* () {
+        const res = yield wait()
+        const a = yield 'string'
+        console.log('222', res, a)
+        return a + res
+    })
+}
+
+fn1().then((value) => {
+    console.log(value)
+})
+```

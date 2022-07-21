@@ -9,6 +9,7 @@
 - 继承
 - new
 - instanceof
+- class
 
 <img src="./img/proto.png" />
 
