@@ -1,0 +1,43 @@
+# 计划
+
+- 八股文
+  - 浏览器渲染原理
+  - 性能优化
+  - 算法
+  - 网络
+  - 性能优化
+- 手写
+  - react全家桶
+    - react
+    - router
+    - redux
+      - saga
+    - dva
+    - umi
+    - 组件库
+      - 文档
+      - 测试
+    - 周边库
+      - react-query
+      - formily
+  - vue全家桶
+    - vue2
+      - vue
+      - router
+      - vuex
+    - vue3
+      - vue
+      - router
+      - vuex
+    - 组件库
+  - 脚手架
+  - 构建工具
+    - webpack
+      - 手写
+      - 性能优化
+      - 自定义loader和plugin
+    - rollup
+    - vite
+  - 方案
+    - 认证
+    - 微前端
