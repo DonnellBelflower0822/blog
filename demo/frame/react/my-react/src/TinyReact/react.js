@@ -2,7 +2,6 @@ import Component, { PureComponent } from "./Component"
 import { TEXT } from './constant'
 import createContext from './createContext'
 import * as hooks from './hooks'
-import { shallowEqual } from "./utils"
 
 function createElement(type, props = {}, children) {
     const { ref, ...restProps } = props || {}
