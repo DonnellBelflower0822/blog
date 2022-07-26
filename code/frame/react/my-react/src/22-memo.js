@@ -11,6 +11,8 @@ const FuncChild = (props) => {
     )
 }
 
+const FuncChildMemo = TinyReact.memo(FuncChild)
+
 class ClassComponent extends TinyReact.Component {
     constructor (props) {
         super(props)
@@ -41,7 +43,7 @@ class ClassComponent extends TinyReact.Component {
                     改变count2
                 </button>
                 <p>count1 {this.state.count1}</p>
-                <FuncChild count2={this.state.count2} />
+                <FuncChildMemo count2={this.state.count2} />
             </div>
         )
     }

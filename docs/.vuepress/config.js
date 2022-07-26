@@ -61,6 +61,7 @@ module.exports = {
           path: '/frame/react/',
           children: [
             '/frame/react/',
+            '/frame/react/tiny-react',
             '/frame/react/router',
             '/frame/react/redux',
             '/frame/react/dva',

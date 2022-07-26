@@ -1,60 +1,5 @@
 # React概念
 
-## 对react理解
-- 是什么: 用于构建用户界面的 JavaScript 库
-- 干什么: 可以通过组件化的方式构建快速相应的大型web应用
-- 如果干:
-  - 声明式: 
-    - 关注要做什么,而不是如何做
-    - 表达逻辑,不是定义步骤
-  - 组件化: 
-  - 一次学习,跨平台编写
-- 优点:
-  - 开发团队和社区强大
-  - 一次学习,跨平台
-  - api简洁
-- 缺点:
-  - 没有官方系统解决方案,选型成本高
-  - 过于灵活,不易写出高质量的应用
-
-## JSX
-- 是什么
-  - 一个js的语法扩展,更好的描述UI应该呈现的它应有交互的本质形式
-  - 其实是React.createElement的语法糖
-- 实现目的
-  - 声明式
-  - 代码结构清晰和简洁,可读性强
-  - 结构,属性,样式,事件实现高聚合低耦合
-  - 没有引入新的概念
-- 其他方案
-  - vue:template会引入其他概念: `v-on:click @click`
-
-**转换后**
-```js
-const element = <h1>hello world</h1>
-
-// 在react runtime为 classic
-const element = /*#__PURE__*/React.createElement("h1", null, "Hello, world!");
-
-// react runtime 为 automaic
-import { jsx as _jsx } from "react/jsx-runtime";
-const element = /*#__PURE__*/_jsx("h1", {
-  children: "Hello, world!"
-});
-```
-
-## 虚拟dom
-- 通过React.createElement函数返回的js对象
-- 通过js对象去描述dom
-- 优点
-  - 处理浏览器兼容性问题,避免用户操作真实dom
-  - 内容经过xss处理,可防止xss攻击
-  - 跨平台
-  - 在更新时可以进行差异化更新,减少dom的更新操作
-- 缺点
-  - 虚拟dom需要消耗额外的内存
-  - 首次渲染不一定更快
-
 ## 函数组件和类组件
 - 相同点
   - 接收属性返回react元素
@@ -91,11 +36,6 @@ const element = /*#__PURE__*/_jsx("h1", {
       - 未来函数组件会成为主流
         - 屏蔽this
         - 更好的复用逻辑
-
-## React渲染流程
-- jsx
-- React.createElement(经过babel)
-- virtual dom
  
 ## dom-diff
 
