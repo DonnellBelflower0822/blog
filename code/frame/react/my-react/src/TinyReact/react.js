@@ -10,6 +10,7 @@ function createElement(type, props = {}, children) {
     } else {
         children = wrapperChildren(children)
     }
+    // 返回虚拟dom
     return {
         type,
         ref,

@@ -35,6 +35,9 @@ export function updateDomProps(dom, oldProps, newProps) {
 
         if (key === 'style') {
             if (value) {
+                if (!dom.style) {
+                    dom.style = {}
+                }
                 for (let styleAttr in value) {
                     dom.style[styleAttr] = value[styleAttr]
                 }
@@ -48,6 +51,14 @@ export function updateDomProps(dom, oldProps, newProps) {
         }
 
         dom[key] = newProps[key]
+    }
+
+    if (oldProps) {
+        for (const key in oldProps) {
+            if (newProps[key] === undefined) {
+                dom.removeAttribute(key)
+            }
+        }
     }
 }
 

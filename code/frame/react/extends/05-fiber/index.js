@@ -16,11 +16,6 @@ C1.slibing = C2
 
 let nextUnitOfWork = null
 
-function start() {
-    nextUnitOfWork = A1
-    requestIdleCallback(workLoop, { timeout: 1000 })
-}
-
 function workLoop(deadline) {
     while ((deadline.timeRemaining() > 0 || deadline.didTimeout) && nextUnitOfWork) {
         nextUnitOfWork = preformUnitOfWork(nextUnitOfWork)
@@ -28,16 +23,19 @@ function workLoop(deadline) {
 
     if (!nextUnitOfWork) {
         console.log('render ended')
+        nextUnitOfWork = null
         return
     }
 
     requestIdleCallback(workLoop, { timeout: 1000 })
 }
 
+// 处理单个执行单元
 function preformUnitOfWork(fiber) {
+    // 开始
     beginWork(fiber)
 
-    // 有大儿子
+    // 1. 有大儿子
     if (fiber.child) {
         return fiber.child
     }
@@ -46,21 +44,28 @@ function preformUnitOfWork(fiber) {
     while (fiber) {
         // 当前fiber完成
         completeUnitOfWork(fiber)
-        // 有兄弟就返回兄弟
+
+        // 2. 有兄弟就返回兄弟
         if (fiber.slibing) {
             return fiber.slibing
         }
-        // 返回父亲
+
+        // 3. 返回父亲
         fiber = fiber.return
     }
 }
 
 function beginWork(fiber) {
-    console.log('beginWork', fiber.props.key)
+    console.log('开始', fiber.props.key)
 }
 
 function completeUnitOfWork(fiber) {
-    console.log('completeUnitOfWork', fiber.props.key)
+    console.log('完成', fiber.props.key)
 }
 
-start()
+function start(newNextUnitOfWork) {
+    nextUnitOfWork = newNextUnitOfWork
+    requestIdleCallback(workLoop, { timeout: 1000 })
+}
+
+start(A1)

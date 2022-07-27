@@ -6,7 +6,10 @@ export const TAG_HOST = Symbol('TAG_HOST')
 export const TAG_ROOT = Symbol('TAG_ROOT')
 // 文本节点
 export const TAG_TEXT = Symbol('TAG_TEXT')
-
+// 类组件
+export const TAG_CLASS = Symbol('TAG_CLASS')
+// 函数组件
+export const TAG_FUNCTION = Symbol('TAG_FUNCTION')
 
 // effectTag
 
@@ -15,4 +18,4 @@ export const PLACEMENT = Symbol('PLACEMENT')
 // 更新
 export const UPDATE = Symbol('UPDATE')
 // 删除
-export const DELETE = Symbol('DELETE')
+export const DELETION = Symbol('DELETE')

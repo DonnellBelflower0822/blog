@@ -13,16 +13,19 @@ export default class Component {
         this.updater = new Updater(this)
     }
 
+    // 添加更新任务
     setState(partialState, cb) {
         this.updater.addState(partialState, cb)
     }
 
     // 强制更新
     forceUpdate = () => {
+        // 调用render, 拿到最新的render虚拟dom
         const newRenderVdom = this.render.call(this)
         const prevProps = this.lastRenderVdom.props
         const prevState = this.state
 
+        // 找到真实dom
         const oldDOM = findDOM(this.lastRenderVdom)
 
         // 比较两个虚拟dom
@@ -31,18 +34,18 @@ export default class Component {
             this.lastRenderVdom,
             newRenderVdom,
         )
+
+        // 记录上一次的render虚拟dom
         this.lastRenderVdom = newRenderVdom
+        console.log('componentDidUpdate', this)
+
         this.componentDidUpdate?.(prevProps, prevState)
     }
 }
 
 export class PureComponent extends Component {
     shouldComponentUpdate(nextProps, nextState) {
-        try {
-            return !(shallowEqual(this.props, nextProps) && shallowEqual(this.state, nextState))
-        } catch (e) {
-            console.log(e)
-        }
+        return !(shallowEqual(this.props, nextProps) && shallowEqual(this.state, nextState))
     }
 }
 

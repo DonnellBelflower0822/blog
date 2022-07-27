@@ -3,6 +3,7 @@ export const updateQueue = {
     // 是否存于批量更新模式
     isBatchingUpdate: false,
     updater: new Set(),
+    // 批量更新
     batchUpdate() {
         for (const updater of this.updater) {
             updater.updateClassComponent()
@@ -21,25 +22,27 @@ class Updater {
         this.callbacks = []
     }
 
+    // 先将setState放到队列中
     addState(partialState, cb) {
         this.pendingState.push(partialState)
         if (typeof cb === 'function') {
             this.callbacks.push(cb)
         }
+        // 尝试更新
         this.emitUpdate()
     }
 
     emitUpdate(newProps) {
         this.newProps = newProps
 
-        // 处于批量更新模式
         if (updateQueue.isBatchingUpdate) {
+            // 处于批量更新模式
             updateQueue.updater.add(this)
+            return
         }
-        // 处于非批量更新模式
-        else {
-            this.updateClassComponent()
-        }
+
+        // 处于非批量更新模式, 直接更新
+        this.updateClassComponent()
     }
 
     // 获取新的state
@@ -64,6 +67,7 @@ class Updater {
         const { pendingState, classInstance, callbacks, newProps } = this
 
         if (newProps || pendingState.length > 0) {
+            // 拿到最新的props和state
             shouldComponentUpdate(classInstance, newProps, this.getState(), callbacks)
         }
     }

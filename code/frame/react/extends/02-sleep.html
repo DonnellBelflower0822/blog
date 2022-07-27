@@ -22,9 +22,19 @@
             }
         }
 
-        console.time('计时')
+        console.time('计时1')
         sleep(100)
-        console.timeEnd('计时')
+        console.timeEnd('计时1')
+
+        const sleep1 = (delayMs) => {
+            const start = Date.now()
+            while (Date.now() - start <= delayMs) {
+            }
+        }
+
+        console.time('计时2')
+        sleep(100)
+        console.timeEnd('计时2')
     </script>
 </body>
 

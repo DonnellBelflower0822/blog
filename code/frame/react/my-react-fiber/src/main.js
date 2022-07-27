@@ -1,21 +1,27 @@
 import TinyReact from "./TinyReact/react";
 import TinyReactDOM from "./TinyReact/react-dom";
 
-const style = {
-    border: '3px solid red'
+const ADD = 'ADD'
+
+function reducer(state, action) {
+    switch (action.type) {
+        case ADD:
+            return { count: state.count + 1 }
+        default:
+            return state
+    }
 }
 
-const element = (
-    <div id='A1' style={style}>
-        A1
-        <div id='B1' style={style}>
-            B1
-            <div id='C1' style={style}>C1</div>
-            <div id='C2' style={style}>C2</div>
+function App() {
+    const [state, dispatch] = TinyReact.useReducer(reducer, { count: 0 })
+    return (
+        <div>
+            <h2>{state.count}</h2>
+            <button onClick={() => {
+                dispatch({ type: ADD })
+            }}>+1</button>
         </div>
-        <div id='B2' style={style}>B2</div>
-    </div>
-)
+    )
+}
 
-TinyReactDOM.render(element, document.getElementById('root'))
-
+TinyReactDOM.render(<App />, document.getElementById('root'))

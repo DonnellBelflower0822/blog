@@ -62,6 +62,7 @@ module.exports = {
           children: [
             '/frame/react/',
             '/frame/react/tiny-react',
+            '/frame/react/tiny-react-fiber',
             '/frame/react/router',
             '/frame/react/redux',
             '/frame/react/dva',

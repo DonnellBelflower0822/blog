@@ -1,4 +1,6 @@
 import { ELEMENT_TEXT } from './constant'
+import { scheduleRoot, useReducer } from './schedule'
+import { Update } from './UpdateQueue'
 
 function createElement(type, props = {}, ...children) {
     const { ref, ...restProps } = props || {}
@@ -25,8 +27,24 @@ function wrapperChildren(child) {
     return child
 }
 
+class Component {
+    constructor (props) {
+        this.props = props
+    }
+
+    setState(payload) {
+        const update = new Update(payload)
+        this.internalFiber.updateQueue.equeueUpdate(update)
+        scheduleRoot()
+    }
+}
+
+Component.isReactComponent = {}
+
 const TinyReact = {
-    createElement
+    createElement,
+    Component,
+    useReducer
 }
 
 export default TinyReact

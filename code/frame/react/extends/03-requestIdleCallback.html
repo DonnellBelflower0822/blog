@@ -52,7 +52,6 @@
             }
 
             // 本帧没有剩余时间, 需要把控制权交还给浏览器
-
             if (tasks.length > 0) {
                 // 还有任务需要向浏览器申请空闲时间执行
                 requestIdleCallback(workLoop, { timeout: 1000 })
@@ -62,7 +61,6 @@
         function preformUnitOfWork() {
             tasks.shift()()
         }
-
     </script>
 </body>
 

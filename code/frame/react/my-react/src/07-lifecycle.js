@@ -4,24 +4,24 @@ import TinyReactDOM from "./TinyReact/react-dom"
 class ChildComponent extends TinyReact.Component {
     constructor (props) {
         super(props)
-        console.log('ChildComponent constructor')
+        // console.log('ChildComponent constructor')
     }
 
     static getDerivedStateFromProps() {
-        console.log('ChildComponent getDerivedStateFromProps')
+        // console.log('ChildComponent getDerivedStateFromProps')
         return {}
     }
 
     componentDidMount() {
-        console.log('ChildComponent componentDidMount')
+        // console.log('ChildComponent componentDidMount')
     }
 
     componentWillUnMount() {
-        console.log('ChildComponent componentWillUnMount')
+        // console.log('ChildComponent componentWillUnMount')
     }
 
     shouldComponentUpdate() {
-        console.log('ChildComponent shouldComponentUpdate')
+        // console.log('ChildComponent shouldComponentUpdate')
         return true
     }
 
@@ -30,7 +30,7 @@ class ChildComponent extends TinyReact.Component {
     }
 
     render() {
-        console.log('ChildComponent render')
+        // console.log('ChildComponent render')
         
         return (
             <div>
@@ -44,25 +44,25 @@ class ChildComponent extends TinyReact.Component {
 class ParentComponent extends TinyReact.Component {
     constructor (props) {
         super(props)
-        console.log('parentComponent constructor')
+        // console.log('parentComponent constructor')
         this.state = { count: 0 }
     }
 
     static getDerivedStateFromProps() {
-        console.log('parentComponent getDerivedStateFromProps')
+        // console.log('parentComponent getDerivedStateFromProps')
         return {}
     }
 
     componentDidMount() {
-        console.log('parentComponent componentDidMount')
+        // console.log('parentComponent componentDidMount')
     }
 
     componentWillUnMount() {
-        console.log('parentComponent componentWillUnMount')
+        // console.log('parentComponent componentWillUnMount')
     }
 
     shouldComponentUpdate() {
-        console.log('parentComponent shouldComponentUpdate')
+        // console.log('parentComponent shouldComponentUpdate')
         return true
     }
 
@@ -75,7 +75,7 @@ class ParentComponent extends TinyReact.Component {
     }
 
     render() {
-        console.log('parentComponent render')
+        // console.log('parentComponent render')
 
         const props = {
             className: `container-${this.state.count}`

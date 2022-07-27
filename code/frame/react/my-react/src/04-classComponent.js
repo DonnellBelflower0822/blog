@@ -12,6 +12,7 @@ class ClassComponent extends TinyReact.Component {
             count: this.state.count + 1
         })
     }
+    
     // handleClick() {
     //     // undefined
     //     console.log(this)
