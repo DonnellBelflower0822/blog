@@ -63,10 +63,42 @@ export function scheduleRoot(rootFiber) {
     nextUnitOfWork = workInProgressRoot
 }
 
+function workLoop(deadline) {
+    // ==render阶段==
+
+    // 是否交出控制权
+    let shouldYield = false
+
+    while (nextUnitOfWork && !shouldYield) {
+        // 执行单个执行单元, 返回下一个执行单元
+        nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
+        // 看是否还有剩余时间, 如果没有时间则交出控制权, 有时间则继续执行下一个执行单元
+        shouldYield = deadline.timeRemaining() < 1
+    }
+
+    // ==end render阶段==
+
+    if (!nextUnitOfWork && workInProgressRoot) {
+        console.log('render阶段结束')
+        // commit阶段
+        commitRoot()
+    }
+
+    requestIdleCallback(workLoop, { timeout: 500 })
+}
+
 requestIdleCallback(workLoop, { timeout: 500 })
 
+// 执行一个执行单元(fiber)
+// 从父到子, 子完成后父才完成
+// 构建fiber树和收集好effect
 function performUnitOfWork(currentFiber) {
     beginWork(currentFiber)
+
+    // 构建fiber的顺序
+    // 先大儿子
+    // 其次兄弟
+    // 最后父亲
 
     if (currentFiber.child) {
         // 有大儿子
@@ -87,9 +119,14 @@ function performUnitOfWork(currentFiber) {
     }
 }
 
-// 开始
-// 1. 创建dom
-// 2. 创建儿子们的fiber
+/**
+ * 1. 处理自身
+ *      原生节点: 创建真实dom, 挂载到fiber.stateNode
+ *      class组件: new出类的实例, 挂载到fiber.stateNode
+ *                调用render获取渲染的虚拟dom
+ *                继续构建子级的fiber
+ * 2. 创建儿子们的fiber
+ */
 function beginWork(currentFiber) {
     if (currentFiber.tag === TAG_ROOT) {
         updateHostRoot(currentFiber)
@@ -108,7 +145,7 @@ function beginWork(currentFiber) {
 function updateFunctionComponent(currentFiber) {
     currentFunctionFiber = currentFiber
     hookIndex = 0
-    currentFunctionFiber.hooks = currentFunctionFiber.hooks || []
+    currentFunctionFiber.hooks = []
 
     const newChildren = currentFiber.type(currentFiber.props)
     reconcileChildren(currentFiber, [newChildren])
@@ -122,11 +159,11 @@ function updateClassComponent(currentFiber) {
         currentFiber.updateQueue = new UpdateQueue()
     }
 
+    // 获取最新state
     currentFiber.stateNode.state = currentFiber.updateQueue.forceUpdate(currentFiber.stateNode.state)
-    // currentFiber
+    // 调用render, 获取最新的render虚拟dom
     const newElement = currentFiber.stateNode.render()
-    const newChildren = [newElement]
-    reconcileChildren(currentFiber, newChildren)
+    reconcileChildren(currentFiber, [newElement])
 }
 
 // 处理文本
@@ -160,15 +197,15 @@ function updateHostRoot(currentFiber) {
 
 /**
  * 构建children的fiber
- * @param {*} currentFiber 
- * @param {*} children 
+ * currentFiber则是父fiber
+ * children是虚拟dom数组
  */
 function reconcileChildren(currentFiber, children) {
     let newChildIndex = 0
     // 上一个兄弟fiber
     let prevSlibing
 
-    // 旧的fiber
+    // 旧子级fiber
     let oldFiber = currentFiber.alternate?.child
 
     while (newChildIndex < children.length || oldFiber) {
@@ -178,6 +215,7 @@ function reconcileChildren(currentFiber, children) {
 
         const sameType = newChild && oldFiber && newChild.type === oldFiber.type
 
+        // 类型一样则可以复用
         if (sameType) {
             // 可以复用, 更新
             newFiber = {
@@ -238,10 +276,10 @@ function reconcileChildren(currentFiber, children) {
         if (newFiber) {
             // 构建fiber关系网
             if (newChildIndex === 0) {
-                // 大儿子
+                // 给父亲建立大儿子关系
                 currentFiber.child = newFiber
             } else {
-                // 兄弟
+                // 给兄弟间建立兄弟关系
                 prevSlibing.sibling = newFiber
             }
 
@@ -252,9 +290,6 @@ function reconcileChildren(currentFiber, children) {
     }
 }
 
-// p5
-// p7
-
 // 完成一个执行单元
 // 1. 收集有effect的fiber, 组成effect list
 function completeUnitOfWork(currentFiber) {
@@ -262,14 +297,22 @@ function completeUnitOfWork(currentFiber) {
 
     if (returnFiber) {
         // 把儿子挂到父亲
+
+        // 如果父亲没有firstEffect, 
+        // 就证明是currentFiber是父亲的child,
+        // 所以将自身的fistEffect赋给父亲的firstEffect
         if (!returnFiber.fisrtEffect) {
             returnFiber.fisrtEffect = currentFiber.fisrtEffect
         }
 
+        // 自身有lastEffect
         if (currentFiber.lastEffect) {
             if (returnFiber.lastEffect) {
+                // 上一个最新lastEffect的nextEffect指向到当前fiber的第一个effect
                 returnFiber.lastEffect.nextEffect = currentFiber.fisrtEffect
             }
+
+            // 更新父级fiber的lastEffect
             returnFiber.lastEffect = currentFiber.lastEffect
         }
 
@@ -277,33 +320,17 @@ function completeUnitOfWork(currentFiber) {
         const { effectTag } = currentFiber
         if (effectTag) {
             if (returnFiber.lastEffect) {
+                // 前一个lastEffect的nextEffect指向当前fiber
                 returnFiber.lastEffect.nextEffect = currentFiber
             } else {
+                // 父级fiber没有lastEffect就证明是第一次遇到有副作用的子fiber
                 returnFiber.fisrtEffect = currentFiber
             }
 
+            // 父级effect的lastEffect指向当前fiber
             returnFiber.lastEffect = currentFiber
         }
     }
-}
-
-function workLoop(deadline) {
-    // 是否交出控制权
-    let shouldYield = false
-
-    while (nextUnitOfWork && !shouldYield) {
-        // 执行单个执行单元, 返回下一个执行单元
-        nextUnitOfWork = performUnitOfWork(nextUnitOfWork)
-        // 看是否还有剩余时间, 如果没有时间则交出控制权, 有时间则继续执行下一个执行单元
-        shouldYield = deadline.timeRemaining() < 1
-    }
-
-    if (!nextUnitOfWork && workInProgressRoot) {
-        console.log('render阶段结束')
-        commitRoot()
-    }
-
-    requestIdleCallback(workLoop, { timeout: 500 })
 }
 
 function commitRoot() {

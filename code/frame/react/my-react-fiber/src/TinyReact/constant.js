@@ -11,8 +11,6 @@ export const TAG_CLASS = Symbol('TAG_CLASS')
 // 函数组件
 export const TAG_FUNCTION = Symbol('TAG_FUNCTION')
 
-// effectTag
-
 // 新增
 export const PLACEMENT = Symbol('PLACEMENT')
 // 更新

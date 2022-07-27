@@ -15,6 +15,7 @@ export class UpdateQueue {
         if (!this.lastUpdate) {
             this.firstUpdate = this.lastUpdate = update
         } else {
+            // this.lastUpdate  => 上一个更新
             this.lastUpdate.nextUpdater = update
             this.lastUpdate = update
         }
@@ -30,6 +31,8 @@ export class UpdateQueue {
             state = { ...state, ...nextState }
             currentUpdate = currentUpdate.nextUpdater
         }
+
+        this.firstUpdate = this.lastUpdate = null
 
         return state
     }
