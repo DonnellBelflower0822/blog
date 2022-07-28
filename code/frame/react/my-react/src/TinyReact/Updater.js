@@ -68,13 +68,12 @@ class Updater {
 
         if (newProps || pendingState.length > 0) {
             // 拿到最新的props和state
-            shouldComponentUpdate(classInstance, newProps, this.getState(), callbacks)
+            updateClassComponent(classInstance, newProps, this.getState(), callbacks)
         }
     }
 }
 
-// 组件是否更新
-function shouldComponentUpdate(classInstance, newProps, nextState, callbacks) {
+function updateClassComponent(classInstance, newProps, nextState, callbacks) {
     // 处理 static getDerivedStateFromProps生命周期
     const { ownType: ClassComponent } = classInstance
     if (ClassComponent.getDerivedStateFromProps) {

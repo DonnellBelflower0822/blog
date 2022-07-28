@@ -1,4 +1,4 @@
-import { put, takeEvery, cps } from '../redux-saga/effects'
+import { put, takeEvery, cps, all } from '../../core/redux-saga/effects'
 import { ADD1, ASYNC_ADD1 } from '../store/action-type'
 
 const delay = (ms, callback) => {
@@ -12,8 +12,12 @@ function* add1() {
     yield put({ type: ADD1 })
 }
 
-function* rootSaga() {
+function* watcherSaga() {
     yield takeEvery(ASYNC_ADD1, add1)
+}
+
+function* rootSaga() {
+    const result = yield all([watcherSaga])
 }
 
 export default rootSaga

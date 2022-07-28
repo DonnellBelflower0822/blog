@@ -16,6 +16,7 @@
 import { ELEMENT_TEXT, PLACEMENT, TAG_HOST, TAG_ROOT, TAG_TEXT, DELETION, UPDATE, TAG_CLASS, TAG_FUNCTION } from "./constant"
 import { cretateDOM, updateDomProps } from './react-dom'
 import { Update, UpdateQueue } from "./UpdateQueue"
+import { shallowEqual } from "./utils"
 
 // 下一个执行单元 fiber
 let nextUnitOfWork = null
@@ -31,6 +32,8 @@ let hookIndex = 0
 // 删除节点
 const deletions = []
 
+// currentRoot浏览器显示的rootFiber
+// workInProgressRoot是正在进行的rootFiber
 // 最核心的就是props和stateNode, 其他属性都是后加的
 export function scheduleRoot(rootFiber) {
     if (currentRoot?.alternate) {
@@ -295,41 +298,44 @@ function reconcileChildren(currentFiber, children) {
 function completeUnitOfWork(currentFiber) {
     let returnFiber = currentFiber.return
 
-    if (returnFiber) {
-        // 把儿子挂到父亲
+    if (!returnFiber) {
+        return
+    }
 
-        // 如果父亲没有firstEffect, 
-        // 就证明是currentFiber是父亲的child,
-        // 所以将自身的fistEffect赋给父亲的firstEffect
-        if (!returnFiber.fisrtEffect) {
-            returnFiber.fisrtEffect = currentFiber.fisrtEffect
+    // 1. 把自己的儿子挂到自己的父亲
+    //    孙子 挂到 爷爷
+
+    // 如果父亲没有firstEffect, 
+    // 就证明是currentFiber是父亲的child,
+    // 所以将自身的fistEffect赋给父亲的firstEffect
+    if (!returnFiber.fisrtEffect) {
+        returnFiber.fisrtEffect = currentFiber.fisrtEffect
+    }
+
+    // 自身有lastEffect
+    if (currentFiber.lastEffect) {
+        if (returnFiber.lastEffect) {
+            // 上一个最新lastEffect的nextEffect指向到当前fiber的第一个effect
+            returnFiber.lastEffect.nextEffect = currentFiber.fisrtEffect
         }
 
-        // 自身有lastEffect
-        if (currentFiber.lastEffect) {
-            if (returnFiber.lastEffect) {
-                // 上一个最新lastEffect的nextEffect指向到当前fiber的第一个effect
-                returnFiber.lastEffect.nextEffect = currentFiber.fisrtEffect
-            }
+        // 更新父级fiber的lastEffect
+        returnFiber.lastEffect = currentFiber.lastEffect
+    }
 
-            // 更新父级fiber的lastEffect
-            returnFiber.lastEffect = currentFiber.lastEffect
+    // 把自己挂到父亲
+    const { effectTag } = currentFiber
+    if (effectTag) {
+        if (returnFiber.lastEffect) {
+            // 前一个lastEffect的nextEffect指向当前fiber
+            returnFiber.lastEffect.nextEffect = currentFiber
+        } else {
+            // 父级fiber没有lastEffect就证明是第一次遇到有副作用的子fiber
+            returnFiber.fisrtEffect = currentFiber
         }
 
-        // 把自己挂到父亲
-        const { effectTag } = currentFiber
-        if (effectTag) {
-            if (returnFiber.lastEffect) {
-                // 前一个lastEffect的nextEffect指向当前fiber
-                returnFiber.lastEffect.nextEffect = currentFiber
-            } else {
-                // 父级fiber没有lastEffect就证明是第一次遇到有副作用的子fiber
-                returnFiber.fisrtEffect = currentFiber
-            }
-
-            // 父级effect的lastEffect指向当前fiber
-            returnFiber.lastEffect = currentFiber
-        }
+        // 父级effect的lastEffect指向当前fiber
+        returnFiber.lastEffect = currentFiber
     }
 }
 
@@ -368,7 +374,7 @@ function commitWork(currentFiber) {
     if (currentFiber.effectTag === PLACEMENT) {
         let nextFiber = currentFiber
         while (nextFiber.tag !== TAG_HOST && nextFiber.tag !== TAG_TEXT) {
-            nextFiber = currentFiber.child
+            nextFiber = nextFiber.child
         }
         // 新增
         returnDOM.appendChild(nextFiber.stateNode)
@@ -399,30 +405,155 @@ function commitDeletion(currentFiber, returnDOM) {
     }
 }
 
-export function useReducer(reducer, initialValue) {
+const createBaseUseReducer = (isUseState = false) => (
+    (reducer, initialValue) => {
+        let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+        if (newHook) {
+            newHook.state = newHook.updateQueue.forceUpdate(newHook.state)
+        } else {
+            // 第一次渲染
+            newHook = {
+                state: initialValue,
+                updateQueue: new UpdateQueue(isUseState)
+            }
+        }
+
+        const dispatch = (action) => {
+            newHook.updateQueue.equeueUpdate(
+                new Update(
+                    // 兼容useState
+                    typeof reducer === 'function'
+                        ? reducer(newHook.state, action)
+                        : action
+                )
+            )
+            scheduleRoot()
+        }
+
+        currentFunctionFiber.hooks[hookIndex++] = newHook
+
+        return [newHook.state, dispatch]
+    }
+)
+
+export const useReducer = createBaseUseReducer()
+export const useState = useReducer.bind(null, null)
+
+export const useCallback = (callback, deps) => {
     let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
     if (newHook) {
-        newHook.state = newHook.updateQueue.forceUpdate(newHook.state)
+        if (!shallowEqual(newHook.deps, deps)) {
+            newHook.callback = callback
+            newHook.deps = deps
+        }
     } else {
         // 第一次渲染
         newHook = {
-            state: initialValue,
-            updateQueue: new UpdateQueue()
+            callback,
+            deps
         }
-    }
-
-    const dispatch = (action) => {
-        newHook.updateQueue.equeueUpdate(
-            new Update(
-                typeof reducer === 'function'
-                    ? reducer(newHook.state, action)
-                    : action
-            )
-        )
-        scheduleRoot()
     }
 
     currentFunctionFiber.hooks[hookIndex++] = newHook
 
-    return [newHook.state, dispatch]
+    return newHook.callback
+}
+
+export const useMemo = (factory, deps) => {
+    let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+
+    if (newHook) {
+        if (!shallowEqual(newHook.deps, deps)) {
+            newHook.memo = factory()
+            newHook.deps = deps
+        }
+    } else {
+        // 第一次渲染
+        newHook = {
+            memo: factory(),
+            deps
+        }
+    }
+
+    currentFunctionFiber.hooks[hookIndex++] = newHook
+
+    return newHook.memo
+}
+
+export const useContext = (Context) => {
+    let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+
+    if (newHook) {
+        newHook.contextValue = Context.Provider._value
+    } else {
+        newHook = {
+            contextValue: Context.Provider._value
+        }
+    }
+
+    currentFunctionFiber.hooks[hookIndex++] = newHook
+    return newHook.contextValue;
+}
+
+const createEffect = (delyFn = setTimeout) => {
+    return (fn, deps) => {
+        let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+
+        if (newHook) {
+            if (!shallowEqual(newHook.deps, deps)) {
+                newHook.destoryFb?.()
+
+                delyFn(() => {
+                    newHook.destoryFb = fn()
+                })
+                newHook.deps = deps
+            } else {
+                newHook.deps = deps
+            }
+        } else {
+            // 第一次渲染
+            newHook = {
+                deps
+            }
+
+            delyFn(() => {
+                newHook.destoryFb = fn()
+            })
+        }
+
+        currentFunctionFiber.hooks[hookIndex++] = newHook
+    }
+}
+
+export const useEffect = createEffect(setTimeout)
+
+export const useLayoutEffect = createEffect(queueMicrotask)
+
+export const useImperativeHandle = (ref, factory, deps) => {
+    let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+
+    if (newHook) {
+        if (!shallowEqual(deps, newHook.deps)) {
+            newHook.imperativeRef = factory()
+            newHook.deps = deps
+        }
+    } else {
+        newHook = {
+            deps,
+            imperativeRef: factory()
+        }
+    }
+    currentFunctionFiber.hooks[hookIndex++] = newHook
+    return newHook.imperativeRef
+}
+
+export const useRef = (current) => {
+    let newHook = currentFunctionFiber?.alternate?.hooks?.[hookIndex]
+    if (!newHook) {
+        newHook = { current };
+    }
+
+    currentFunctionFiber.hooks[hookIndex++] = newHook
+
+    return newHook
 }

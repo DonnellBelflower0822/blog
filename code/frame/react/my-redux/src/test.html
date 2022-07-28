@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    >
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        const compose = (...fns) => (
+            fns.reduce((prevFn, currentFn) => (
+                (...args) => prevFn(currentFn(...args))
+            ))
+        )
+
+        function upperCase(str) {
+            return str.toUpperCase()
+        }
+
+        function first(arr) {
+            return arr[0]
+        }
+
+        function reverse(arr) {
+            return arr.reverse()
+        }
+
+        // console.log(111, upperCase(first(reverse(array))))
+
+        // const reverseResult = reverse()
+        // const firstResult = first(reverseResult)
+        // const upperCaseResult = upperCase(firstResult)
+
+
+
+        const fn = compose(upperCase, first, reverse)
+
+        const fn1 = (...fns) => {
+            // console.log(fns, fnArgs)
+            return fns.reduce((prevFn, currentFn) => {
+                console.log('before', prevFn, currentFn)
+                // 第一次
+                // prevFn: upperCase
+                // currentFn: first
+                // diyFn1: return (firstResult)=> prevFn(currentFn(reverseResult))
+
+                // 第二次
+                // prevFn: diyFn1
+                // current: reverse
+                // diyFn2: return (arg = ['hello', 'world', 'allen'])=>diyFn1(reverse(arg))
+
+                return (...args) => {
+                    return prevFn(currentFn(...args))
+                }
+
+
+                /**
+                const fn1 = (...args)=>{
+                    return upperCase(
+                        first(
+                            reverse(...args)
+                        )
+                    )
+                } 
+                */
+            })
+        }
+
+        console.log(1, fn1(upperCase, first, reverse)(['hello', 'world', 'allen']))
+        console.log(2, fn(['hello', 'world', 'allen']))
+        // console.log(222, fn(array), )
+    </script>
+</body>
+
+</html>

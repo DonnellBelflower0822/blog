@@ -1,5 +1,5 @@
 import React from 'react'
-import { createStore } from './redux/createStore'
+import { createStore } from '../core/redux/createStore'
 
 const ADD = 'ADD'
 const MINUS = 'MINUS'

@@ -1,5 +1,5 @@
 import React from 'react'
-import { connect } from './react-redux'
+import { connect } from '../core/react-redux'
 import { ADD1, ASYNC_ADD1 } from './store/action-type'
 
 class Counter1 extends React.Component {

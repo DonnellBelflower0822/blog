@@ -1,5 +1,5 @@
 import React from 'react'
-import { useDispatch, useSelector } from './react-redux'
+import { useDispatch, useSelector } from '../core/react-redux'
 import { ADD2, MINUS2 } from './store/action-type'
 
 function Counter2() {

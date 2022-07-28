@@ -1,5 +1,8 @@
 import { ELEMENT_TEXT } from './constant'
-import { scheduleRoot, useReducer } from './schedule'
+import {
+    scheduleRoot, useReducer, useState, useCallback, useMemo, useEffect, useLayoutEffect,
+    useRef
+} from './schedule'
 import { Update } from './UpdateQueue'
 
 function createElement(type, props = {}, ...children) {
@@ -44,7 +47,13 @@ Component.isReactComponent = {}
 const TinyReact = {
     createElement,
     Component,
-    useReducer
+    useReducer,
+    useState,
+    useCallback,
+    useMemo,
+    useEffect,
+    useLayoutEffect,
+    useRef
 }
 
 export default TinyReact

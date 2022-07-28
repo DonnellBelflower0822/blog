@@ -1,19 +1,9 @@
-import { put, takeEvery, cps } from '../redux-saga/effects'
-import { ADD1, ASYNC_ADD1 } from '../store/action-type'
-
-const delay = (ms, callback) => {
-    setTimeout(() => {
-        callback(null)
-    }, ms)
-}
-
-function* add1() {
-    yield cps(delay, 1000)
-    yield put({ type: ADD1 })
-}
-
-function* rootSaga() {
-    yield takeEvery(ASYNC_ADD1, add1)
-}
+// import rootSaga from './01-base'
+// import rootSaga from './02-it'
+import rootSaga from './03-takeEvery'
+// import rootSaga from './04-delay'
+// import rootSaga from './05-call'
+// import rootSaga from './06-cps'
+// import rootSaga from './07-all'
 
 export default rootSaga

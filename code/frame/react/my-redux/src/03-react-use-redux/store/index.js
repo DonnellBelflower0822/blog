@@ -1,4 +1,4 @@
-import { createStore } from "../redux"
+import { createStore } from "../../core/redux"
 import rootReducer from "./reducer"
 
 const store = createStore(rootReducer)

@@ -1,4 +1,4 @@
-import { ADD1 } from "../action-type"
+import { ADD1, ADD2 } from "../action-type"
 
 const initialState = { count: 1 }
 const reducer = (state = initialState, action) => {

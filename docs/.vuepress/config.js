@@ -19,7 +19,7 @@ module.exports = {
     sidebar: {
       '/basic/': [
         {
-          title: 'ES',
+          title: '语法篇',
           path: '/basic/es/',
           children: [
             '/basic/es/',
@@ -36,13 +36,7 @@ module.exports = {
             '/basic/es/write',
             '/basic/es/cg',
             '/basic/es/question',
-          ]
-        },
-        {
-          title: 'TS',
-          path: '/basic/ts-md/',
-          children: [
-            '/basic/ts-md/',
+            '/basic/es/ts',
           ]
         },
         {
@@ -63,49 +57,47 @@ module.exports = {
             '/frame/react/',
             '/frame/react/tiny-react',
             '/frame/react/tiny-react-fiber',
-            '/frame/react/router',
+            // '/frame/react/router',
             '/frame/react/redux',
             '/frame/react/dva',
-            '/frame/react/umi',
-            '/frame/react/source',
-            '/frame/react/interview',
           ]
         },
+        // {
+        //   title: 'React-md',
+        //   path: '/frame/react-md/',
+        //   children: [
+        //     '/frame/react-md/',
+        //     // '/frame/react-md/my-react',
+        //     // '/frame/react-md/hook',
+        //     // '/frame/react-md/my-redux',
+        //     // '/frame/react/my-router',
+        //     '/frame/react-md/optimize',
+        //     // '/frame/react-md/fiber',
+        //     '/frame/react-md/immutable',
+        //   ]
+        // },
+        // {
+        //   title: 'Vue',
+        //   path: '/frame/vue/',
+        //   children: [
+        //     '/frame/vue/',
+        //     '/frame/vue/vue3',
+        //     // '/frame/vue/router',
+        //     // '/frame/vue/vuex',
+        //     // '/frame/vue/pina',
+        //     // '/frame/vue/source',
+        //   ]
+        // },
         {
-          title: 'React-md',
-          path: '/frame/react-md/',
-          children: [
-            '/frame/react-md/',
-            '/frame/react-md/my-react',
-            '/frame/react-md/hook',
-            '/frame/react-md/my-redux',
-            // '/frame/react/my-router',
-            '/frame/react-md/optimize',
-            '/frame/react-md/fiber',
-            '/frame/react-md/immutable',
-          ]
-        },
-        {
-          title: 'Vue',
+          title: 'vue',
           path: '/frame/vue/',
           children: [
             '/frame/vue/',
-            '/frame/vue/router',
-            '/frame/vue/vuex',
-            '/frame/vue/pina',
-            '/frame/vue/source',
-          ]
-        },
-        {
-          title: 'Vue-md',
-          path: '/frame/vue-md/',
-          children: [
-            '/frame/vue-md/',
-            '/frame/vue-md/my-vue2',
-            '/frame/vue-md/my-vue2-router',
-            '/frame/vue-md/my-vue2-vuex',
-            '/frame/vue-md/my-vue2-ssr',
-            '/frame/vue-md/my-vue3',
+            '/frame/vue/my-vue2',
+            '/frame/vue/my-vue2-router',
+            '/frame/vue/my-vue2-vuex',
+            '/frame/vue/my-vue2-ssr',
+            '/frame/vue/my-vue3',
           ]
         }
       ],

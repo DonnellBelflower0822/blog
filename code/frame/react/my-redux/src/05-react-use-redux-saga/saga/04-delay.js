@@ -1,4 +1,4 @@
-import { put, takeEvery } from '../redux-saga/effects'
+import { put, takeEvery } from '../../core/redux-saga/effects'
 import { ADD1, ASYNC_ADD1 } from '../store/action-type'
 
 function delay(ms) {

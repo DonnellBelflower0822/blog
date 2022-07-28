@@ -1,41 +1,4 @@
 # React概念
-
-## 函数组件和类组件
-- 相同点
-  - 接收属性返回react元素
-- 不同点
-  - 编程思想:
-    - 类组件: 创建实例,是面向对象的编程方法
-    - 函数组件: 不需要创建实例,是基于函数式编程
-  - 内存:
-    - 类组件: 需要创建和保存实例,会占用一定内存
-    - 函数组件: 不需要创建实例,可以节约内存
-  - 捕获特性:
-    - 函数组件具有值捕获特性
-  - 可测试性:
-    - 函数组件更方便单元测试
-  - 状态:
-    - 类组件和函数组件都可以有状态
-  - 生命周期:
-    - 类组件: 完整的生命周期
-    - 函数组件: 可以通过React.useEffect实现componentDidMount,componentDidUpdate,componentWillUnmount
-  - 逻辑复用
-    - 类组件: 组合, 继承, hoc
-    - 函数组件: 自定义hook
-  - 跳过更新:
-    - 类组件:
-      - shouldComponentUpdate: 返回true更新,返回false不更新
-      - PureComponent: 实现shouldComponent对新旧state和新旧props进行浅层比较
-    - 函数组件:
-      - React.memo(Component,areEqual)
-      - 第二个参数`areEqual是否相等`:
-        - 可以对新旧props进行比较
-        - 返回true: 不更新
-        - 返回false: 更新
-    - 发展前景
-      - 未来函数组件会成为主流
-        - 屏蔽this
-        - 更好的复用逻辑
  
 ## dom-diff
 

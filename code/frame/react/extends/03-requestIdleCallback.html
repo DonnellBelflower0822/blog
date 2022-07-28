@@ -24,7 +24,7 @@
         const tasks = [
             () => {
                 console.log('任务1开始')
-                sleep(20)
+                sleep(1)
                 console.log('任务1结束')
             },
             () => {
@@ -34,7 +34,7 @@
             },
             () => {
                 console.log('任务3开始')
-                sleep(20)
+                sleep(1)
                 console.log('任务3结束')
             },
         ]
@@ -42,14 +42,19 @@
         requestIdleCallback(workLoop, { timeout: 1000 })
 
         function workLoop(deadline) {
-            console.log('deadline', deadline.timeRemaining())
+            // 是否让出执行权
+            let isYield = false
+            console.log('开启此次任务')
             /**
              * 本帧还有剩余时间或者任务已经超时
              * 并且还有任务
              */
-            if ((deadline.timeRemaining() > 0 || deadline.didTimeout) && tasks.length > 0) {
+            while (tasks.length > 0 && !isYield) {
                 preformUnitOfWork()
+                isYield = deadline.timeRemaining() <= 0 && !deadline.didTimeout
             }
+
+            console.log('结束此次任务')
 
             // 本帧没有剩余时间, 需要把控制权交还给浏览器
             if (tasks.length > 0) {

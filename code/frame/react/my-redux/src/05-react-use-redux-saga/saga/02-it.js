@@ -1,4 +1,4 @@
-import { take, put } from '../redux-saga/effects'
+import { take, put } from '../../core/redux-saga/effects'
 import { ADD1, ASYNC_ADD1 } from '../store/action-type'
 
 function* add() {
@@ -12,8 +12,10 @@ function* rootSaga() {
     for (let i = 0; i < 3; i += 1) {
         yield take(ASYNC_ADD1)
         yield add()
-        console.log('rootsaga next')
+        console.log('root saga next')
     }
+
+    console.log('结束saga')
 }
 
 export default rootSaga

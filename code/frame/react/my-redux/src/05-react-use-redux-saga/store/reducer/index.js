@@ -1,5 +1,5 @@
 import count1 from './count1'
-import { combineReducers } from '../../redux'
+import { combineReducers } from '../../../core/redux'
 
 const rootReducer = combineReducers({
     count1,

@@ -6,9 +6,11 @@ export class Update {
 }
 
 export class UpdateQueue {
-    constructor () {
+    constructor (isUseState = false) {
         this.firstUpdate = null
         this.lastUpdate = null
+
+        this.isUseState = isUseState
     }
 
     equeueUpdate(update) {
@@ -27,8 +29,8 @@ export class UpdateQueue {
             const nextState = typeof currentUpdate.payload === 'function'
                 ? currentUpdate.payload(state)
                 : currentUpdate.payload
-
-            state = { ...state, ...nextState }
+            
+            state = !this.isUseState ? { ...state, ...nextState } : nextState
             currentUpdate = currentUpdate.nextUpdater
         }
 

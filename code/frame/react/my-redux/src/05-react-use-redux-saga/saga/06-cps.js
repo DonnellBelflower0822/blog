@@ -1,4 +1,4 @@
-import { put, takeEvery, cps } from '../redux-saga/effects'
+import { put, takeEvery, cps } from '../../core/redux-saga/effects'
 import { ADD1, ASYNC_ADD1 } from '../store/action-type'
 
 const delay = (ms, callback) => {

@@ -1,57 +1,41 @@
-import { applyMiddleware, createStore } from "../redux"
+import { applyMiddleware, createStore } from "../../core/redux"
 import rootReducer from "./reducer"
 
-
-function logger({ getState }) {
+function logger(middlewareAPI) {
     return function loggerNext(next) {
         return function loggerDispatch(action) {
-            console.log('prev state', getState())
+            console.log('prev state', middlewareAPI.getState())
             next(action)
-            console.log('next state', getState())
+            console.log('next state', middlewareAPI.getState())
         }
     }
 }
 
-function thunk({ dispatch, getState }) {
+function thunk(middlewareAPI) {
     return function thunkNext(next) {
         return function thunkDispatch(action) {
             if (typeof action === 'function') {
-                return action(dispatch, getState)
+                return action(middlewareAPI.dispatch, middlewareAPI.getState)
             }
             return next(action)
         }
     }
 }
 
-function promise({ dispatch }) {
+function promise(middlewareAPI) {
     return function promiseNext(next) {
         return function promiseDispatch(action) {
             if (typeof action?.then === 'function') {
-                return action.then(data => dispatch(data))
+                return action.then(data => middlewareAPI.dispatch(data))
             }
             return next(action)
         }
     }
 }
 
-// const store = applyMiddleware(promise, thunk, logger)(createStore)(rootReducer)
-const store = createStore(rootReducer, {}, applyMiddleware(promise, thunk, logger))
+const store = createStore(rootReducer, {}, applyMiddleware(logger, thunk, promise))
 
 export default store
-
-// const [promise, thunk, logger] = chains
-// promise(thunk(logger()))
-
-// function compose(...fns) {
-//     return function (args) {
-//         return fns.reduceRight((args, currentFn) => {
-//             return currentFn(args)
-//         }, args)
-//     }
-// }
-
-// const [promise, thunk, logger] = chains
-// promise(thunk(logger()))
 
 function compose(...fns) {
     return fns.reduce((lastFn, currentFn) => {

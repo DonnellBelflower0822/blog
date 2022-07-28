@@ -20,6 +20,21 @@
 
 ## TinyReact.createElement
 
+> 执行TinyReact.createElement返回虚拟dom
+
+**数据结构**
+
+```ts
+interface VDom {
+    type: string | FunctionComponent | ClassComponent,
+    props: {
+        ...props,
+        children: VDom | VDom[] | string | null
+    },
+    dom: HTMLELEMENT
+}
+```
+
 ```js
 function createElement(type, props = {}, children) {
     const { ref, ...restProps } = props || {}
@@ -63,7 +78,6 @@ function wrapperChildren(child) {
 - createDOM: 根据虚拟dom创建真实dom
 
 ```js
-
 // 将虚拟dom挂载到容器上
 function render(rootVdom, container) {
     // 挂载
@@ -323,15 +337,14 @@ export function updateProps(currentDOM, newProps, lastProps) {
 ```
 
 ### addEvent
+
+**合成事件**
+1. 处理事件在浏览器兼容性
+2. 可以在事件处理函数前后做额外操作 `进入批量更新模式` 等操作
+
 ```js
 /**
  * 给真实DOM绑定事件
- * 为什么要合成事件
- * 1. 处理事件兼容性
- * 2. 可以在事件处理函数前后做额外操作
- * @param {*} dom 
- * @param {*} eventType 
- * @param {*} handler 
  */
 export default function addEvent(dom, eventType, handler) {
     if (!dom.store) {
@@ -347,6 +360,8 @@ export default function addEvent(dom, eventType, handler) {
 ```
 
 ### dispatchEvent
+
+> 通过获取触发事件的元素, 冒泡向上
 
 ```js
 import { updateQueue } from "./Updater"
@@ -548,6 +563,108 @@ export default class Component {
 }
 ```
 
+### 生命周期(类组件)
+
+**挂载阶段**
+
+```js
+function mountClassComponent(vdom) {
+    // 创建类的实例 -> constructor
+    const instance = new ClassComponent(props)
+
+    // static getDerivedStateFromProps 
+    // 从props得到state
+    if (ClassComponent.getDerivedStateFromProps) {
+        const newState = ClassComponent.getDerivedStateFromProps(
+            instance.props, 
+            instance.state
+        )
+        
+        if(newState!==null){
+            instance.state = {
+                ...instance.state,
+                ...newState
+            }
+        }
+    }
+
+    // render
+    // 调用实例的render方法, 返回虚拟dom
+    const renderVdom = instance.render.call(instance)
+
+    // 根据render返回虚拟dom生成真实dom
+    const dom = createDOM(renderVdom)
+
+    // 先挂载到dom上, 插入页面中后执行componentDidMount
+    if (instance.componentDidMount) {
+        dom.componentDidMount = instance.componentDidMount.bind(instance)
+    }
+
+    // 此时真实dom还未插入页面中
+    return dom
+}
+
+function mount(vdom, container) {
+    const dom = createDOM(vdom)
+
+    container.appendChild(dom)
+
+    // 真正执行componentDidMount
+    dom.componentDidMount?.()
+}
+```
+
+**更新阶段**
+
+```js
+function updateClassComponent(classInstance, newProps, nextState, callbacks) {
+    // 处理 static getDerivedStateFromProps生命周期
+    const { ownType: ClassComponent } = classInstance
+    if (ClassComponent.getDerivedStateFromProps) {
+        const newState = ClassComponent.getDerivedStateFromProps(newProps, classInstance.state)
+        if(newState!==null){
+            classInstance.state = {
+                ...classInstance.state,
+                ...newState
+            }
+        }
+    }
+
+    // 处理shouldComponentUpdate生命周期
+    if (
+        classInstance.shouldComponentUpdate
+        && !classInstance.shouldComponentUpdate(newProps, nextState)
+    ) {
+        classInstance.state = nextState
+        if (newProps) {
+            classInstance.props = newProps
+        }
+        callbacks.length = 0
+        return
+    }
+
+    classInstance.state = nextState
+
+    if (newProps) {
+        classInstance.props = newProps
+    }
+    classInstance.forceUpdate()
+    callbacks.forEach(callback => callback())
+    callbacks.length = 0
+}
+
+export default class Component {
+    forceUpdate = () => {
+        // 调用render, 拿到最新的render虚拟dom
+        const newRenderVdom = this.render.call(this)
+        
+        // ...
+
+        this.componentDidUpdate?.(prevProps, prevState)
+    }
+}
+```
+
 ## compareTwoVdom(dom-diff)
 1. 新旧虚拟dom都没有(啥也不用做)
 2. 旧的有虚拟dom, 新的没有虚拟dom(走卸载旧的虚拟dom) 
@@ -569,6 +686,19 @@ export default class Component {
             2. 调用compareTwoVdom进行新旧虚拟dom对比
 
 ### updateChildren
+
+```js
+function updateChildren(parentDOM, lastRendeChildren, newRenderChildren) {
+    lastRendeChildren = toArray(lastRendeChildren)
+    newRenderChildren = toArray(newRenderChildren)
+
+    const maxLength = Math.max(lastRendeChildren.length, newRenderChildren.length)
+    for (let i = 0; i < maxLength; i += 1) {
+        const nextDOM = lastRendeChildren.find((vdom, index) => index > i && vdom && vdom.dom)
+        compareTwoVdom(parentDOM, lastRendeChildren[i], newRenderChildren[i], nextDOM?.dom)
+    }
+}
+```
 
 ### 完整代码
 
