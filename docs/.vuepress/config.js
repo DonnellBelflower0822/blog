@@ -129,46 +129,33 @@ module.exports = {
         },
       ],
       '/engine/': [
-        {
-          title: 'webpack',
-          path: '/engine/webpack-md/',
-          children: [
-            '/engine/webpack-md/',
-            '/engine/webpack-md/principle',
-            '/engine/webpack-md/my-webpack',
-            '/engine/webpack-md/modules',
-          ]
-        },
-        {
-          title: 'rollup',
-          path: '/engine/rollup-md/',
-          children: [
-            '/engine/rollup-md/',
-          ]
-        },
-        {
-          title: 'vite',
-          path: '/engine/vite-md/',
-          children: [
-            '/engine/vite-md/',
-          ]
-        },
-        {
-          title: '工程化',
-          path: '/engine/engine/',
-          children: [
-            '/engine/engine/',
-            '/engine/engine/cli',
-            '/engine/engine/monorepo',
-          ]
-        },
-        {
-          title: 'git',
-          path: '/engine/git/',
-          children: [
-            '/engine/git/',
-          ]
-        }
+        // {
+        //   title: '构建工具',
+        //   path: '/engine/tool/',
+        //   children: [
+        '/engine/',
+        '/engine/principle',
+        '/engine/my-webpack',
+        '/engine/modules',
+        '/engine/vite-doc'
+        // ]
+        // },
+        // {
+        //   title: '工程化',
+        //   path: '/engine/engine/',
+        //   children: [
+        //     '/engine/engine/',
+        //     '/engine/engine/cli',
+        //     '/engine/engine/monorepo',
+        //   ]
+        // },
+        // {
+        //   title: 'git',
+        //   path: '/engine/git/',
+        //   children: [
+        //     '/engine/git/',
+        //   ]
+        // }
       ],
       '/http/': [
         {

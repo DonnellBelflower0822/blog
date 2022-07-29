@@ -2,18 +2,11 @@
   - 手写react
     - oldReact
       - https://www.bilibili.com/video/BV1k341177iT?p=1&vd_source=a68f633f09d312398f97094b0716fbb8
-    - react-router
-      - https://www.bilibili.com/video/BV1k341177iT?p=29&vd_source=a68f633f09d312398f97094b0716fbb8
-    - redux, react-redux, redux-saga, dva, umi
-      - https://www.bilibili.com/video/BV1k341177iT?p=43&vd_source=a68f633f09d312398f97094b0716fbb8
-    - fiber,dom-diff,hook
-      - https://www.bilibili.com/video/BV16V411672B?p=2&vd_source=a68f633f09d312398f97094b0716fbb8
     - React源码阅读
       - https://xiaochen1024.com/courseware/60b1b2f6cf10a4003b634718/60b1b328cf10a4003b63471b
     - 面试题
       - https://www.bilibili.com/video/BV1H54y187W1?spm_id_from=333.337.search-card.all.click&vd_source=a68f633f09d312398f97094b0716fbb8
       - https://www.bilibili.com/video/BV1AU4y187AU?spm_id_from=333.337.search-card.all.click&vd_source=a68f633f09d312398f97094b0716fbb8
-      - https://www.bilibili.com/video/BV1Wy4y1g7HN?spm_id_from=333.337.search-card.all.click&vd_source=a68f633f09d312398f97094b0716fbb8
       - https://www.bilibili.com/video/BV1xL4y1L712?spm_id_from=333.337.search-card.all.click&vd_source=a68f633f09d312398f97094b0716fbb8
 - vue
   - 知识点
@@ -48,6 +41,8 @@
 - 博客
 - https://www.qinguanghui.com/react/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E5%B8%A7%E9%87%8C%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88.html
 - https://react.iamkasong.com/#%E7%AB%A0%E8%8A%82%E8%AF%B4%E6%98%8E
+
+- 监控
 
 # 知识点
 

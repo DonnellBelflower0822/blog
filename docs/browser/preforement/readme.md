@@ -1,5 +1,7 @@
 # 性能
 
+- https://www.bilibili.com/video/BV1yy4y1i7o1?p=2
+
 - 降低请求量：
   - 合并资源，减少 HTTP 请求数，
   - minify / gzip 压缩，webP，lazyLoad。
