@@ -1,433 +1,167 @@
- # Webpack
-
-- [ ] 文件监听原理
-- [ ] webpack热更新原理HMR
-- [ ] 自定义loader/plugin
-- [ ] 优化webpack构建速度
-  - [ ] 多线程
-- [ ] 多入口
-- [ ] 代码分割
-  - [ ] 公共
-  - [ ] 第三包
-- [ ] webpack脚手架
-- [ ] tree shaking
+# Webpack
 
 ## 概念
 
-webpack 是一个用于现代 JavaScript 应用程序的 静态模块打包工具
+webpack 是一个用于现代 `JavaScript` 应用程序的 `静态模块打包`工具
 
-1. 默认只对js和json进行处理，其他类型需要借助loader
-2. 打包：它会在内部构建一个 依赖图(dependency graph)，此依赖图对应映射到项目所需的每个模块，并生成一个或多个 bundle
+- 默认只对`js和json`进行处理，其他类型需要借助loader
+- 打包：它会在内部构建一个 `依赖图(dependency graph)`，此依赖图对应映射到项目所需的每个模块，并生成`一个或多个 bundle`
 
-## 什么是模块？
+## loader 加载器
+- 作用
+  - webpack 只能理解 JavaScript 和 JSON 文件
+  - loader 让 webpack 能够去处理其他类型的文件，并将它们转换为有效 模块，以供应用程序使用，以及被添加到依赖图中。
+- 特点
+  - loader 支持`链式`调用。链中的每个 loader 会将转换应用在已处理过的资源上。一组链式的 loader 将按照`相反`的顺序执行。链中的第一个 loader 将其结果（也就是应用过转换后的资源）传递给下一个 loader，依此类推。最后，链中的最后一个 loader，返回 webpack 所期望的 JavaScript。
+  - loader 可以是`同步`的，也可以是`异步`的。
+  - loader 运行在 Node.js 中，并且能够执行任何操作。
+  - loader 可以通过 `options` 对象配置
+  - 除了常见的通过 package.json 的 main 来将一个 npm 模块导出为 loader，还可以在 module.rules 中使用 loader 字段直接引用一个模块。
+  - 插件(plugin)可以为 loader 带来更多特性。
+  - loader 能够产生额外的任意文件。
 
-- 将一个复杂的程序依据一定的规则(规范)封装成几个块(文件), 并进行组合在一起；
-- 块的内部数据/实现是私有的, 只是向外部暴露一些接口(方法)与外部其它模块通信；
-- 一个模块的组成
-  - 数据--->内部的属性；
-  - 操作数据的行为--->内部的函数；
-- 模块化是指解决一个复杂的问题时自顶向下把系统划分成若干模块的过程，有多种属性，分别反映其内部特性；
-- 模块化编码：编码时是按照模块一个一个编码的, 整个项目就是一个模块化的项目；
+### 常用loader
+- babel-loader: 转换js
+  - 优化
+    - 'babel-loader?cacheDirectory'
+    - 排除 node_modules
+    - 优化辅助代码 `plugins: ['@babel/plugin-transform-runtime']`
+- postcss-loader
+  - 使用 JS 插件转换样式
+  - 补全css和处理css兼容性
+- css-loader
+- style-loader
+- less-loader
+- MiniCssExtractPlugin.loader
+- asset/resource 处理资源
+- ts-loader
+- vue-loader
 
-## 模块化优点
+## plugin 插件
+  - 插件则可以用于执行范围更广的任务。包括：打包优化，资源管理，注入环境变量。
 
-- 更好代码组织方式，利于后期维护
-- 按需加载
-- 避免命名冲突
-- 更好的依赖处理
-- 更好的分离
-
-## 模块化
-
-```js
-const allenModule = (function () {
-  const name = 'allen'
-  const sex = 'man'
-  return {
-    tell() {
-      console.log(name, sex)
-    }
-  }
-})()
-```
-
-```js
-(function (window) {
-  const name = 'allen'
-  const sex = 'man'
-  window.allenModule = {
-    tell() {
-      console.log(name, sex)
-    }
-  }
-})(window)
-```
-
-## 进化史
-
-### AMD
-
-### COMMONJS
-
-> exports和require
-
-```js
-// index.js
-const a = require('./math')
-
-console.log(a)
-
-const { getSum } = require('./math')
-console.log(getSum)
-
-const a2 = require('./math-2')
-
-console.log(a2)
-
-const { desc } = require('./math-2')
-console.log(desc)
-
-// math.js
-exports.getSum = (a, b) => a + b
-exports.desc = (a, b) => a - b
-
-// math-2.js
-const getSum = (a, b) => a + b
-const desc = (a, b) => a - b
-
-module.exports = {
-  getSum,
-  desc
-}
-```
-
-### ES6 MODULE
-
-```js
-// index.js
-import math, { desc } from './math'
-console.log(math, desc)
-
-// math.js
-export default {
-  getSum: (a, b) => a + b
-}
-
-export function desc(a, b) {
-  return a - b
-}
-```
-
-## tapable
-
-### SyncHook
-
-```js
-// 同步钩子
-class SyncHook {
-  constructor() {
-    this.tasks = []
-  }
-  // 注册钩子
-  tap(name, task) {
-    this.tasks.push(task)
-   }
-
-  // 执行钩子
-  call(...args) {
-    this.tasks.forEach(task => {
-      task(...args)
-    })
-  }
-}
-
-const hook = new SyncHook(['name'])
-
-hook.tap('react', (name) => {
-  console.log('react', name)
-})
-hook.tap('node', (name) => {
-  console.log('node', name)
-})
-
-hook.call('allen')
-```
-
-### SyncBailHook
-
-```js
-// 同步钩子
-class SyncBailHook {
-  constructor() {
-    this.tasks = []
-  }
-  // 注册钩子
-  tap(name, task) {
-    this.tasks.push(task)
-  }
-
-  // 执行钩子
-  call(...args) {
-    for (let i = 0;i < this.tasks.length;i += 1) {
-      const task = this.tasks[i]
-      const result = task(...args)
-      if (result !== undefined) {
-        return
-      }
-    }
-  }
-}
-
-const hook = new SyncBailHook(['name'])
-
-hook.tap('react', (name) => {
-  console.log('react', name)
-  return 'all'
-})
-hook.tap('node', (name) => {
-  console.log('node', name)
-})
-
-hook.call('allen')
-```
-
-## loader的执行顺序
-
-> 从右到左，从下往上
+### 常见plugins
+- html-webpack-plugin: 简化了 HTML 文件的创建
+- SplitChunksPlugin: 拆分chunks
+- EnvironmentPlugin: 环境变量 process.env.xxx
+- CopyWebpackPlugin: 复制文件
+- MiniCssExtractPlugin: 将css文件独立成文件
+- EslintWebpackPlugin: 
+- VueLoaderPlugin: vue
+- webpack-bundle-analyzer: 打包文件分析
 
 ## Loader和Plugin的区别
+- Loader 本质就是一个函数，在该函数中对接收到的`内容`进行转换，返回转换后的结果。
+- Plugin 就是插件，基于事件流框架 Tapable，插件可以扩展 Webpack 的功能，在 Webpack 运行的`生命周期`中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 Webpack 提供的 API 改变输出结果。
+- 配置位置
+  - Loader 在 module.rules 中配置，作为模块的解析规则，类型为数组。每一项都是一个 Object，内部包含了 test(类型文件)、loader、options (参数)等属性。
+  - Plugin 在 plugins 中单独配置，类型为数组，每一项是一个 Plugin 的实例，参数都通过构造函数传入。
+- 执行顺序
+  - Loader: 从右到左
+  - Plugin: 从左到右
 
-- Loader 本质就是一个函数，在该函数中对接收到的内容进行转换，返回转换后的结果。因为 Webpack 只认识 JavaScript，所以 Loader 就成了翻译官，对其他类型的资源进行转译的预处理工作。
-- Plugin 就是插件，基于事件流框架 Tapable，插件可以扩展 Webpack 的功能，在 Webpack 运行的生命周期中会广播出许多事件，Plugin 可以监听这些事件，在合适的时机通过 Webpack 提供的 API 改变输出结果。
-- Loader 在 module.rules 中配置，作为模块的解析规则，类型为数组。每一项都是一个 Object，内部包含了 test(类型文件)、loader、options (参数)等属性。
-- Plugin 在 plugins 中单独配置，类型为数组，每一项是一个 Plugin 的实例，参数都通过构造函数传入。
+## 使用
 
-## webpack执行流程
+### 预加载preload/预获取prefetch
 
-<img src="./img/webpack.png" />
+- preload(预加载)：当前导航下可能需要资源
+- prefetch(预获取)：将来某些导航下可能需要的资源
 
-## 模块打包本质
+#### 区别
+- 加载时机
+    - preload chunk 会在父 chunk 加载时，以并行方式同时开始加载。
+    - prefetch chunk 会在父 chunk 加载结束后才开始加载。
+- 优先级
+    - preload chunk 具有中等优先级，并立即下载。
+    - prefetch chunk 在浏览器闲置时下载。
+- 使用时机
+    - preload chunk 会在父 chunk 中立即请求，用于当下时刻。
+    - prefetch chunk 会用于未来的某个时刻。
+- 浏览器支持程度不同。
+- 配置
+  - preload: `import(/* webpackPreload: true */ './path/to/js')`
+  - prefetch: `import(/* webpackPrefetch: true */ './path/to/js')`
 
-> 为每个模块创造一个可以导出和引入的环境
+### mode
+- optimization.chunkIds
+  - development: named
+  - production: deterministic
+  - chunkIds的值
+    - 'natural'	按使用顺序的数字 id。
+    - 'named'	对调试更友好的可读的 id。
+    - 'deterministic'	在不同的编译中不变的短数字 id。有益于长期缓存。在生产模式中会默认开启。
+    - 'size'	专注于让初始下载包大小更小的数字 id。
+    - 'total-size'	专注于让总下载包大小更小的数字 id。
 
-### 分析一下打包后的文件
-```js
-(() => {
-  // 收集所有的模块
-  var __webpack_modules__ = ({
-    "./src/index.js": ((__unused_webpack_module, exports) => {
-      // __webpack_require__会调用函数作用域的定义
-      eval("const {  a} = __webpack_require__(\"./src/demo/a.js\");__webpack_require__(\"./src/index.less\");console.log(a + b);")
-    }),
-    "./src/demo/a.js": ((__unused_webpack_module, exports) => {
-      eval("exports.a = 'allen';")
-    }),
-    "./src/index.less": ((__unused_webpack_module, exports) => {
-      eval("const style = document.createElement('style');style.innerHTML = 'html {  margin: 0;  padding: 0;}';document.head.appendChild(style);")
-    })
-  });
-  var __webpack_module_cache__ = {};
+### 分割文件
 
-  // 实现一个__webpack_require__的引入方式
-  function __webpack_require__(moduleId) {
-    // 缓存，单例
-    var cachedModule = __webpack_module_cache__[moduleId];
-    if (cachedModule !== undefined) {
-      return cachedModule.exports;
-    }
+webpack 将根据以下条件自动拆分 chunks：
 
-    // 为每个module创建一个exports，并缓存起来
-    var module = __webpack_module_cache__[moduleId] = {
-      exports: {}
-    };
-
-    // 通过moduleId调用，并把module和exports作为参数传递
-    __webpack_modules__[moduleId](module, module.exports, __webpack_require__);
-
-    // 得到的结果返回
-    return module.exports;
-  }
-
-  // 调用主入口
-  var __webpack_exports__ = __webpack_require__("./src/index.js");
-})()
-```
-
-## loader的执行顺序
-
-> 默认是从右到左（从下到上）
-
-## plugin的执行顺序
-
-> 默认是从左到右（从上到下）
+- 新的 chunk 可以被共享，或者模块来自于 node_modules 文件夹
+- 新的 chunk 体积大于 20kb（在进行 min+gz 之前的体积）
+- 当按需加载 chunks 时，并行请求的最大数量小于或等于 30
+- 当加载初始化页面时，并发请求的最大数量小于或等于 30
 
 
-## tree shaking
+## 优化手段
 
-> 描述移除 JavaScript 上下文中的未引用代码(dead-code)
+### hash
 
-> 它依赖于 ES2015 模块语法的 静态结构 特性，例如 import 和 export
+> filename: [name].[contenthash][ext]
 
-```js
-// utils/index.js
-export function a() {
-  console.log('a')
-}
+- hash ：任何一个文件改动，整个项目的构建 hash 值都会改变；
+- chunkhash：文件的改动只会影响其所在 chunk 的 hash 值；
+- contenthash：每个文件都有单独的 hash 值，文件的改动只会影响自身的 hash 值
 
-export function b() {
-  console.log('b')
-}
+### 优化构建速度
 
-// index.js
-import { a } from './utils'
-console.log(a)
-```
+- resolve.extensions: 高频文件后缀名放前面；
+- externals: 从输出的 bundle 中排除依赖
+- module.rule 缩小范围
+- babel-loader
+  - 开启缓存 babel-loader?cacheDirectory
+  - 缓存位置： node_modules/.cache/babel-loader
+- 合理利用alias
 
-### 输出bundle的文件
+### 优化构建结果
 
-<img src="./img/tree-shaking.png" />
+- webpack-bundle-analyzer分析打包结果
+- css-minimizer-webpack-plugin压缩css文件
+- terser-webpack-plugin 压缩js
 
-### 标记为side-effect-free(无副作用)
+### 优化运行时
+- 入口点分割
+- splitChunks拆分chunks
+- 代码懒加载
 
-> 设置为false表示所有文件都不包含副作用，webpack可以安全删除未用到的export
+## 题
+### source map是什么？生产环境怎么用？
+- source map 是将编译、打包、压缩后的代码映射回`源代码`的过程。
+- 打包压缩后的代码不具备良好的`可读性`，想要调试源码就需要 soucre map。
+- map文件只要不打开开发者工具，浏览器是不会加载的。
+- 线上环境一般有三种处理方案：
+  - hidden-source-map：借助第三方错误监控平台 Sentry 使用
+  - nosources-source-map：只会显示具体行数以及查看源代码的错误栈。安全性比 sourcemap 高
+  - sourcemap：通过 nginx 设置将 .map 文件只对白名单开放(公司内网)
+- 注意：避免在生产中使用 inline- 和 eval-，因为它们会增加 bundle 体积大小，并降低整体性能
 
-```json
-{
-  "sideEffects":false
-}
-```
 
-### 设置为sideEffects存在将css等文件删除
+### 使用webpack开发时，你用过哪些可以提高效率的插件？
+- webpack-merge: 合并webpack配置
+- webpack-devServer: 热更新
+- webpack-bundle-analyzer-plugin: 分析打包后的结果
 
-> 需要将这些css会产生副作用排除
+### 模块打包原理知道吗？
+Webpack 实际上为每个模块创造了一个可以`导出和导入`的环境，本质上并没有修改 代码的执行逻辑，代码执行顺序与模块加载顺序也完全一致。
 
-```
-{
-  "sideEffects": ["*.css"]
-}
-```
+### 文件监听原理呢？
 
-## 使用ts/tsx
+- 在发现源码发生变化时，自动重新构建出新的输出文件。
 
-### 生成tsconfig.json
+### 说一下 Webpack 的热更新原理吧
 
-`npx tsc --init`
+- Webpack 的热更新又称热替换（Hot Module Replacement），缩写为 HMR。 这个机制可以做到`不用刷新浏览器`而将新变更的模块`替换`掉旧的模块。
 
-### 配置package.json的resolve
-
-```json
-{
-  resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
-  },
-  optimization: {
-    usedExports: true
-  }
-}
-```
-
-## 构建优化点
-
-- 使用module.noParse
-
-```js
-{
-  module: {
-    // 不去解析lodash
-    noParse: /lodash/,
-  }
-}
-```
-
-- 使用module.rules.xx.exclude
-
-排除所有符合条件的模块
-
-```js
-module: {
-    // 不去解析lodash的import
-    noParse: /lodash/,
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: 'babel-loader'
-      }
-    ]
-}
-```
-
-- 使用webpack.IgnorePlugin
-
-> 在moment的语言包上使用
-
-```js
-new webpack.IgnorePlugin({
-  resourceRegExp: /^\.\/locale$/,
-  contextRegExp: /moment$/,
-})
-```
-
-- dll
-
-```js
-// webpack.config.dll.js 打包dll
-const path = require('path')
-const webpack = require('webpack')
-
-module.exports = {
-  entry: {
-    react: ['react', 'react-dom']
-  },
-  output: {
-    path: path.resolve(__dirname, './dist'),
-    filename: '[name]_dll.js',
-    library: '[name]_dll',
-  },
-  plugins: [
-    new webpack.DllPlugin({
-      name: '[name]_dll',
-      path: path.resolve(__dirname, 'dist', 'manifest.json')
-    })
-  ]
-}
-```
-
-```js
-// webpack.config.js 主配置文件
-new webpack.DllReferencePlugin({
-  manifest: path.resolve(__dirname, './dist', 'manifest.json')
-})
-```
-
-## scope hosting
-
-```js
-// webpack中mode=production
-// 源文件
-let a = 1
-let b = 2
-let c = 3
-let d = a + b + c
-console.log(d, '---')
-
-// 打包后的文件
-console.log(6,"---")
-```
-
-## 懒加载
-
-```js
-const element = document.createElement('div')
-
-element.innerHTML = '按钮'
-element.addEventListener('click', () => {
-  // jsonp的形式
-  import('./data').then(res => {
-    console.log(res.default)
-  })
-})
-
-document.body.appendChild(element)
-```
+- HMR的核心就是客户端从服务端拉去`更新后`的文件，准确的说是 chunk diff (chunk 需要更新的部分)，实际上 WDS 与浏览器之间维护了一个 Websocket，
+- 当本地资源发生变化时，WDS 会向浏览器推送更新，并带上构建时的 hash，让客户端与上一次资源进行对比。客户端对比出差异后会向 WDS 发起 Ajax 请求来获取更改内容(文件列表、hash)，这样客户端就可以再借助这些信息继续向 WDS 发起 jsonp 请求获取该chunk的增量更新。
 

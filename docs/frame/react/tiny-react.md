@@ -1,8 +1,10 @@
 # 手写react(V15)
 
-## 实现的功能
+> 代码仓库
 
-> 代码仓库: 
+<a href="https://github.com/xuxiaozhou/blog/tree/master/code/frame/react/my-react">https://github.com/xuxiaozhou/blog/tree/master/code/frame/react/my-react</a>
+
+## 实现的功能
 
 - TinyReact
   - createElement

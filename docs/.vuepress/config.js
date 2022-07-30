@@ -133,29 +133,12 @@ module.exports = {
         //   title: '构建工具',
         //   path: '/engine/tool/',
         //   children: [
-        '/engine/',
-        '/engine/principle',
-        '/engine/my-webpack',
         '/engine/modules',
+        '/engine/',
+        '/engine/my-webpack',
+        // '/engine/rollup',
+        '/engine/cli',
         '/engine/vite-doc'
-        // ]
-        // },
-        // {
-        //   title: '工程化',
-        //   path: '/engine/engine/',
-        //   children: [
-        //     '/engine/engine/',
-        //     '/engine/engine/cli',
-        //     '/engine/engine/monorepo',
-        //   ]
-        // },
-        // {
-        //   title: 'git',
-        //   path: '/engine/git/',
-        //   children: [
-        //     '/engine/git/',
-        //   ]
-        // }
       ],
       '/http/': [
         {
