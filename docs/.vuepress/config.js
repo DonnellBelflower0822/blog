@@ -10,7 +10,7 @@ module.exports = {
       { text: '浏览器', link: '/browser/' },
       { text: '工程化', link: '/engine/' },
       { text: 'http', link: '/http/' },
-      { text: '跨端', link: '/crossEnd/' },
+      // { text: '跨端', link: '/crossEnd/' },
       { text: '算法', link: '/algorithm/' },
       { text: '解决方案', link: '/solutions/' },
       { text: 'node', link: '/node-md/' },
@@ -18,36 +18,22 @@ module.exports = {
     ],
     sidebar: {
       '/basic/': [
-        {
-          title: '语法篇',
-          path: '/basic/es/',
-          children: [
-            '/basic/es/',
-            '/basic/es/tranform',
-            '/basic/es/grammar',
-            '/basic/es/function',
-            '/basic/es/async',
-            '/basic/es/array',
-            '/basic/es/object',
-            '/basic/es/context',
-            '/basic/es/scope',
-            '/basic/es/this',
-            '/basic/es/prototype',
-            '/basic/es/write',
-            '/basic/es/cg',
-            '/basic/es/question',
-            '/basic/es/ts',
-          ]
-        },
-        {
-          title: 'html-css',
-          path: '/basic/html-css/',
-          children: [
-            '/basic/html-css/',
-            '/basic/html-css/layout',
-            '/basic/html-css/adapted',
-          ]
-        }
+        '/basic/',
+        '/basic/tranform',
+        '/basic/grammar',
+        '/basic/function',
+        '/basic/async',
+        '/basic/array',
+        '/basic/object',
+        '/basic/context',
+        '/basic/scope',
+        '/basic/this',
+        '/basic/prototype',
+        '/basic/write',
+        '/basic/cg',
+        '/basic/question',
+        '/basic/ts',
+        '/basic/css',
       ],
       '/frame/': [
         {
@@ -57,37 +43,10 @@ module.exports = {
             '/frame/react/',
             '/frame/react/tiny-react',
             '/frame/react/tiny-react-fiber',
-            // '/frame/react/router',
             '/frame/react/redux',
             '/frame/react/dva',
           ]
         },
-        // {
-        //   title: 'React-md',
-        //   path: '/frame/react-md/',
-        //   children: [
-        //     '/frame/react-md/',
-        //     // '/frame/react-md/my-react',
-        //     // '/frame/react-md/hook',
-        //     // '/frame/react-md/my-redux',
-        //     // '/frame/react/my-router',
-        //     '/frame/react-md/optimize',
-        //     // '/frame/react-md/fiber',
-        //     '/frame/react-md/immutable',
-        //   ]
-        // },
-        // {
-        //   title: 'Vue',
-        //   path: '/frame/vue/',
-        //   children: [
-        //     '/frame/vue/',
-        //     '/frame/vue/vue3',
-        //     // '/frame/vue/router',
-        //     // '/frame/vue/vuex',
-        //     // '/frame/vue/pina',
-        //     // '/frame/vue/source',
-        //   ]
-        // },
         {
           title: 'vue',
           path: '/frame/vue/',
@@ -102,87 +61,46 @@ module.exports = {
         }
       ],
       '/browser/': [
-        {
-          title: '浏览器',
-          path: '/browser/browser/',
-          children: [
-            '/browser/browser/',
-            '/browser/browser/render',
-            '/browser/browser/storage',
-            '/browser/browser/event',
-            '/browser/browser/cache',
-          ]
-        },
-        {
-          title: 'event-loop',
-          path: '/browser/event-loop/',
-          children: [
-            '/browser/event-loop/',
-          ]
-        },
-        {
-          title: '性能优化',
-          path: '/browser/preforement/',
-          children: [
-            '/browser/preforement/',
-          ]
-        },
+        '/browser/browser/',
+        '/browser/browser/render',
+        '/browser/browser/storage',
+        '/browser/browser/event',
+        '/browser/browser/cache',
+        '/browser/event-loop/',
+        '/browser/preforement/',
       ],
       '/engine/': [
-        // {
-        //   title: '构建工具',
-        //   path: '/engine/tool/',
-        //   children: [
         '/engine/modules',
         '/engine/',
         '/engine/my-webpack',
-        // '/engine/rollup',
         '/engine/cli',
         '/engine/vite-doc'
       ],
       '/http/': [
-        {
-          title: 'http',
-          path: '/http/http/',
-          children: [
-            '/http/http/',
-            '/http/http/http',
-            '/http/http/request',
-          ]
-        },
-        {
-          title: '请求',
-          path: '/http/request/',
-          children: [
-            '/http/request/',
-            '/http/request/axios',
-          ]
-        },
-        {
-          title: '安全',
-          path: '/http/safe/',
-          children: [
-            '/http/safe/',
-            '/http/safe/xss',
-            '/http/safe/crsf',
-          ]
-        }
+        '/http/http/',
+        '/http/http/http',
+        '/http/http/request',
+        '/http/request/',
+        '/http/request/axios',
+        '/http/safe/',
+        '/http/safe/xss',
+        '/http/safe/crsf',
       ],
-      '/crossEnd/': [
-        {
-          title: 'pc客户端',
-          path: '/crossEnd/electron-md/',
-        },
-        {
-          title: '小程序',
-          path: '/crossEnd/miniapp/',
-          children: [
-            '/crossEnd/miniapp/',
-            '/crossEnd/miniapp/taro',
-            '/crossEnd/miniapp/uniapp',
-          ]
-        }
-      ],
+      // '/crossEnd/': [
+      //   {
+      //     title: 'pc客户端',
+      //     path: '/crossEnd/electron-md/',
+      //   },
+      //   {
+      //     title: '小程序',
+      //     path: '/crossEnd/miniapp/',
+      //     children: [
+      //       '/crossEnd/miniapp/',
+      //       '/crossEnd/miniapp/taro',
+      //       '/crossEnd/miniapp/uniapp',
+      //     ]
+      //   }
+      // ],
       '/solutions/': [
         {
           title: '表单方案',
@@ -207,14 +125,8 @@ module.exports = {
         }
       ],
       '/node-md/': [
-        {
-          title: '中台',
-          path: '/node-md/'
-        },
-        {
-          title: 'ci-cd',
-          path: '/node-md/ci-cd'
-        },
+        '/node-md/',
+        '/node-md/ci-cd'
       ],
       '/algorithm/': [],
     }
