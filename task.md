@@ -48,3 +48,18 @@
 - 博客
 - https://www.qinguanghui.com/react/%E6%B5%8F%E8%A7%88%E5%99%A8%E4%B8%80%E5%B8%A7%E9%87%8C%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88.html
 - https://react.iamkasong.com/#%E7%AB%A0%E8%8A%82%E8%AF%B4%E6%98%8E
+
+
+- 封装taro模板
+  - model
+  - formily
+  - form组件
+    - field
+    - picker
+    - cascader
+  - react-query
+- 中台egg.js
+- qiankun
+- 批量生成参会人的签到二维码，并以zip格式提供下载
+- 使用node启动打印程序子进程，实现签到后并打印签到证
+- cicd
