@@ -14,5 +14,4 @@
 - https://ziyi2.github.io/algorithms/guide/introduction.html#%E5%AD%A6%E4%B9%A0%E6%96%87%E6%A1%A3
 - https://zhongmeizhi.github.io/fed-note/
 - https://github.com/bettersong/interview
-- https://ifyouremember.github.io/Interview/web/
 - https://q.shanyue.tech/fe/ts/695.html

@@ -9,8 +9,6 @@ module.exports = {
       { text: '框架篇', link: '/frame/' },
       { text: '浏览器', link: '/browser/' },
       { text: '工程化', link: '/engine/' },
-      { text: 'http', link: '/http/' },
-      // { text: '跨端', link: '/crossEnd/' },
       { text: '算法', link: '/algorithm/' },
       { text: '解决方案', link: '/solutions/' },
       { text: 'node', link: '/node-md/' },
@@ -61,13 +59,11 @@ module.exports = {
         }
       ],
       '/browser/': [
-        '/browser/browser/',
-        '/browser/browser/render',
-        '/browser/browser/storage',
-        '/browser/browser/event',
-        '/browser/browser/cache',
-        '/browser/event-loop/',
-        '/browser/preforement/',
+        '/browser/',
+        '/browser/eventloop',
+        '/browser/preforement',
+        '/browser/request',
+        '/browser/http',
       ],
       '/engine/': [
         '/engine/modules',
@@ -76,31 +72,6 @@ module.exports = {
         '/engine/cli',
         '/engine/vite-doc'
       ],
-      '/http/': [
-        '/http/http/',
-        '/http/http/http',
-        '/http/http/request',
-        '/http/request/',
-        '/http/request/axios',
-        '/http/safe/',
-        '/http/safe/xss',
-        '/http/safe/crsf',
-      ],
-      // '/crossEnd/': [
-      //   {
-      //     title: 'pc客户端',
-      //     path: '/crossEnd/electron-md/',
-      //   },
-      //   {
-      //     title: '小程序',
-      //     path: '/crossEnd/miniapp/',
-      //     children: [
-      //       '/crossEnd/miniapp/',
-      //       '/crossEnd/miniapp/taro',
-      //       '/crossEnd/miniapp/uniapp',
-      //     ]
-      //   }
-      // ],
       '/solutions/': [
         {
           title: '表单方案',
