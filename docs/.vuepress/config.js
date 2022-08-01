@@ -9,9 +9,9 @@ module.exports = {
       { text: '框架篇', link: '/frame/' },
       { text: '浏览器', link: '/browser/' },
       { text: '工程化', link: '/engine/' },
-      { text: '算法', link: '/algorithm/' },
-      { text: '解决方案', link: '/solutions/' },
-      { text: 'node', link: '/node-md/' },
+      // { text: '算法', link: '/algorithm/' },
+      // { text: '解决方案', link: '/solutions/' },
+      // { text: 'node', link: '/node-md/' },
       { text: '简历', link: '/resume' },
     ],
     sidebar: {
@@ -56,7 +56,8 @@ module.exports = {
             '/frame/vue/my-vue2-ssr',
             '/frame/vue/my-vue3',
           ]
-        }
+        },
+        '/frame/qiankun/',
       ],
       '/browser/': [
         '/browser/',
@@ -70,7 +71,8 @@ module.exports = {
         '/engine/',
         '/engine/my-webpack',
         '/engine/cli',
-        '/engine/vite-doc'
+        '/engine/vite-doc',
+        '/engine/log',
       ],
       '/solutions/': [
         {

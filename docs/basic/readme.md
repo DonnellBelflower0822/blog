@@ -148,7 +148,6 @@ const p = new Person()
 console.log(Object.prototype.toString.call(p))  // [object Object]
 ```
 
-
 ## undefined和null
 - 相同点
   - 都是原始类型,只有一个值
@@ -182,7 +181,9 @@ console.log(Symbol('hello symbol').description) // hello symbo
 // console.log(s1 + 'hello')   // TypeError: Cannot convert a Symbol value to a string
 ```
 
-### `Object.getOwnPropertySymbols,Reflect.ownKeys`
+### Symbol的遍历方式
+
+> Object.getOwnPropertySymbols,Reflect.ownKeys
 
 ```js
 const s = Symbol('foo')
