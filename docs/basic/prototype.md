@@ -22,6 +22,11 @@
 - 函数的 prototype 是一个对象，也就是原型
 - 对象的 __proto__ 指向原型， __proto__ 将对象和原型连接起来组成了原型链
 
+## 特殊
+```js
+Function.__proto__ === Function.prototype
+```
+
 ### 自定义构造函数
 <img src="./img/proto-0.png" />
 

@@ -165,7 +165,7 @@ var a = JSON.parse(JSON.stringify(obj))
 ```js
 const cloneDeep = (data, weakMap = new WeakMap()) => {
     // 排除基础类型的深度拷贝
-    if (typeof data !== 'object' || data === null) {
+    if ((typeof data !== 'object' || data === null) || !Array.isArray(data)) {
         return data
     }
 

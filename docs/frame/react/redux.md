@@ -808,22 +808,3 @@ export const select = (selector) => {
     return { type: SELECT, selector }
 }
 ```
-
-### 分析
-
-```js
-function* rootSaga() {
-    // yield {type: CALL, fn: delay, args: [1000]}
-    yield call(delay, 1000)
-    // yield {type: PUT, action: {type:ADD1}}
-    yield put({ type: ADD1 })
-}
-
-// runSaga
-switch(resultValue.type){
-    case CALL:
-        break
-    case PUT:
-        break
-}
-```

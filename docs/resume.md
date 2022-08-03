@@ -9,9 +9,9 @@
 
 ## 专业技能
 
-- 熟练使用react和vue2全家桶
+- 使用react和vue2全家桶
 - 手写react的常用功能的实现
-- 熟练使用es6+和typescript
+- 使用es6+和typescript
 - 使用electron开发客户端
 - 使用taro, uni-app开发微信小程序
 - 使用webpack，vite，rollup构建工具

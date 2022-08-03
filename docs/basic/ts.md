@@ -320,6 +320,8 @@ fn({ length: 1 })
 
 ### Partial
 
+> 把属性都改成非必填
+
 ```ts
 interface T0 {
     name: string,
@@ -344,6 +346,8 @@ type MyPartial<T> = {
 
 
 ### Record
+
+
 
 ```ts
 type Man = 'allen' | 'tim'
@@ -371,6 +375,8 @@ type MyRecord<K extends keyof any, V> = {
 
 ### Pick
 
+> 提取
+
 ```ts
 interface T0 {
     name: string,
@@ -389,7 +395,7 @@ type MyPick<T, K extends keyof T> = {
   [P in K]: T[P]
 }
 ```
-### Extract
+### Extract 提取
 
 ```ts
 interface Person {
@@ -419,7 +425,8 @@ const obj1: T2 = {
 type MyExtract<T,U> = T extends U ? T : never
 ```
 
-### Exclude(排除/不包括)
+### Exclude(排除/不包括) 
+> 返回联合类型
 
 ```ts
 interface T0 {
