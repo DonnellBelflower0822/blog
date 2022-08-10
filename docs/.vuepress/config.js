@@ -7,8 +7,8 @@ module.exports = {
     nav: [
       { text: '基础篇', link: '/basic/' },
       { text: '框架篇', link: '/frame/' },
-      { text: '浏览器', link: '/browser/' },
       { text: '工程化', link: '/engine/' },
+      { text: '基础知识', link: '/browser/' },
       // { text: '算法', link: '/algorithm/' },
       // { text: '解决方案', link: '/solutions/' },
       // { text: 'node', link: '/node-md/' },

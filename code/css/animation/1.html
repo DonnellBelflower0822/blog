@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    >
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Document</title>
+</head>
+
+<body>
+    <section>
+        <style>
+            .box {
+                width: 100px;
+                height: 100px;
+                animation: animate 3s;
+            }
+
+            @keyframes animate {
+                0% {
+                    background-color: red;
+                }
+
+                100% {
+                    background-color: green;
+                }
+            }
+        </style>
+        <div class="box"></div>
+    </section>
+    <hr />
+    <section>
+        <style>
+            .box1 {
+                width: 100px;
+                height: 100px;
+                animation: animate1 3s;
+                margin-bottom: 12px;
+                background-color: red;
+            }
+
+            .box1:nth-of-type(2){
+                animation-delay: 1s;
+            }
+            @keyframes animate1 {
+                0% {
+                    transform: translateX(0);
+                }
+
+                100% {
+                    transform: translateX(100%);
+                }
+            }
+        </style>
+        <div class="box1"></div>
+        <div class="box1"></div>
+    </section>
+</body>
+
+</html>

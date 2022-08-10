@@ -1,5 +1,22 @@
 # 计划
 
+- 基础知识
+  - http
+  - 浏览器渲染原理
+  - 性能优化
+    - web
+    - electron
+- 原理
+  - vue
+  - react
+  - webpack
+  - qiankun
+- 规范
+  - 高质量代码的书写
+
+
+=====================
+
 - 八股文
   - 浏览器渲染原理
   - 性能优化
@@ -41,3 +58,10 @@
   - 方案
     - 认证
     - 微前端
+
+https://github.com/GoogleChromeLabs/webpack-libs-optimizations
+
+## 计划
+- 渲染原理
+- http
+- redux-saga

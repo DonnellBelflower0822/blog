@@ -2,14 +2,14 @@ const sum = (a, b, c, d) => {
     return a + b + c + d
 }
 
-const curry = (fn) => {
+function curry(fn) {
     return function f(...args) {
-        if (args.length === fn.length) {
-            return fn.apply(this, args)
+        if (fn.length === args.length) {
+            return fn(...args)
         }
 
-        return (...restArgs) => {
-            return f(...args, ...restArgs)
+        return (...resetArgs) => {
+            return f(...args, ...resetArgs)
         }
     }
 }

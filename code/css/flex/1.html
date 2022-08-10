@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta
+        http-equiv="X-UA-Compatible"
+        content="IE=edge"
+    >
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            width: 300px;
+        }
+
+        .item {
+            height: 100px;
+        }
+
+        .item1 {
+            /* flex-grow: 1; */
+            /* flex-shrink: 1;
+            width: 80px;*/
+            width: 80px;
+            background-color: red;
+
+            flex: none;
+        }
+
+        .item2 {
+            /* flex-grow: 2; */
+            /* 
+            flex-shrink: 1; */
+            width: 120px;
+            background-color: green;
+            flex: none;
+        }
+
+        .item3 {
+
+            /* width: 200px; */
+            /* flex-grow: 3; */
+            /* flex-shrink: 1; */
+            background-color: blue;
+            flex: 1;
+            /* flex: none; */
+            /* flex-basis: 200px;
+            flex-shrink: 0; */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item item1"></div>
+        <div class="item item2"></div>
+        <div class="item item3"></div>
+    </div>
+</body>
+
+</html>

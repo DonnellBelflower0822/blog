@@ -17,15 +17,12 @@ const array = ['hello', 'world', 'allen']
 
 console.log(111, upperCase(first(reverse(array))))
 
+
+
 const compose = (...fns) => (
-    (...args) => (
-        fns.reduceRight((prevFnOrResult, currentFn, index) => (
-            currentFn.apply(
-                null,
-                index === 0 ? prevFnOrResult : [prevFnOrResult]
-            )
-        ), args)
-    )
+    fns.reduce((prevFn, currentFn) => (
+        (...args) => prevFn(currentFn(...args))
+    ))
 )
 
 const fn = compose(upperCase, first, reverse)

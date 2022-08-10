@@ -16,11 +16,4 @@ features:
 footer: MIT Licensed | Copyright © 2018-present Allen
 ---
 
-https://github.com/GoogleChromeLabs/webpack-libs-optimizations
-
-
-## 计划
-- 渲染原理
-- http
-- redux-saga
 
